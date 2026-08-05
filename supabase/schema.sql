@@ -328,6 +328,15 @@ grant execute on function public.my_role()   to authenticated;
 grant execute on function public.is_editor() to authenticated;
 grant execute on function public.is_chief()  to authenticated;
 
+-- If the project has "automatically expose new tables" switched on, Supabase
+-- will already have granted these tables to anon. RLS still reduces anon to
+-- zero rows, but there is no reason for the privilege to exist at all, so it
+-- is taken back explicitly. Belt as well as braces.
+revoke all on public.profiles         from anon;
+revoke all on public.manuscripts      from anon;
+revoke all on public.manuscript_files from anon;
+revoke all on public.status_events    from anon;
+
 
 -- ---------------------------------------------------------------------------
 -- Storage: a private bucket for manuscript PDFs.
