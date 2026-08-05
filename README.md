@@ -97,6 +97,57 @@ page as a Claude Artifact; the public website does not use it.
 
 ---
 
+## The editorial portal
+
+`portal.html` is the submission system: accounts, manuscript upload, author status
+tracking, and an editorial queue. It runs on [Supabase](https://supabase.com) (free tier)
+and is served as a static page like everything else.
+
+### Connecting it
+
+1. Create a Supabase project, then open **Project Settings → API**
+2. Paste the two public values into the `CONFIG` block near the bottom of `portal.html`:
+
+```js
+const CONFIG = {
+  url:     "https://xxxxxxxx.supabase.co",
+  anonKey: "eyJhbGciOi...",
+};
+```
+
+3. Open the Supabase **SQL Editor**, paste all of `supabase/schema.sql`, press Run
+4. Sign up through the portal, then run this once to make yourself editor-in-chief:
+
+```sql
+update public.profiles set role = 'chief_editor' where email = 'you@example.com';
+```
+
+Both config values are meant to be public — the anon key grants nothing on its own.
+Access is decided by row-level security in the database, which is why step 3 is not
+optional. **Never put the `service_role` key in this file**; it bypasses every policy.
+
+### Roles
+
+| Role | Can do |
+| --- | --- |
+| `author` | Submit, see only their own manuscripts |
+| `reviewer` | *(phase 2)* See only manuscripts assigned to them |
+| `section_editor` | See all submissions, change status |
+| `faculty_editor` | Same, plus sign decisions |
+| `chief_editor` | Everything, plus change other people's roles |
+
+Nobody can promote themselves — the `role` column is pinned by policy for everyone
+except a chief editor, so the SQL editor above is the only way the first one is created.
+
+### Keeping it awake
+
+Free Supabase projects pause after about a week without traffic.
+`.github/workflows/keepalive.yml` pings the project twice a week to prevent that.
+It reads the URL and key out of `portal.html`, so there is nothing extra to configure.
+
+
+---
+
 ## Licence
 
 Site content © the PRISM editorial team. Journal articles are published under

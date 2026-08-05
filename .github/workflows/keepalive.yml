@@ -1,0 +1,48 @@
+# Supabase free-tier projects are paused after ~7 days without traffic, which
+# would make the submission portal look broken to an author. This pings the
+# project twice a week to keep it awake.
+#
+# It reads the project URL and anon key straight out of portal.html so there is
+# only ever one place to change them. Both values are public by design.
+
+name: Keep Supabase awake
+
+on:
+  schedule:
+    - cron: "17 6 * * 1,4"   # Mondays and Thursdays, 06:17 UTC
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read Supabase config from portal.html
+        id: cfg
+        run: |
+          URL=$(grep -oE 'url:[[:space:]]*"https://[a-z0-9]+\.supabase\.co"' portal.html \
+                | grep -oE 'https://[a-z0-9]+\.supabase\.co' | head -1)
+          KEY=$(grep -oE 'anonKey:[[:space:]]*"[A-Za-z0-9._-]+"' portal.html \
+                | sed -E 's/.*"([A-Za-z0-9._-]+)".*/\1/' | head -1)
+          if [ -z "$URL" ] || [ -z "$KEY" ]; then
+            echo "Supabase is not configured in portal.html yet — nothing to ping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "key=$KEY" >> "$GITHUB_OUTPUT"
+
+      - name: Ping
+        if: steps.cfg.outputs.skip != 'true'
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' \
+            -H "apikey: ${{ steps.cfg.outputs.key }}" \
+            "${{ steps.cfg.outputs.url }}/rest/v1/manuscripts?select=id&limit=1")
+          echo "Ping returned HTTP $code"
+          # 200 = reachable, 401/403 = reachable but RLS refused us, which is
+          # also a healthy answer. Anything else means the project is down.
+          case "$code" in
+            200|401|403) echo "Project is awake." ;;
+            *) echo "::error::Supabase looks unreachable (HTTP $code)"; exit 1 ;;
+          esac
