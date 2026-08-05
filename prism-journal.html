@@ -1,0 +1,1619 @@
+<title>PRISM — A Multidisciplinary Journal of Student Research</title>
+<style>
+  /* ============================================================
+     PRISM — visual system
+     Constant : white light, the prism, the typography, the grid.
+     Variable : --issue, one colour per issue, drawn from the
+                dispersion fan. Change the three --issue tokens
+                below and the whole publication re-skins.
+     ============================================================ */
+
+  :root {
+    /* --- ISSUE COLOUR — Vol. 1, No. 1 : 656 nm (H-alpha) --- */
+    --issue:      #C4213D;
+    --issue-ink:  #A3132E;   /* text-safe on paper */
+    --issue-wash: #FBEDEF;
+
+    /* --- constants --- */
+    --paper:   #FBFAF9;
+    --surface: #FFFFFF;
+    --ink:     #1A1416;
+    --ink-2:   #574D52;
+    --ink-3:   #8A7E83;
+    --rule:    #E5DFE0;
+    --rule-2:  #F1ECED;
+    --plate:   #0B090A;
+
+    /* dispersion — the six sections, in wavelength order */
+    --w-violet: #6E3AD6;
+    --w-blue:   #2E5FE0;
+    --w-cyan:   #0E93B8;
+    --w-green:  #2E9B4F;
+    --w-amber:  #D89A16;
+    --w-red:    #D2542E;
+
+    --serif: "Hoefler Text", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, "Cascadia Mono", Consolas, monospace;
+
+    --measure: 34rem;
+    --rail-w: 15rem;
+    --pad: clamp(1.25rem, 4vw, 3.5rem);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --issue:      #FF5F73;
+      --issue-ink:  #FF7385;
+      --issue-wash: #2A1418;
+      --paper:   #0F0C0E;
+      --surface: #171316;
+      --ink:     #F2ECEE;
+      --ink-2:   #A79BA0;
+      --ink-3:   #7B6F74;
+      --rule:    #2B2428;
+      --rule-2:  #201A1D;
+      --w-violet: #9A73F0;
+      --w-blue:   #6E93F5;
+      --w-cyan:   #3FB8DC;
+      --w-green:  #56C077;
+      --w-amber:  #E8B846;
+      --w-red:    #EE7A52;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --issue:      #FF5F73;
+    --issue-ink:  #FF7385;
+    --issue-wash: #2A1418;
+    --paper:   #0F0C0E;
+    --surface: #171316;
+    --ink:     #F2ECEE;
+    --ink-2:   #A79BA0;
+    --ink-3:   #7B6F74;
+    --rule:    #2B2428;
+    --rule-2:  #201A1D;
+    --w-violet: #9A73F0;
+    --w-blue:   #6E93F5;
+    --w-cyan:   #3FB8DC;
+    --w-green:  #56C077;
+    --w-amber:  #E8B846;
+    --w-red:    #EE7A52;
+  }
+
+  :root[data-theme="light"] {
+    --issue:      #C4213D;
+    --issue-ink:  #A3132E;
+    --issue-wash: #FBEDEF;
+    --paper:   #FBFAF9;
+    --surface: #FFFFFF;
+    --ink:     #1A1416;
+    --ink-2:   #574D52;
+    --ink-3:   #8A7E83;
+    --rule:    #E5DFE0;
+    --rule-2:  #F1ECED;
+    --w-violet: #6E3AD6;
+    --w-blue:   #2E5FE0;
+    --w-cyan:   #0E93B8;
+    --w-green:  #2E9B4F;
+    --w-amber:  #D89A16;
+    --w-red:    #D2542E;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+
+  a { color: inherit; }
+
+  :focus-visible {
+    outline: 2px solid var(--issue);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* ============================ COVER ============================ */
+
+  .cover {
+    position: relative;
+    background: var(--plate);
+    color: #F6F2F3;
+    min-height: clamp(30rem, 74vh, 42rem);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  #scene {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    display: block;
+  }
+
+  .cover-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(105deg, rgba(11,9,10,0.92) 0%, rgba(11,9,10,0.72) 28%, rgba(11,9,10,0) 58%);
+  }
+
+  .cover-inner {
+    position: relative;
+    z-index: 2;
+    padding: clamp(1.75rem, 5vw, 3.75rem) var(--pad);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.5rem, 4vw, 2.75rem);
+    flex: 1;
+  }
+
+  .cover-rule {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: rgba(246,242,243,0.55);
+  }
+  .cover-rule .sep { color: rgba(246,242,243,0.28); }
+
+  .wordmark {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(3.5rem, 13vw, 8.5rem);
+    line-height: 0.9;
+    letter-spacing: 0.06em;
+    margin: 0;
+    text-indent: 0.06em;
+  }
+
+  .cover-sub {
+    font-family: var(--serif);
+    font-size: clamp(1.0625rem, 2.2vw, 1.4375rem);
+    line-height: 1.45;
+    color: rgba(246,242,243,0.82);
+    max-width: 27ch;
+    margin: 0.75rem 0 0;
+    text-wrap: balance;
+  }
+
+  .cover-body { max-width: 34rem; }
+
+  .cover-foot {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+  }
+
+  .issue-line {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    color: rgba(246,242,243,0.6);
+    font-variant-numeric: tabular-nums;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+  .issue-swatch {
+    width: 0.6875rem;
+    height: 0.6875rem;
+    border-radius: 50%;
+    background: var(--issue);
+    box-shadow: 0 0 0 1px rgba(246,242,243,0.25), 0 0 14px var(--issue);
+    flex: none;
+  }
+
+  .btn-row { display: flex; flex-wrap: wrap; gap: 0.625rem; }
+
+  .btn {
+    font-family: var(--sans);
+    font-size: 0.8125rem;
+    font-weight: 550;
+    letter-spacing: 0.02em;
+    padding: 0.6875rem 1.25rem;
+    border-radius: 2px;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+    white-space: nowrap;
+  }
+  .btn-solid { background: var(--issue); color: #FFF; }
+  .btn-solid:hover { background: #FFF; color: var(--plate); }
+  .btn-ghost { border-color: rgba(246,242,243,0.35); color: #F6F2F3; }
+  .btn-ghost:hover { border-color: #F6F2F3; background: rgba(246,242,243,0.08); }
+
+  /* ============================ SHELL ============================ */
+
+  .shell {
+    display: grid;
+    grid-template-columns: var(--rail-w) minmax(0, 1fr);
+    gap: 0 clamp(2rem, 6vw, 5rem);
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 0 var(--pad);
+  }
+
+  /* --- contents rail --- */
+  .rail {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    max-height: 100vh;
+    overflow-y: auto;
+    padding: 2.75rem 0 2rem;
+    border-right: 1px solid var(--rule);
+    margin-right: -1px;
+  }
+
+  .rail-mark {
+    font-family: var(--serif);
+    font-size: 1.375rem;
+    letter-spacing: 0.14em;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  .rail-tag {
+    font-family: var(--mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 1.75rem;
+  }
+
+  .rail-list { list-style: none; margin: 0; padding: 0 1.25rem 0 0; }
+  .rail-list li { margin: 0; }
+
+  .rail-link {
+    display: flex;
+    gap: 0.6875rem;
+    align-items: baseline;
+    padding: 0.4375rem 0;
+    font-size: 0.8125rem;
+    color: var(--ink-2);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    padding-left: 0.75rem;
+    margin-left: -0.75rem;
+    transition: color 120ms ease, border-color 120ms ease;
+  }
+  .rail-link .n {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+  }
+  .rail-link:hover { color: var(--ink); }
+  .rail-link[aria-current="true"] {
+    color: var(--ink);
+    font-weight: 550;
+    border-left-color: var(--issue);
+  }
+  .rail-link[aria-current="true"] .n { color: var(--issue-ink); }
+
+  .rail-foot {
+    margin-top: 1.75rem;
+    padding: 1rem 1.25rem 0 0;
+    border-top: 1px solid var(--rule-2);
+    font-family: var(--mono);
+    font-size: 0.625rem;
+    line-height: 1.7;
+    letter-spacing: 0.04em;
+    color: var(--ink-3);
+  }
+
+  /* --- main column --- */
+  main { padding: 2.75rem 0 0; min-width: 0; }
+
+  section { padding: 0 0 clamp(3.5rem, 8vw, 6rem); scroll-margin-top: 1.5rem; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0 0 1rem;
+  }
+  .eyebrow::after {
+    content: "";
+    height: 1px;
+    background: var(--rule);
+    flex: 1;
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.75rem, 3.6vw, 2.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.005em;
+    margin: 0 0 1.25rem;
+    max-width: 20ch;
+    text-wrap: balance;
+  }
+
+  h3 {
+    font-family: var(--sans);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: 0.005em;
+    margin: 0 0 0.375rem;
+  }
+
+  .lede {
+    font-family: var(--serif);
+    font-size: clamp(1.125rem, 2.1vw, 1.3125rem);
+    line-height: 1.55;
+    color: var(--ink);
+    max-width: var(--measure);
+    margin: 0 0 1.5rem;
+  }
+
+  .prose { max-width: var(--measure); }
+  .prose p {
+    font-family: var(--serif);
+    font-size: 1.0625rem;
+    line-height: 1.68;
+    color: var(--ink-2);
+    margin: 0 0 1.125rem;
+  }
+  .prose p strong { color: var(--ink); font-weight: 600; }
+  .prose p a { color: var(--issue-ink); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+  .tbd {
+    color: var(--ink-3);
+    border-bottom: 1px dotted currentColor;
+    font-style: normal;
+    white-space: nowrap;
+  }
+
+  /* --- pull quote / editorial stance --- */
+  .stance {
+    border-left: 2px solid var(--issue);
+    padding: 0.25rem 0 0.25rem 1.5rem;
+    margin: 2rem 0;
+    max-width: var(--measure);
+  }
+  .stance p {
+    font-family: var(--serif);
+    font-size: clamp(1.125rem, 2.3vw, 1.375rem);
+    line-height: 1.45;
+    margin: 0;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+
+  /* --- scope: the six sections --- */
+  .scope {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1.75rem 2.5rem;
+  }
+  .scope li { position: relative; padding-top: 0.875rem; }
+  .scope li::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2.25rem;
+    height: 2px;
+    background: var(--tick);
+  }
+  .scope h3 { margin-bottom: 0.3125rem; }
+  .scope p {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--ink-2);
+  }
+
+  /* --- criteria --- */
+  .criteria { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; max-width: 42rem; }
+  .criteria li {
+    display: grid;
+    grid-template-columns: 2.75rem 1fr;
+    gap: 0 1rem;
+    padding: 1.25rem 0;
+    border-top: 1px solid var(--rule);
+  }
+  .criteria li:last-child { border-bottom: 1px solid var(--rule); }
+  .criteria .k {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    color: var(--issue-ink);
+    padding-top: 0.1875rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .criteria h3 { font-size: 1rem; }
+  .criteria p { margin: 0; font-size: 0.9375rem; color: var(--ink-2); line-height: 1.6; }
+
+  /* --- tables --- */
+  .table-wrap {
+    overflow-x: auto;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    margin: 0 0 1rem;
+  }
+  table { border-collapse: collapse; width: 100%; min-width: 40rem; font-size: 0.875rem; }
+  thead th {
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 400;
+    padding: 0.75rem 1.25rem 0.75rem 0;
+    border-bottom: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: 0.9375rem 1.25rem 0.9375rem 0;
+    border-bottom: 1px solid var(--rule-2);
+    vertical-align: top;
+    color: var(--ink-2);
+    line-height: 1.55;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody th {
+    text-align: left;
+    padding: 0.9375rem 1.25rem 0.9375rem 0;
+    border-bottom: 1px solid var(--rule-2);
+    vertical-align: top;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  tbody tr:last-child th { border-bottom: none; }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 0.8125rem; white-space: nowrap; }
+
+  .table-note {
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+    max-width: var(--measure);
+    margin: 0;
+  }
+
+  /* --- figure --- */
+  figure { margin: 2rem 0 2.5rem; }
+  .fig-frame {
+    overflow-x: auto;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 1.5rem 1.25rem;
+  }
+  .fig-frame svg { display: block; width: 100%; min-width: 34rem; height: auto; color: var(--ink-2); }
+  figcaption {
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--ink-3);
+    margin-top: 0.875rem;
+    max-width: var(--measure);
+  }
+  figcaption b { color: var(--ink-2); font-weight: 600; }
+
+  /* --- process stages --- */
+  .stages { list-style: none; margin: 2rem 0 0; padding: 0; counter-reset: st; max-width: 42rem; }
+  .stages li {
+    display: grid;
+    grid-template-columns: 3.25rem 1fr;
+    gap: 0 1rem;
+    padding: 1.375rem 0;
+    border-top: 1px solid var(--rule);
+    position: relative;
+  }
+  .stages li:last-child { border-bottom: 1px solid var(--rule); }
+  .stages .st {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-3);
+    padding-top: 0.25rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .stages h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.625rem; font-size: 1rem; }
+  .stages p { margin: 0.25rem 0 0; font-size: 0.9375rem; color: var(--ink-2); line-height: 1.6; }
+  .who {
+    font-family: var(--mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.1875rem 0.5rem;
+    border-radius: 2px;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+  .who-s { background: var(--rule-2); color: var(--ink-2); border: 1px solid var(--rule); }
+  .who-f { background: var(--issue-wash); color: var(--issue-ink); border: 1px solid var(--issue); }
+
+  /* --- definition blocks (author reqs, policies) --- */
+  .defs { margin: 0; display: grid; gap: 0; max-width: 42rem; }
+  .defs > div {
+    padding: 1.25rem 0;
+    border-top: 1px solid var(--rule);
+  }
+  .defs > div:last-child { border-bottom: 1px solid var(--rule); }
+  .defs dt {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin: 0 0 0.375rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+  }
+  .defs dd { margin: 0; font-size: 0.9375rem; color: var(--ink-2); line-height: 1.62; }
+  .req {
+    font-family: var(--mono);
+    font-size: 0.5625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.1875rem 0.4375rem;
+    border: 1px solid var(--issue);
+    color: var(--issue-ink);
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  /* --- board --- */
+  .board { list-style: none; margin: 1.75rem 0 0; padding: 0; display: grid; gap: 0; max-width: 42rem; }
+  .board li {
+    display: grid;
+    grid-template-columns: minmax(0, 13rem) 1fr;
+    gap: 0.25rem 1.5rem;
+    padding: 1.125rem 0;
+    border-top: 1px solid var(--rule);
+  }
+  .board li:last-child { border-bottom: 1px solid var(--rule); }
+  .board .role { font-size: 0.9375rem; font-weight: 600; }
+  .board .duty { font-size: 0.875rem; color: var(--ink-2); line-height: 1.6; }
+
+  /* --- issues / colour system --- */
+  .issues { list-style: none; margin: 1.75rem 0 0; padding: 0; display: grid; gap: 0; max-width: 42rem; }
+  .issues li {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 9rem) 1fr auto;
+    align-items: baseline;
+    gap: 0 1.25rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--rule);
+  }
+  .issues li:last-child { border-bottom: 1px solid var(--rule); }
+  .issues .chip {
+    width: 1.75rem;
+    height: 0.5rem;
+    border-radius: 1px;
+    background: var(--c);
+    align-self: center;
+  }
+  .issues .vol { font-family: var(--mono); font-size: 0.8125rem; font-variant-numeric: tabular-nums; color: var(--ink); }
+  .issues .nm { font-size: 0.875rem; color: var(--ink-2); }
+  .issues .st2 {
+    font-family: var(--mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    white-space: nowrap;
+  }
+  .issues li.now .st2 { color: var(--issue-ink); }
+  .issues li.now .vol { font-weight: 600; }
+
+  /* --- submit panel --- */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-top: 2px solid var(--issue);
+    border-radius: 3px;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    max-width: 42rem;
+  }
+  .panel h3 { font-family: var(--serif); font-weight: 400; font-size: 1.5rem; margin-bottom: 0.75rem; }
+  .panel p { font-size: 0.9375rem; color: var(--ink-2); line-height: 1.62; margin: 0 0 1.25rem; max-width: 40ch; }
+  .panel .btn-solid:hover { background: var(--ink); color: var(--paper); }
+  .panel .btn-ghost { border-color: var(--rule); color: var(--ink); }
+  .panel .btn-ghost:hover { border-color: var(--ink); background: transparent; }
+
+  .checklist { list-style: none; margin: 1.5rem 0 0; padding: 1.25rem 0 0; border-top: 1px solid var(--rule-2); display: grid; gap: 0.5rem; }
+  .checklist li {
+    font-size: 0.875rem;
+    color: var(--ink-2);
+    display: grid;
+    grid-template-columns: 1.125rem 1fr;
+    gap: 0.5rem;
+    line-height: 1.55;
+  }
+  .checklist li::before {
+    content: "";
+    width: 0.625rem;
+    height: 0.625rem;
+    border: 1px solid var(--issue);
+    border-radius: 1px;
+    margin-top: 0.4375rem;
+  }
+
+  /* ============================ FOOTER ============================ */
+
+  footer {
+    border-top: 1px solid var(--rule);
+    margin-top: 2rem;
+    background: var(--surface);
+  }
+  .foot-inner {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: clamp(2rem, 5vw, 3.25rem) var(--pad);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 2rem 2.5rem;
+  }
+  .foot-col h4 {
+    font-family: var(--mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 400;
+    margin: 0 0 0.75rem;
+  }
+  .foot-col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4375rem; }
+  .foot-col li, .foot-col p { font-size: 0.8125rem; color: var(--ink-2); line-height: 1.6; margin: 0; }
+  .foot-col a { text-decoration: none; }
+  .foot-col a:hover { color: var(--issue-ink); text-decoration: underline; text-underline-offset: 2px; }
+  .foot-mark { font-family: var(--serif); font-size: 1.5rem; letter-spacing: 0.12em; margin: 0 0 0.5rem; }
+  .foot-legal {
+    border-top: 1px solid var(--rule-2);
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 1.25rem var(--pad) 2.5rem;
+    font-family: var(--mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.05em;
+    color: var(--ink-3);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+  }
+
+  /* ============================ RESPONSIVE ============================ */
+
+  @media (max-width: 62rem) {
+    :root { --rail-w: 12rem; }
+  }
+
+  @media (max-width: 52rem) {
+    .shell { grid-template-columns: 1fr; gap: 0; }
+    .rail {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      max-height: none;
+      overflow: visible;
+      border-right: none;
+      border-bottom: 1px solid var(--rule);
+      margin-right: 0;
+      padding: 0.75rem 0;
+      background: var(--paper);
+      background: color-mix(in srgb, var(--paper) 92%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .rail-mark { margin: 0; font-size: 1.125rem; flex: none; }
+    .rail-tag, .rail-foot { display: none; }
+    .rail-list {
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      padding: 0;
+      scrollbar-width: none;
+      flex: 1;
+    }
+    .rail-list::-webkit-scrollbar { display: none; }
+    .rail-link {
+      border-left: none;
+      border-bottom: 2px solid transparent;
+      padding: 0.25rem 0.75rem;
+      margin-left: 0;
+      white-space: nowrap;
+      font-size: 0.75rem;
+    }
+    .rail-link .n { display: none; }
+    .rail-link[aria-current="true"] { border-left-color: transparent; border-bottom-color: var(--issue); }
+    main { padding-top: 2rem; }
+    .issues li { grid-template-columns: 2.5rem 1fr; row-gap: 0.25rem; }
+    .issues .st2 { grid-column: 2; }
+    .board li { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+
+<!-- ============================ COVER ============================ -->
+<header class="cover">
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <div class="cover-scrim"></div>
+
+  <div class="cover-inner">
+    <div class="cover-rule">
+      <span>Open access</span>
+      <span class="sep">/</span>
+      <span>Transparent review</span>
+      <span class="sep">/</span>
+      <span>No fees</span>
+    </div>
+
+    <div class="cover-body">
+      <h1 class="wordmark">PRISM</h1>
+      <p class="cover-sub">A multidisciplinary journal of secondary-school research — reviewed by students, decided by faculty, published with the record.</p>
+    </div>
+
+    <div class="cover-foot">
+      <div class="issue-line">
+        <span class="issue-swatch"></span>
+        <span>Vol.&nbsp;1 &nbsp;No.&nbsp;1 &nbsp;·&nbsp; 656&nbsp;nm &nbsp;·&nbsp; <span class="tbd">Spring 2027</span></span>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-solid" href="#submit">Submit a manuscript</a>
+        <a class="btn btn-ghost" href="#review">How review works</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============================ SHELL ============================ -->
+<div class="shell">
+
+  <nav class="rail" aria-label="Contents">
+    <a class="rail-mark" href="#top">PRISM</a>
+    <div class="rail-tag">Contents</div>
+    <ul class="rail-list">
+      <li><a class="rail-link" href="#about"><span class="n">01</span>About</a></li>
+      <li><a class="rail-link" href="#scope"><span class="n">02</span>Aims &amp; scope</a></li>
+      <li><a class="rail-link" href="#criteria"><span class="n">03</span>What we publish</a></li>
+      <li><a class="rail-link" href="#types"><span class="n">04</span>Article types</a></li>
+      <li><a class="rail-link" href="#review"><span class="n">05</span>Peer review</a></li>
+      <li><a class="rail-link" href="#authors"><span class="n">06</span>For authors</a></li>
+      <li><a class="rail-link" href="#policies"><span class="n">07</span>Ethics &amp; integrity</a></li>
+      <li><a class="rail-link" href="#editors"><span class="n">08</span>Editorial board</a></li>
+      <li><a class="rail-link" href="#issues"><span class="n">09</span>Issues</a></li>
+      <li><a class="rail-link" href="#submit"><span class="n">10</span>Submit</a></li>
+    </ul>
+    <div class="rail-foot">
+      ISSN <span class="tbd">0000-0000</span><br>
+      Continuous publication<br>
+      CC&nbsp;BY&nbsp;4.0
+    </div>
+  </nav>
+
+  <main id="top">
+
+    <!-- 01 ABOUT -->
+    <section id="about">
+      <p class="eyebrow">01 — About the journal</p>
+      <h2>A journal that publishes the evidence behind its own decisions.</h2>
+      <div class="prose">
+        <p>PRISM is an open-access journal for research carried out by secondary-school students, across every scientific discipline. It is edited by students and overseen by faculty. Everything it publishes is free to read, and nothing costs anything to submit.</p>
+        <p>Student journals usually ask to be trusted on the strength of who is behind them. PRISM asks to be trusted on the strength of what it shows you. Every accepted paper is published together with its <strong>reviewer reports, the authors' response, and a decision letter signed by the faculty member who approved it</strong>. If a referee objected and the objection was answered, you can read both. If a limitation survived into the final version, it is stated in the paper and named in the decision letter.</p>
+        <p>That is the whole editorial argument. A reader does not have to take our word for the quality of a paper, because the record of how it was judged is attached to it.</p>
+      </div>
+
+      <div class="stance">
+        <p>We do not claim that everything we publish is important. We claim that everything we publish can be checked.</p>
+      </div>
+
+      <div class="prose">
+        <p>The name is the method. A prism belongs to no single discipline; it takes one beam and separates it into its wavelengths. PRISM takes one question and lets several fields answer it — a result in ecology and a result in statistics belong in the same issue when both are sound, and a reader in one should be able to follow the other.</p>
+      </div>
+    </section>
+
+    <!-- 02 SCOPE -->
+    <section id="scope">
+      <p class="eyebrow">02 — Aims &amp; scope</p>
+      <h2>Deliberately broad in subject. Deliberately narrow in standard.</h2>
+      <p class="lede">PRISM considers original research, replications, and critical reviews in any of six sections. Work that sits between two sections is welcome and will be reviewed by both.</p>
+
+      <ul class="scope">
+        <li style="--tick: var(--w-violet)">
+          <h3>Physics &amp; Astronomy</h3>
+          <p>Mechanics, optics, electronics, astronomy and observational projects, instrumentation built by the authors, computational physics.</p>
+        </li>
+        <li style="--tick: var(--w-blue)">
+          <h3>Chemistry &amp; Materials</h3>
+          <p>Synthesis and characterisation, electrochemistry, analytical methods, materials testing, green chemistry, kitchen- and classroom-scale experimental work done rigorously.</p>
+        </li>
+        <li style="--tick: var(--w-cyan)">
+          <h3>Biology &amp; Health</h3>
+          <p>Molecular and cell biology, microbiology, plant and animal physiology, genetics, bioinformatics, public-health and epidemiological analysis of open data.</p>
+        </li>
+        <li style="--tick: var(--w-green)">
+          <h3>Earth &amp; Environment</h3>
+          <p>Ecology and field surveys, water and air quality, climate data analysis, geology, conservation, agriculture, long-term local monitoring.</p>
+        </li>
+        <li style="--tick: var(--w-amber)">
+          <h3>Computation &amp; Mathematics</h3>
+          <p>Algorithms, machine learning, simulation, applied statistics, pure mathematics with complete proofs, software and tools built for other researchers.</p>
+        </li>
+        <li style="--tick: var(--w-red)">
+          <h3>Quantitative Social Science</h3>
+          <p>Survey and experimental work on human behaviour, economics, linguistics, psychology and education research — held to the same standards of design, consent and pre-specified analysis.</p>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 03 CRITERIA -->
+    <section id="criteria">
+      <p class="eyebrow">03 — Criteria for publication</p>
+      <h2>Four questions every referee is asked.</h2>
+      <p class="lede">We do not judge manuscripts on how impressive the topic sounds, how expensive the equipment was, or where the author goes to school. Referees answer these four questions and nothing else.</p>
+
+      <ol class="criteria">
+        <li>
+          <span class="k">I</span>
+          <div>
+            <h3>Is it sound?</h3>
+            <p>The design, controls, sample size and statistics support the claim being made — and support nothing stronger than that claim. Overreach in the abstract is a reason for revision, not rejection, provided the underlying work holds.</p>
+          </div>
+        </li>
+        <li>
+          <span class="k">II</span>
+          <div>
+            <h3>Is it honest?</h3>
+            <p>The manuscript states plainly what was already known before the study, what the study adds, what it does not show, and what went wrong. Negative and inconclusive results are publishable in PRISM; concealed ones are not.</p>
+          </div>
+        </li>
+        <li>
+          <span class="k">III</span>
+          <div>
+            <h3>Can it be checked?</h3>
+            <p>A competent reader with the deposited data, code and procedure could repeat the analysis and arrive at the same numbers. This is the criterion we are strictest about, because it is the one a student journal can enforce completely.</p>
+          </div>
+        </li>
+        <li>
+          <span class="k">IV</span>
+          <div>
+            <h3>Can it be read across fields?</h3>
+            <p>A student working in a different section can follow the question, the figures, and the limits of the result. Jargon that is load-bearing stays; jargon that is decoration goes.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 04 ARTICLE TYPES -->
+    <section id="types">
+      <p class="eyebrow">04 — Article types</p>
+      <h2>Six formats, each reviewed against its own standard.</h2>
+      <p class="lede">Choose the type that matches the work. Submitting a small result as a Short Report is not a lesser act than submitting a Research Article — it is the correct one.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Type</th>
+              <th scope="col">What it is</th>
+              <th scope="col">Length</th>
+              <th scope="col">Review</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Research Article</th>
+              <td>A complete original study with data the authors collected or generated themselves.</td>
+              <td class="num">≤ 5,000 w<br>≤ 6 figures</td>
+              <td class="num">2 students<br>+ 1 faculty</td>
+            </tr>
+            <tr>
+              <th scope="row">Short Report</th>
+              <td>A single clean result that does not need a full-length treatment. The most common accepted format.</td>
+              <td class="num">≤ 2,000 w<br>≤ 3 figures</td>
+              <td class="num">2 students<br>+ 1 faculty</td>
+            </tr>
+            <tr>
+              <th scope="row">Replication</th>
+              <td>A direct or conceptual repeat of a published study, reporting whatever was found. Outcome does not affect acceptance.</td>
+              <td class="num">≤ 2,500 w</td>
+              <td class="num">2 students<br>+ 1 faculty</td>
+            </tr>
+            <tr>
+              <th scope="row">Registered Report</th>
+              <td>Question, method and analysis plan reviewed <em>before</em> data are collected. Accepted in principle at that point, whatever the results turn out to be.</td>
+              <td class="num">Stage 1 ≤ 2,500 w<br>Stage 2 ≤ 5,000 w</td>
+              <td class="num">2 stages<br>+ faculty</td>
+            </tr>
+            <tr>
+              <th scope="row">Review</th>
+              <td>A critical synthesis that takes a position on an open question. Not a summary of a field.</td>
+              <td class="num">≤ 4,000 w<br>≥ 30 refs</td>
+              <td class="num">2 students<br>+ 1 faculty</td>
+            </tr>
+            <tr>
+              <th scope="row">Comment</th>
+              <td>A substantive challenge to a paper already published in PRISM. Sent to the original authors, whose reply is published alongside.</td>
+              <td class="num">≤ 1,000 w</td>
+              <td class="num">1 student<br>+ 1 faculty</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">Word limits exclude the abstract, references, and figure captions. Supplementary material is unlimited and is deposited, not typeset.</p>
+    </section>
+
+    <!-- 05 PEER REVIEW -->
+    <section id="review">
+      <p class="eyebrow">05 — Peer review</p>
+      <h2>Students do the reviewing. A faculty member signs the decision.</h2>
+      <p class="lede">Every manuscript is read by at least two trained student reviewers and by one faculty reviewer, who writes and signs the decision letter. No paper is accepted on student review alone.</p>
+
+      <figure>
+        <div class="fig-frame">
+          <svg viewBox="0 0 940 330" role="img" aria-label="Flow diagram: a manuscript passes through screening, student peer review, and a faculty-signed decision to publication; the reviewer reports, author response and signed decision letter are collected into a review record that is published with the article.">
+            <defs>
+              <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="currentColor"></path>
+              </marker>
+              <marker id="ar-i" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="var(--issue)"></path>
+              </marker>
+            </defs>
+
+            <!-- revision loop, above the main row -->
+            <path d="M 662 70 C 662 34 662 32 566 32 C 470 32 470 34 470 70"
+                  fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3"
+                  opacity="0.55" marker-end="url(#ar)"></path>
+            <text x="566" y="24" text-anchor="middle" font-family="ui-monospace, Menlo, monospace"
+                  font-size="10" fill="currentColor" opacity="0.65">revision — one round is normal</text>
+
+            <!-- main row -->
+            <g stroke="currentColor" fill="none" stroke-width="1">
+              <rect x="20"  y="70" width="132" height="56" rx="2" opacity="0.45"></rect>
+              <rect x="212" y="70" width="132" height="56" rx="2" opacity="0.45"></rect>
+              <rect x="404" y="70" width="132" height="56" rx="2" opacity="0.45"></rect>
+              <rect x="596" y="70" width="132" height="56" rx="2" stroke="var(--issue)" stroke-width="1.5" opacity="1"></rect>
+              <rect x="788" y="70" width="132" height="56" rx="2" opacity="0.45"></rect>
+            </g>
+
+            <g font-family="-apple-system, system-ui, sans-serif" text-anchor="middle" fill="currentColor">
+              <text x="86"  y="96" font-size="12.5" font-weight="600">Submission</text>
+              <text x="278" y="96" font-size="12.5" font-weight="600">Screening</text>
+              <text x="470" y="96" font-size="12.5" font-weight="600">Peer review</text>
+              <text x="662" y="96" font-size="12.5" font-weight="600" fill="var(--issue)">Decision</text>
+              <text x="854" y="96" font-size="12.5" font-weight="600">Publication</text>
+
+              <text x="86"  y="112" font-size="9.5" opacity="0.7">free · any format</text>
+              <text x="278" y="112" font-size="9.5" opacity="0.7">student editors</text>
+              <text x="470" y="112" font-size="9.5" opacity="0.7">≥ 2 students</text>
+              <text x="662" y="112" font-size="9.5" fill="var(--issue)">faculty signs</text>
+              <text x="854" y="112" font-size="9.5" opacity="0.7">CC BY 4.0</text>
+            </g>
+
+            <!-- connectors -->
+            <g stroke="currentColor" stroke-width="1" marker-end="url(#ar)">
+              <line x1="152" y1="98" x2="206" y2="98"></line>
+              <line x1="344" y1="98" x2="398" y2="98"></line>
+              <line x1="536" y1="98" x2="590" y2="98"></line>
+              <line x1="728" y1="98" x2="782" y2="98"></line>
+            </g>
+            <g font-family="ui-monospace, Menlo, monospace" font-size="9" text-anchor="middle"
+               fill="currentColor" opacity="0.6">
+              <text x="179" y="90">≤ 10 days</text>
+              <text x="371" y="90">assigned</text>
+              <text x="563" y="90">reports</text>
+              <text x="755" y="90">accepted</text>
+            </g>
+
+            <!-- record lane -->
+            <g stroke="var(--issue)" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#ar-i)" opacity="0.85">
+              <line x1="470" y1="126" x2="470" y2="244"></line>
+              <line x1="662" y1="126" x2="662" y2="244"></line>
+            </g>
+
+            <rect x="380" y="250" width="440" height="52" rx="26"
+                  fill="none" stroke="var(--issue)" stroke-width="1.5"></rect>
+            <text x="600" y="271" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif"
+                  font-size="12" font-weight="600" fill="var(--issue)">Review record</text>
+            <text x="600" y="288" text-anchor="middle" font-family="ui-monospace, Menlo, monospace"
+                  font-size="9.5" fill="var(--issue)" opacity="0.85">reports · author response · signed decision letter</text>
+
+            <path d="M 820 276 C 872 276 854 264 854 132"
+                  fill="none" stroke="var(--issue)" stroke-width="1.5" marker-end="url(#ar-i)"></path>
+            <text x="812" y="204" text-anchor="end" font-family="ui-monospace, Menlo, monospace"
+                  font-size="9.5" fill="var(--issue)">published with the article</text>
+          </svg>
+        </div>
+        <figcaption><b>Figure 1.</b> The two mechanisms PRISM's credibility rests on. Solid path: no manuscript reaches publication without a faculty reviewer signing the decision. Dashed path: the reports and the decision letter are not internal documents — they are published as part of the article record, under the same licence.</figcaption>
+      </figure>
+
+      <ol class="stages">
+        <li>
+          <span class="st">01</span>
+          <div>
+            <h3>Submission <span class="who who-s">Author</span></h3>
+            <p>Any legible format, one PDF. No formatting requirements before acceptance. Preprints are welcome and posting one does not count as prior publication.</p>
+          </div>
+        </li>
+        <li>
+          <span class="st">02</span>
+          <div>
+            <h3>Editorial screening <span class="who who-s">Student editors</span></h3>
+            <p>Two student editors check scope, completeness, and whether the data and code statements are real. Decided within 10 working days. Manuscripts declined here get a written reason naming what was missing — never a form letter.</p>
+          </div>
+        </li>
+        <li>
+          <span class="st">03</span>
+          <div>
+            <h3>Student peer review <span class="who who-s">≥ 2 reviewers</span></h3>
+            <p>At least two student reviewers from the relevant section, working from a published rubric mapped to the four criteria. Reviewers complete a short training module before their first assignment. Single-anonymised by default: reviewers see the authors, authors do not see reviewers unless a reviewer chooses to sign.</p>
+          </div>
+        </li>
+        <li>
+          <span class="st">04</span>
+          <div>
+            <h3>Faculty review and decision <span class="who who-f">Faculty</span></h3>
+            <p>A faculty reviewer reads the manuscript and the student reports, then writes the decision letter — stating which reviewer points are binding and which are optional — and signs it under their own name. This step cannot be skipped or delegated to a student editor.</p>
+          </div>
+        </li>
+        <li>
+          <span class="st">05</span>
+          <div>
+            <h3>Revision <span class="who who-s">Author</span></h3>
+            <p>One substantive round is normal. Revisions return to the original reviewers wherever possible. Authors respond point by point; that response is part of the published record.</p>
+          </div>
+        </li>
+        <li>
+          <span class="st">06</span>
+          <div>
+            <h3>Publication <span class="who who-f">Editorial office</span></h3>
+            <p>Article and full review record published together under CC BY 4.0, with a DOI issued at acceptance. Continuous publication: papers appear when they are ready and are gathered into the current issue.</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="prose" style="margin-top: 2rem;">
+        <p><strong>Reports on rejected manuscripts are never published.</strong> The record exists to let readers judge accepted work, not to expose authors whose work was declined. Reviewers may sign their reports or stay anonymous; either way the report is published, and signed reviewers are credited by name in the article.</p>
+      </div>
+    </section>
+
+    <!-- 06 FOR AUTHORS -->
+    <section id="authors">
+      <p class="eyebrow">06 — For authors</p>
+      <h2>What a submission must contain.</h2>
+      <p class="lede">Formatting is not a barrier at PRISM — style and layout are handled after acceptance. These requirements are about substance, and a manuscript missing any of them is returned at screening.</p>
+
+      <dl class="defs">
+        <div>
+          <dt>Data availability <span class="req">Required</span></dt>
+          <dd>The data behind every figure and statistic must be deposited in an open repository (Zenodo, OSF, Figshare or a subject repository) with a DOI, before publication. Raw data where possible, processed data at minimum. "Available on request" is not an availability statement and is not accepted.</dd>
+        </div>
+        <div>
+          <dt>Code availability <span class="req">Required</span></dt>
+          <dd>Any script or notebook used for analysis, simulation or figure generation is deposited with a licence and a DOI. Spreadsheet analyses count: deposit the workbook with formulas intact.</dd>
+        </div>
+        <div>
+          <dt>Mentor contribution statement <span class="req">Required</span></dt>
+          <dd>Name every teacher, mentor, lab host or family member who contributed, and say exactly what they did — proposed the question, provided equipment, ran an instrument, wrote code, edited the text. This is the single most important integrity statement in a student journal, and referees are instructed to weigh the paper against it. A well-mentored project is not worth less. An undisclosed one is not publishable.</dd>
+        </div>
+        <div>
+          <dt>Prior knowledge and limitations</dt>
+          <dd>A paragraph stating what was known before the study, and a separate paragraph stating what the results do not establish. Both are required in the manuscript body, not only in a cover letter.</dd>
+        </div>
+        <div>
+          <dt>Methods detail</dt>
+          <dd>Sample sizes and how they were chosen, every exclusion and why, the exact statistical tests used, and the software and versions. Enough that a reader could repeat the procedure without contacting you.</dd>
+        </div>
+        <div>
+          <dt>Use of AI tools <span class="req">Disclose</span></dt>
+          <dd>Generative AI used for analysis, code, figures, translation or drafting must be disclosed in the methods, naming the tool and what it did. Using AI is permitted and disclosed use is never held against a manuscript. Undisclosed use is treated as a research-integrity matter. AI systems cannot be authors, because they cannot be accountable.</dd>
+        </div>
+        <div>
+          <dt>Authorship</dt>
+          <dd>Authors are the people who did the work and can defend it. Every author approves the final version and signs a contribution statement using the CRediT taxonomy. Adding a name for goodwill — a mentor, a supervisor, a friend — is not permitted.</dd>
+        </div>
+        <div>
+          <dt>Cost to authors <span class="req">None</span></dt>
+          <dd>PRISM charges nothing to submit, nothing to review, and nothing to publish. There are no article processing charges, no page charges, and no colour charges. The journal is run by volunteers and hosted by <span class="tbd">[host institution]</span>.</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- 07 POLICIES -->
+    <section id="policies">
+      <p class="eyebrow">07 — Ethics &amp; research integrity</p>
+      <h2>Rules that exist because student research has its own risks.</h2>
+
+      <dl class="defs">
+        <div>
+          <dt>Human participants</dt>
+          <dd>Any study involving people — including classroom surveys and online questionnaires — requires documented approval from a school ethics committee, IRB, or equivalent review body, plus informed consent. Where participants are under 18, parental or guardian consent is also required. Submissions must include the approval reference or an explicit statement of the exemption relied on.</dd>
+        </div>
+        <div>
+          <dt>Data about minors</dt>
+          <dd>Datasets containing information about minors must be de-identified before deposition, and the manuscript must describe how. Where de-identification would destroy the data's usefulness, deposit under controlled access and say so.</dd>
+        </div>
+        <div>
+          <dt>Animals and field work</dt>
+          <dd>Vertebrate work requires institutional approval and adherence to ARRIVE reporting guidelines. Field studies must state collection permits, protected-area permissions, and any species handled.</dd>
+        </div>
+        <div>
+          <dt>Laboratory safety</dt>
+          <dd>Work involving hazardous chemicals, biological agents, high voltages, lasers or pressure vessels must state the supervising adult and the facility. PRISM will not publish work that appears to have been carried out unsupervised where supervision was required, regardless of the quality of the result.</dd>
+        </div>
+        <div>
+          <dt>Originality screening</dt>
+          <dd>Every manuscript reaching review is checked with similarity-detection software, and figures are screened for duplication and manipulation. Detected issues are raised with the authors before any decision is made.</dd>
+        </div>
+        <div>
+          <dt>Competing interests</dt>
+          <dd>Declared by authors, reviewers and editors. No student reviews a manuscript from their own school; no faculty member decides on a manuscript from a student they teach or mentor. Declarations are published with the article.</dd>
+        </div>
+        <div>
+          <dt>Corrections and retractions</dt>
+          <dd>PRISM follows COPE guidance. The published version of record is never silently amended: corrections and retractions are separate, permanent, linked in both directions, and state plainly what was wrong. A retraction is not a judgment on the authors' character.</dd>
+        </div>
+        <div>
+          <dt>Appeals</dt>
+          <dd>One appeal per manuscript, in writing, decided by a faculty editor who had no part in the original decision. Appeals must address the reviewers' reasoning, not the outcome.</dd>
+        </div>
+        <div>
+          <dt>Preservation</dt>
+          <dd>All content is archived with <span class="tbd">[preservation service]</span> so that it remains available if the journal ceases to operate — a real risk for any student-run publication, and one PRISM plans for rather than ignores.</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- 08 EDITORIAL -->
+    <section id="editors">
+      <p class="eyebrow">08 — Editorial board</p>
+      <h2>Who does what, and who is accountable.</h2>
+      <p class="lede">PRISM is run by students. It is answerable through its faculty board, which holds the authority no student role holds: the power to accept a paper.</p>
+
+      <ul class="board">
+        <li>
+          <span class="role">Editor-in-Chief</span>
+          <span class="duty">A student. Sets editorial direction, chairs the editorial meeting, and is responsible for the journal's conduct. Does not have the authority to accept a manuscript alone. — <span class="tbd">[to be appointed]</span></span>
+        </li>
+        <li>
+          <span class="role">Managing Editor</span>
+          <span class="duty">A student. Runs the submission queue, tracks deadlines, and is the contact point for authors. — <span class="tbd">[to be appointed]</span></span>
+        </li>
+        <li>
+          <span class="role">Section Editors ×6</span>
+          <span class="duty">Students, one per section. Screen submissions, select and brief reviewers, and prepare the file that goes to faculty. — <span class="tbd">[applications open]</span></span>
+        </li>
+        <li>
+          <span class="role">Faculty Editorial Board</span>
+          <span class="duty">Teachers and researchers. Each accepted paper carries the signature of one board member, who reviewed it and wrote its decision letter. Board members also hear appeals and rule on integrity cases. — <span class="tbd">[nominations open]</span></span>
+        </li>
+        <li>
+          <span class="role">Statistics Reviewers</span>
+          <span class="duty">Consulted whenever a central claim rests on a statistical test. Any editor or reviewer can request this review, and the request cannot be overruled.</span>
+        </li>
+        <li>
+          <span class="role">Reviewer Corps</span>
+          <span class="duty">Trained student reviewers across all sections. Reviewers complete a training module, work from a published rubric, and are credited annually. — <span class="tbd">[open to all students]</span></span>
+        </li>
+      </ul>
+
+      <div class="prose" style="margin-top: 2rem;">
+        <p>Student editors serve one academic year with one renewal. Faculty board members serve two years. Both terms are published, so that a reader in five years can tell who was responsible for a decision made today.</p>
+      </div>
+    </section>
+
+    <!-- 09 ISSUES -->
+    <section id="issues">
+      <p class="eyebrow">09 — Issues</p>
+      <h2>One issue, one wavelength.</h2>
+      <p class="lede">Each issue takes a single colour and keeps it across the cover, the site, and the typeset articles. The colours advance along the visible spectrum, beginning at the red end — so an issue's number and its colour are the same fact stated twice.</p>
+
+      <ul class="issues">
+        <li class="now" style="--c: #C4213D">
+          <span class="chip"></span>
+          <span class="vol">Vol. 1 No. 1</span>
+          <span class="nm">656 nm — Hydrogen alpha</span>
+          <span class="st2">Open for submissions</span>
+        </li>
+        <li style="--c: #D89A16">
+          <span class="chip"></span>
+          <span class="vol">Vol. 1 No. 2</span>
+          <span class="nm">589 nm — Sodium D</span>
+          <span class="st2">Planned</span>
+        </li>
+        <li style="--c: #2E9B4F">
+          <span class="chip"></span>
+          <span class="vol">Vol. 1 No. 3</span>
+          <span class="nm">546 nm — Mercury green</span>
+          <span class="st2">Planned</span>
+        </li>
+        <li style="--c: #0E93B8">
+          <span class="chip"></span>
+          <span class="vol">Vol. 2 No. 1</span>
+          <span class="nm">486 nm — Hydrogen beta</span>
+          <span class="st2">Planned</span>
+        </li>
+      </ul>
+
+      <div class="prose" style="margin-top: 1.75rem;">
+        <p>Every wavelength is a real emission line. The four you see above are among the first spectral lines ever catalogued — which is a small way of saying that separating light into its parts is where a great deal of modern science began.</p>
+      </div>
+    </section>
+
+    <!-- 10 SUBMIT -->
+    <section id="submit">
+      <p class="eyebrow">10 — Submit</p>
+      <h2>Volume 1, Number 1 is open.</h2>
+
+      <div class="panel">
+        <h3>Send a manuscript</h3>
+        <p>One PDF, any format, to the editorial office. You will get an acknowledgement within two working days and a screening decision within ten.</p>
+        <div class="btn-row">
+          <a class="btn btn-solid" href="mailto:submissions@prismjournal.org">submissions@prismjournal.org</a>
+          <a class="btn btn-ghost" href="#authors">Read the requirements</a>
+        </div>
+
+        <ul class="checklist">
+          <li>Manuscript as a single PDF, with figures placed in the text</li>
+          <li>Data deposited, with the DOI or accession stated in the manuscript</li>
+          <li>Analysis code or workbook deposited, with a licence</li>
+          <li>Mentor contribution statement, naming every contributor and what they did</li>
+          <li>Ethics approval reference, if the study involved people or animals</li>
+          <li>AI use disclosure, if any tool was used</li>
+          <li>A limitations paragraph in the discussion</li>
+        </ul>
+      </div>
+
+      <div class="prose" style="margin-top: 2rem;">
+        <p><strong>Reviewing for PRISM.</strong> Any student can apply to join the Reviewer Corps, including students who have not published. Training takes about two hours and covers how to read a methods section, how to write a report that is useful rather than harsh, and what the four criteria mean in practice. Write to <a href="mailto:reviewers@prismjournal.org">reviewers@prismjournal.org</a>.</p>
+        <p><strong>For teachers and researchers.</strong> The faculty board is what makes this journal's decisions worth anything. Serving means reviewing roughly three to five manuscripts a year and signing the decision letters. Write to <a href="mailto:board@prismjournal.org">board@prismjournal.org</a>.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ============================ FOOTER ============================ -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-col">
+      <p class="foot-mark">PRISM</p>
+      <p>A multidisciplinary journal of secondary-school research. Published by <span class="tbd">[host institution]</span>.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Journal</h4>
+      <ul>
+        <li><a href="#about">About PRISM</a></li>
+        <li><a href="#scope">Aims &amp; scope</a></li>
+        <li><a href="#editors">Editorial board</a></li>
+        <li><a href="#issues">Issues</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4>Authors &amp; reviewers</h4>
+      <ul>
+        <li><a href="#authors">Submission requirements</a></li>
+        <li><a href="#types">Article types</a></li>
+        <li><a href="#review">Peer review process</a></li>
+        <li><a href="#policies">Ethics &amp; integrity</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:submissions@prismjournal.org">submissions@prismjournal.org</a></li>
+        <li><a href="mailto:reviewers@prismjournal.org">reviewers@prismjournal.org</a></li>
+        <li><a href="mailto:board@prismjournal.org">board@prismjournal.org</a></li>
+        <li><a href="mailto:editor@prismjournal.org">editor@prismjournal.org</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-legal">
+    <span>ISSN <span class="tbd">0000-0000</span></span>
+    <span>All content CC BY 4.0</span>
+    <span>Peer review records published with every article</span>
+    <span>No fees to authors</span>
+    <span>Indexing applications follow the first complete volume</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- contents rail: mark the section being read ---------- */
+  var links = Array.prototype.slice.call(document.querySelectorAll(".rail-link"));
+  var sections = links
+    .map(function (a) { return document.querySelector(a.getAttribute("href")); })
+    .filter(Boolean);
+
+  if ("IntersectionObserver" in window && sections.length) {
+    var visible = new Map();
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { visible.set(e.target.id, e.intersectionRatio); });
+      var best = null, bestR = 0;
+      visible.forEach(function (r, id) { if (r > bestR) { bestR = r; best = id; } });
+      if (!best) return;
+      links.forEach(function (a) {
+        a.setAttribute("aria-current", a.getAttribute("href") === "#" + best ? "true" : "false");
+      });
+    }, { rootMargin: "-12% 0px -55% 0px", threshold: [0, 0.15, 0.35, 0.6, 1] });
+    sections.forEach(function (s) { obs.observe(s); });
+  }
+
+  /* =================================================================
+     COVER — a beam of white light dispersed by a prism.
+     Geometry is real: Snell's law at both faces, with the refractive
+     index given by Cauchy's equation n(λ) = A + B/λ².
+     ================================================================= */
+
+  var canvas = document.getElementById("scene");
+  if (!canvas || !canvas.getContext) return;
+  var ctx = canvas.getContext("2d");
+
+  var LO = 400, HI = 700, N_RAYS = 84;
+  var CAUCHY_A = 1.470, CAUCHY_B = 24000;   // n = 1.62 at 400 nm, 1.52 at 700 nm
+  var PRISM_ROT = 19 * Math.PI / 180;       // sets 49° incidence — below TIR for all λ
+  var SCENE_ROT = -43.8 * Math.PI / 180;    // lays the fan's mean axis horizontal across the cover
+  var W = 0, H = 0, narrow = false;
+
+  function nOf(lam) { return CAUCHY_A + CAUCHY_B / (lam * lam); }
+
+  /* CIE-ish visible spectrum approximation */
+  function rgbOf(lam) {
+    var r = 0, g = 0, b = 0;
+    if (lam < 440)      { r = -(lam - 440) / 60; b = 1; }
+    else if (lam < 490) { g = (lam - 440) / 50;  b = 1; }
+    else if (lam < 510) { g = 1; b = -(lam - 510) / 20; }
+    else if (lam < 580) { r = (lam - 510) / 70; g = 1; }
+    else if (lam < 645) { r = 1; g = -(lam - 645) / 65; }
+    else                { r = 1; }
+    var f = 1;
+    if (lam < 420)      f = 0.3 + 0.7 * (lam - 380) / 40;
+    else if (lam > 645) f = 0.3 + 0.7 * (700 - lam) / 55;
+    var gam = function (c) { return Math.round(255 * Math.pow(Math.max(0, Math.min(1, c * f)), 0.8)); };
+    return [gam(r), gam(g), gam(b)];
+  }
+
+  function norm(v) { var l = Math.hypot(v[0], v[1]); return [v[0] / l, v[1] / l]; }
+  function rot(p, o, a) {
+    var c = Math.cos(a), s = Math.sin(a), x = p[0] - o[0], y = p[1] - o[1];
+    return [o[0] + x * c - y * s, o[1] + x * s + y * c];
+  }
+
+  /* N must point into the medium the ray comes from. Returns null on TIR. */
+  function refract(I, N, eta) {
+    var cosi = -(I[0] * N[0] + I[1] * N[1]);
+    var k = 1 - eta * eta * (1 - cosi * cosi);
+    if (k < 0) return null;
+    var c = eta * cosi - Math.sqrt(k);
+    return norm([eta * I[0] + c * N[0], eta * I[1] + c * N[1]]);
+  }
+
+  function hitSegment(P, d, A, B) {
+    var ex = B[0] - A[0], ey = B[1] - A[1];
+    var den = d[0] * ey - d[1] * ex;
+    if (Math.abs(den) < 1e-9) return null;
+    var t = ((A[0] - P[0]) * ey - (A[1] - P[1]) * ex) / den;
+    var u = ((A[0] - P[0]) * d[1] - (A[1] - P[1]) * d[0]) / den;
+    if (t <= 1e-6 || u < -1e-4 || u > 1 + 1e-4) return null;
+    return [P[0] + d[0] * t, P[1] + d[1] * t];
+  }
+
+  var geom = null;
+
+  function build() {
+    var cx = narrow ? W * 0.26 : W * 0.34;
+    var cy = narrow ? H * 0.74 : H * 0.66;
+    var s  = narrow ? Math.min(W * 0.30, 100) : Math.min(H * 0.32, 150);
+    var h  = s * Math.sqrt(3) / 2;
+    var C  = [cx, cy];
+
+    var T  = rot([cx, cy - 2 * h / 3], C, PRISM_ROT);
+    var BL = rot([cx - s / 2, cy + h / 3], C, PRISM_ROT);
+    var BR = rot([cx + s / 2, cy + h / 3], C, PRISM_ROT);
+
+    var nL = norm([-(BL[1] - T[1]), BL[0] - T[0]]);
+    if (nL[0] > 0) nL = [-nL[0], -nL[1]];              // outward: left
+    var nR = norm([-(BR[1] - T[1]), BR[0] - T[0]]);
+    if (nR[0] < 0) nR = [-nR[0], -nR[1]];              // outward: right
+
+    var P0 = [T[0] + (BL[0] - T[0]) * 0.5, T[1] + (BL[1] - T[1]) * 0.5];
+    var I  = [1, 0];
+    var far = Math.hypot(W, H) * 1.4;
+    var rays = [];
+
+    for (var i = 0; i < N_RAYS; i++) {
+      var f = i / (N_RAYS - 1);
+      var lam = LO + (HI - LO) * f;
+      var n = nOf(lam);
+      var t1 = refract(I, nL, 1 / n);
+      if (!t1) continue;
+      var P1 = hitSegment(P0, t1, T, BR);
+      if (!P1) continue;
+      var t2 = refract(t1, [-nR[0], -nR[1]], n);
+      if (!t2) continue;
+      rays.push({ lam: lam, c: rgbOf(lam), P1: P1, end: [P1[0] + t2[0] * far, P1[1] + t2[1] * far] });
+    }
+
+    /* Refraction is rotation-equivariant, so turning every resulting point about the
+       prism centre is identical to having tilted the whole bench. Keeps the physics
+       exact while laying the fan out horizontally across the cover. */
+    var R = function (p) { return rot(p, C, SCENE_ROT); };
+    for (var k = 0; k < rays.length; k++) {
+      rays[k].P1 = R(rays[k].P1);
+      rays[k].end = R(rays[k].end);
+    }
+
+    /* The entry beam is bounded, not ruled to the frame edge: it fades up out of
+       darkness a little before the glass. Keeps it clear of the cover type. */
+    var beamLen = Math.min(W, H) * 0.42;
+
+    geom = {
+      T: R(T), BL: R(BL), BR: R(BR),
+      P0: R(P0),
+      entry: R([P0[0] - beamLen, P0[1]]),
+      rays: rays
+    };
+  }
+
+  function lerp(a, b, t) { return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; }
+  function ease(t) { t = Math.max(0, Math.min(1, t)); return 1 - Math.pow(1 - t, 3); }
+
+  function draw(p, drift) {
+    ctx.clearRect(0, 0, W, H);
+    if (!geom) return;
+
+    var g = geom;
+    var pIn  = ease(p / 0.32);
+    var pMid = ease((p - 0.24) / 0.30);
+    var pOut = (p - 0.46) / 0.54;
+
+    ctx.lineCap = "round";
+    ctx.globalCompositeOperation = "lighter";
+
+    /* incoming white beam — head travels toward the glass, tail fades into the dark */
+    if (pIn > 0) {
+      var head = lerp(g.entry, g.P0, pIn);
+      var beam = function (peak) {
+        var gr = ctx.createLinearGradient(g.entry[0], g.entry[1], g.P0[0], g.P0[1]);
+        gr.addColorStop(0, "rgba(255,253,250,0)");
+        gr.addColorStop(0.55, "rgba(255,253,250," + (peak * 0.5).toFixed(3) + ")");
+        gr.addColorStop(1, "rgba(255,253,250," + peak.toFixed(3) + ")");
+        return gr;
+      };
+      ctx.strokeStyle = beam(0.14);
+      ctx.lineWidth = 7;
+      ctx.beginPath(); ctx.moveTo(g.entry[0], g.entry[1]); ctx.lineTo(head[0], head[1]); ctx.stroke();
+      ctx.strokeStyle = beam(0.92);
+      ctx.lineWidth = 1.6;
+      ctx.beginPath(); ctx.moveTo(g.entry[0], g.entry[1]); ctx.lineTo(head[0], head[1]); ctx.stroke();
+    }
+
+    /* inside the glass — the separation begins here */
+    if (pMid > 0) {
+      ctx.lineWidth = 1.4;
+      for (var i = 0; i < g.rays.length; i++) {
+        var r = g.rays[i], e = lerp(g.P0, r.P1, pMid);
+        ctx.strokeStyle = "rgba(" + r.c[0] + "," + r.c[1] + "," + r.c[2] + ",0.10)";
+        ctx.beginPath(); ctx.moveTo(g.P0[0], g.P0[1]); ctx.lineTo(e[0], e[1]); ctx.stroke();
+      }
+    }
+
+    /* the dispersion fan */
+    if (pOut > 0) {
+      for (var j = 0; j < g.rays.length; j++) {
+        var ray = g.rays[j];
+        var f = j / (g.rays.length - 1);
+        var lp = ease((pOut - f * 0.28) / 0.72);
+        if (lp <= 0) continue;
+        var tip = lerp(ray.P1, ray.end, lp);
+        var sh = 1 + 0.07 * Math.sin(drift * 0.0009 + f * 5.2);
+        var c = ray.c;
+
+        ctx.strokeStyle = "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + (0.05 * sh).toFixed(3) + ")";
+        ctx.lineWidth = 9;
+        ctx.beginPath(); ctx.moveTo(ray.P1[0], ray.P1[1]); ctx.lineTo(tip[0], tip[1]); ctx.stroke();
+
+        ctx.strokeStyle = "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + (0.30 * sh).toFixed(3) + ")";
+        ctx.lineWidth = 2.2;
+        ctx.beginPath(); ctx.moveTo(ray.P1[0], ray.P1[1]); ctx.lineTo(tip[0], tip[1]); ctx.stroke();
+      }
+    }
+
+    /* the prism itself, drawn last so its edges stay crisp */
+    ctx.globalCompositeOperation = "source-over";
+    ctx.beginPath();
+    ctx.moveTo(g.T[0], g.T[1]); ctx.lineTo(g.BR[0], g.BR[1]); ctx.lineTo(g.BL[0], g.BL[1]); ctx.closePath();
+    ctx.fillStyle = "rgba(255,255,255,0.028)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255,250,245," + (0.16 + 0.30 * ease(p / 0.4)).toFixed(3) + ")";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  function resize() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var rect = canvas.getBoundingClientRect();
+    W = Math.max(1, Math.round(rect.width));
+    H = Math.max(1, Math.round(rect.height));
+    narrow = W < 720;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    build();
+  }
+
+  var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var start = null, done = false;
+
+  function frame(ts) {
+    if (start === null) start = ts;
+    var el = ts - start;
+    var p = Math.min(1, el / 2200);
+    draw(p, el);
+    if (p < 1) { requestAnimationFrame(frame); }
+    else if (!done) { done = true; ambient(ts); }
+  }
+
+  /* the shimmer only costs frames while the cover is actually on screen */
+  var onScreen = true;
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (es) { onScreen = es[0].isIntersecting; })
+      .observe(document.querySelector(".cover"));
+  }
+
+  function ambient(t0) {
+    var last = t0;
+    (function loop(ts) {
+      if (onScreen && !document.hidden && ts - last > 60) { draw(1, ts); last = ts; }
+      requestAnimationFrame(loop);
+    })(t0);
+  }
+
+  resize();
+  if (reduced) { draw(1, 0); }
+  else { requestAnimationFrame(frame); }
+
+  var rt;
+  window.addEventListener("resize", function () {
+    clearTimeout(rt);
+    rt = setTimeout(function () { resize(); if (reduced || done) draw(1, performance.now()); }, 120);
+  });
+})();
+</script>
