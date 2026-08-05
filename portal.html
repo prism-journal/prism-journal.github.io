@@ -4,173 +4,152 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Editorial portal — PRISM</title>
-<meta name="description" content="Submit a manuscript to PRISM and track its progress through screening, review and decision.">
+<meta name="description" content="Submit a manuscript to PRISM and track it through screening, review and decision.">
 <meta name="color-scheme" content="light dark">
 <meta name="robots" content="noindex">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230B090A'/%3E%3Cpath d='M16 6 L27 25 L5 25 Z' fill='none' stroke='%23F6F2F3' stroke-width='1.6'/%3E%3Cpath d='M2 15 L11.5 15' stroke='%23FFFDFA' stroke-width='1.6'/%3E%3Cpath d='M20 20 L31 22' stroke='%23C4213D' stroke-width='1.4'/%3E%3Cpath d='M20 20 L31 19' stroke='%23D89A16' stroke-width='1.4'/%3E%3Cpath d='M20 20 L31 16' stroke='%232E9B4F' stroke-width='1.4'/%3E%3Cpath d='M20 20 L31 13' stroke='%230E93B8' stroke-width='1.4'/%3E%3C/svg%3E">
 
 <style>
   :root {
-    --issue: #C4213D; --issue-ink: #A3132E; --issue-wash: #FBEDEF;
-    --paper: #FBFAF9; --surface: #FFFFFF;
-    --ink: #1A1416; --ink-2: #574D52; --ink-3: #8A7E83;
-    --rule: #E5DFE0; --rule-2: #F1ECED; --plate: #0B090A;
-    --ok: #2E7D4F; --ok-wash: #EAF5EE;
-    --warn: #9A6B10; --warn-wash: #FBF2DF;
-    --serif: "Hoefler Text", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-    --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, system-ui, sans-serif;
-    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, "Cascadia Mono", Consolas, monospace;
+    --issue:#C4213D; --issue-ink:#A3132E; --issue-wash:#FBEDEF;
+    --paper:#FBFAF9; --surface:#FFFFFF;
+    --ink:#1A1416; --ink-2:#574D52; --ink-3:#8A7E83;
+    --rule:#E5DFE0; --rule-2:#F1ECED; --plate:#0B090A;
+    --ok:#2E7D4F; --ok-wash:#EAF5EE;
+    --warn:#9A6B10; --warn-wash:#FBF2DF;
+    --serif:"Hoefler Text","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,system-ui,sans-serif;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,"Cascadia Mono",Consolas,monospace;
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --issue: #FF5F73; --issue-ink: #FF7385; --issue-wash: #2A1418;
-      --paper: #0F0C0E; --surface: #171316;
-      --ink: #F2ECEE; --ink-2: #A79BA0; --ink-3: #7B6F74;
-      --rule: #2B2428; --rule-2: #201A1D;
-      --ok: #6BC48D; --ok-wash: #14251A;
-      --warn: #E0B053; --warn-wash: #2A2110;
-    }
-  }
+  @media (prefers-color-scheme: dark) { :root {
+    --issue:#FF5F73; --issue-ink:#FF7385; --issue-wash:#2A1418;
+    --paper:#0F0C0E; --surface:#171316;
+    --ink:#F2ECEE; --ink-2:#A79BA0; --ink-3:#7B6F74;
+    --rule:#2B2428; --rule-2:#201A1D;
+    --ok:#6BC48D; --ok-wash:#14251A; --warn:#E0B053; --warn-wash:#2A2110; } }
   :root[data-theme="dark"] {
-    --issue: #FF5F73; --issue-ink: #FF7385; --issue-wash: #2A1418;
-    --paper: #0F0C0E; --surface: #171316;
-    --ink: #F2ECEE; --ink-2: #A79BA0; --ink-3: #7B6F74;
-    --rule: #2B2428; --rule-2: #201A1D;
-    --ok: #6BC48D; --ok-wash: #14251A;
-    --warn: #E0B053; --warn-wash: #2A2110;
-  }
+    --issue:#FF5F73; --issue-ink:#FF7385; --issue-wash:#2A1418;
+    --paper:#0F0C0E; --surface:#171316;
+    --ink:#F2ECEE; --ink-2:#A79BA0; --ink-3:#7B6F74;
+    --rule:#2B2428; --rule-2:#201A1D;
+    --ok:#6BC48D; --ok-wash:#14251A; --warn:#E0B053; --warn-wash:#2A2110; }
 
-  *, *::before, *::after { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--paper); color: var(--ink);
-    font-family: var(--sans); font-size: 16px; line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-  a { color: var(--issue-ink); }
-  :focus-visible { outline: 2px solid var(--issue); outline-offset: 2px; border-radius: 2px; }
+  *,*::before,*::after { box-sizing:border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans);
+         font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  a { color:var(--issue-ink); }
+  :focus-visible { outline:2px solid var(--issue); outline-offset:2px; border-radius:2px; }
 
-  /* ---------- chrome ---------- */
-  .bar {
-    background: var(--plate); color: #F6F2F3;
-    border-bottom: 2px solid var(--issue);
-  }
-  .bar-in {
-    max-width: 60rem; margin: 0 auto; padding: 0.875rem 1.25rem;
-    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
-  }
-  .mark {
-    font-family: var(--serif); font-size: 1.375rem; letter-spacing: 0.14em;
-    text-decoration: none; color: inherit;
-  }
-  .mark-sub {
-    font-family: var(--mono); font-size: 0.625rem; letter-spacing: 0.1em;
-    text-transform: uppercase; color: rgba(246,242,243,0.5);
-    padding-left: 0.875rem; margin-left: 0.25rem; border-left: 1px solid rgba(246,242,243,0.25);
-  }
-  .bar-right { margin-left: auto; display: flex; align-items: center; gap: 0.875rem; }
-  .whoami { font-family: var(--mono); font-size: 0.6875rem; color: rgba(246,242,243,0.65); text-align: right; }
-  .whoami b { color: #F6F2F3; font-weight: 600; }
+  .bar { background:var(--plate); color:#F6F2F3; }
+  .bar-in { max-width:64rem; margin:0 auto; padding:0.875rem 1.25rem;
+            display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+  .mark { font-family:var(--serif); font-size:1.375rem; letter-spacing:0.14em;
+          text-decoration:none; color:inherit; }
+  .mark-sub { font-family:var(--mono); font-size:0.625rem; letter-spacing:0.1em;
+              text-transform:uppercase; color:rgba(246,242,243,0.5);
+              padding-left:0.875rem; border-left:1px solid rgba(246,242,243,0.25); }
+  .bar-right { margin-left:auto; display:flex; align-items:center; gap:0.875rem; }
+  .whoami { font-family:var(--mono); font-size:0.6875rem;
+            color:rgba(246,242,243,0.65); text-align:right; line-height:1.5; }
+  .whoami b { color:#F6F2F3; font-weight:600; }
 
-  .wrap { max-width: 60rem; margin: 0 auto; padding: 2rem 1.25rem 5rem; }
+  nav.tabs-main { background:var(--plate); border-bottom:2px solid var(--issue); }
+  nav.tabs-main .in { max-width:64rem; margin:0 auto; padding:0 1.25rem;
+                      display:flex; overflow-x:auto; scrollbar-width:none; }
+  nav.tabs-main .in::-webkit-scrollbar { display:none; }
+  .navtab { font:inherit; font-size:0.8125rem; font-weight:600; background:none; border:none;
+            color:rgba(246,242,243,0.55); padding:0.75rem 1rem; cursor:pointer;
+            border-bottom:2px solid transparent; margin-bottom:-2px; white-space:nowrap; }
+  .navtab[aria-selected="true"] { color:#F6F2F3; border-bottom-color:var(--issue); }
 
-  /* ---------- type ---------- */
-  h1 { font-family: var(--serif); font-weight: 400; font-size: 2rem; line-height: 1.15; margin: 0 0 0.5rem; }
-  h2 { font-family: var(--serif); font-weight: 400; font-size: 1.5rem; margin: 0 0 1rem; }
-  h3 { font-size: 0.9375rem; font-weight: 600; margin: 0 0 0.375rem; }
-  .eyebrow {
-    font-family: var(--mono); font-size: 0.6875rem; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--ink-3); margin: 0 0 0.75rem;
-  }
-  .lede { color: var(--ink-2); max-width: 46ch; margin: 0 0 1.75rem; }
+  .wrap { max-width:64rem; margin:0 auto; padding:2rem 1.25rem 5rem; }
 
-  /* ---------- cards & forms ---------- */
-  .card {
-    background: var(--surface); border: 1px solid var(--rule);
-    border-radius: 3px; padding: 1.75rem;
-  }
-  .card + .card { margin-top: 1.25rem; }
+  h1 { font-family:var(--serif); font-weight:400; font-size:1.875rem; line-height:1.15; margin:0 0 0.5rem; }
+  h2 { font-family:var(--serif); font-weight:400; font-size:1.375rem; margin:0 0 1rem; }
+  .eyebrow { font-family:var(--mono); font-size:0.6875rem; letter-spacing:0.12em;
+             text-transform:uppercase; color:var(--ink-3); margin:0 0 0.75rem; }
+  .lede { color:var(--ink-2); max-width:52ch; margin:0 0 1.75rem; }
 
-  .field { margin-bottom: 1.125rem; }
-  .field label { display: block; font-size: 0.8125rem; font-weight: 600; margin-bottom: 0.3125rem; }
-  .field .hint { font-size: 0.75rem; color: var(--ink-3); margin: 0 0 0.4375rem; line-height: 1.5; }
-  .req-tag {
-    font-family: var(--mono); font-size: 0.5625rem; letter-spacing: 0.09em;
-    text-transform: uppercase; color: var(--issue-ink); border: 1px solid var(--issue);
-    padding: 0.125rem 0.375rem; border-radius: 2px; margin-left: 0.4375rem; vertical-align: 1px;
-  }
-  input[type=text], input[type=email], input[type=password], input[type=url], select, textarea {
-    width: 100%; font: inherit; font-size: 0.9375rem;
-    padding: 0.5625rem 0.75rem; color: var(--ink);
-    background: var(--paper); border: 1px solid var(--rule); border-radius: 2px;
-  }
-  textarea { resize: vertical; min-height: 5rem; line-height: 1.55; }
-  input:focus, select:focus, textarea:focus { border-color: var(--issue); outline: none; }
-  input[type=file] { font-size: 0.8125rem; }
-  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
-  @media (max-width: 34rem) { .row { grid-template-columns: 1fr; } }
+  .card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:1.75rem; }
+  .card + .card { margin-top:1.25rem; }
 
-  .btn {
-    font: inherit; font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.01em;
-    padding: 0.625rem 1.25rem; border-radius: 2px; border: 1px solid transparent;
-    cursor: pointer; text-decoration: none; display: inline-block;
-  }
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .btn-solid { background: var(--issue); color: #fff; }
-  .btn-solid:hover:not(:disabled) { background: var(--ink); }
-  .btn-ghost { background: transparent; border-color: var(--rule); color: var(--ink); }
-  .btn-ghost:hover:not(:disabled) { border-color: var(--ink); }
-  .btn-sm { font-size: 0.75rem; padding: 0.375rem 0.75rem; }
-  .btn-row { display: flex; gap: 0.625rem; flex-wrap: wrap; align-items: center; }
+  .field { margin-bottom:1.125rem; }
+  .field label { display:block; font-size:0.8125rem; font-weight:600; margin-bottom:0.3125rem; }
+  .field .hint { font-size:0.75rem; color:var(--ink-3); margin:0 0 0.4375rem; line-height:1.5; }
+  .req-tag { font-family:var(--mono); font-size:0.5625rem; letter-spacing:0.09em;
+             text-transform:uppercase; color:var(--issue-ink); border:1px solid var(--issue);
+             padding:0.125rem 0.375rem; border-radius:2px; margin-left:0.4375rem; }
+  input[type=text],input[type=email],input[type=password],input[type=date],select,textarea {
+    width:100%; font:inherit; font-size:0.9375rem; padding:0.5625rem 0.75rem; color:var(--ink);
+    background:var(--paper); border:1px solid var(--rule); border-radius:2px; }
+  textarea { resize:vertical; min-height:4.5rem; line-height:1.55; }
+  input:focus,select:focus,textarea:focus { border-color:var(--issue); outline:none; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:0 1rem; }
+  @media (max-width:34rem){ .row{grid-template-columns:1fr;} }
 
-  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--rule); margin-bottom: 1.5rem; }
-  .tab {
-    font: inherit; font-size: 0.875rem; font-weight: 600; background: none; border: none;
-    color: var(--ink-3); padding: 0.625rem 1rem; cursor: pointer;
-    border-bottom: 2px solid transparent; margin-bottom: -1px;
-  }
-  .tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--issue); }
+  .btn { font:inherit; font-size:0.8125rem; font-weight:600; padding:0.625rem 1.25rem;
+         border-radius:2px; border:1px solid transparent; cursor:pointer;
+         text-decoration:none; display:inline-block; }
+  .btn:disabled { opacity:0.5; cursor:not-allowed; }
+  .btn-solid { background:var(--issue); color:#fff; }
+  .btn-solid:hover:not(:disabled) { background:var(--ink); }
+  .btn-ghost { background:transparent; border-color:var(--rule); color:var(--ink); }
+  .btn-ghost:hover:not(:disabled) { border-color:var(--ink); }
+  .btn-sm { font-size:0.75rem; padding:0.375rem 0.75rem; }
+  .btn-row { display:flex; gap:0.625rem; flex-wrap:wrap; align-items:center; }
 
-  /* ---------- status pills ---------- */
-  .pill {
-    font-family: var(--mono); font-size: 0.625rem; letter-spacing: 0.07em;
-    text-transform: uppercase; padding: 0.1875rem 0.5rem; border-radius: 2px;
-    border: 1px solid; white-space: nowrap; display: inline-block;
-  }
-  .p-submitted   { color: var(--ink-2); border-color: var(--rule); background: var(--rule-2); }
-  .p-screening   { color: var(--warn); border-color: var(--warn); background: var(--warn-wash); }
-  .p-under_review{ color: var(--warn); border-color: var(--warn); background: var(--warn-wash); }
-  .p-revision    { color: var(--issue-ink); border-color: var(--issue); background: var(--issue-wash); }
-  .p-accepted    { color: var(--ok); border-color: var(--ok); background: var(--ok-wash); }
-  .p-declined    { color: var(--ink-3); border-color: var(--rule); background: transparent; }
-  .p-withdrawn   { color: var(--ink-3); border-color: var(--rule); background: transparent; }
+  .tabs { display:flex; border-bottom:1px solid var(--rule); margin-bottom:1.5rem; overflow-x:auto; }
+  .tab { font:inherit; font-size:0.8125rem; font-weight:600; background:none; border:none;
+         color:var(--ink-3); padding:0.5rem 0.875rem; cursor:pointer;
+         border-bottom:2px solid transparent; margin-bottom:-1px; white-space:nowrap; }
+  .tab[aria-selected="true"] { color:var(--ink); border-bottom-color:var(--issue); }
 
-  /* ---------- manuscript list ---------- */
-  .ms-list { list-style: none; margin: 0; padding: 0; }
-  .ms-list li { border-top: 1px solid var(--rule); padding: 1rem 0; }
-  .ms-list li:last-child { border-bottom: 1px solid var(--rule); }
-  .ms-head { display: flex; gap: 0.875rem; align-items: baseline; flex-wrap: wrap; }
-  .ms-no { font-family: var(--mono); font-size: 0.75rem; color: var(--ink-3); font-variant-numeric: tabular-nums; }
-  .ms-title { font-weight: 600; font-size: 0.9375rem; flex: 1; min-width: 12rem; }
-  .ms-meta {
-    font-family: var(--mono); font-size: 0.6875rem; color: var(--ink-3);
-    margin-top: 0.375rem; display: flex; gap: 0.875rem; flex-wrap: wrap;
-  }
-  .ms-body { margin-top: 0.875rem; padding-top: 0.875rem; border-top: 1px dashed var(--rule); font-size: 0.875rem; color: var(--ink-2); }
-  .ms-body dl { display: grid; grid-template-columns: minmax(0,10rem) 1fr; gap: 0.4375rem 1rem; margin: 0 0 1rem; }
-  .ms-body dt { font-size: 0.75rem; color: var(--ink-3); font-family: var(--mono); }
-  .ms-body dd { margin: 0; font-size: 0.875rem; }
+  .pill { font-family:var(--mono); font-size:0.625rem; letter-spacing:0.07em;
+          text-transform:uppercase; padding:0.1875rem 0.5rem; border-radius:2px;
+          border:1px solid; white-space:nowrap; display:inline-block; }
+  .p-submitted{color:var(--ink-2);border-color:var(--rule);background:var(--rule-2);}
+  .p-screening,.p-under_review,.p-invited,.p-accepted_a{color:var(--warn);border-color:var(--warn);background:var(--warn-wash);}
+  .p-revision{color:var(--issue-ink);border-color:var(--issue);background:var(--issue-wash);}
+  .p-accepted,.p-submitted_r{color:var(--ok);border-color:var(--ok);background:var(--ok-wash);}
+  .p-declined,.p-withdrawn,.p-declined_a{color:var(--ink-3);border-color:var(--rule);background:transparent;}
+  .role-pill { font-family:var(--mono); font-size:0.625rem; text-transform:uppercase;
+               letter-spacing:0.06em; color:var(--ink-2); }
 
-  .note {
-    font-size: 0.8125rem; padding: 0.75rem 0.875rem; border-radius: 2px;
-    border: 1px solid; margin-bottom: 1.25rem; line-height: 1.55;
-  }
-  .note-err { color: var(--issue-ink); border-color: var(--issue); background: var(--issue-wash); }
-  .note-ok  { color: var(--ok); border-color: var(--ok); background: var(--ok-wash); }
-  .note-info{ color: var(--ink-2); border-color: var(--rule); background: var(--rule-2); }
+  .ms-list { list-style:none; margin:0; padding:0; }
+  .ms-list > li { border-top:1px solid var(--rule); padding:1.125rem 0; }
+  .ms-list > li:last-child { border-bottom:1px solid var(--rule); }
+  .ms-head { display:flex; gap:0.875rem; align-items:baseline; flex-wrap:wrap; }
+  .ms-no { font-family:var(--mono); font-size:0.75rem; color:var(--ink-3); font-variant-numeric:tabular-nums; }
+  .ms-title { font-weight:600; font-size:0.9375rem; flex:1; min-width:12rem; }
+  .ms-meta { font-family:var(--mono); font-size:0.6875rem; color:var(--ink-3);
+             margin-top:0.375rem; display:flex; gap:0.875rem; flex-wrap:wrap; }
+  .panel { margin-top:1rem; padding-top:1rem; border-top:1px dashed var(--rule);
+           font-size:0.875rem; color:var(--ink-2); }
+  .panel dl { display:grid; grid-template-columns:minmax(0,9rem) 1fr; gap:0.4375rem 1rem; margin:0 0 1rem; }
+  .panel dt { font-size:0.75rem; color:var(--ink-3); font-family:var(--mono); }
+  .panel dd { margin:0; font-size:0.875rem; }
+  .sub { border:1px solid var(--rule); border-radius:3px; padding:1rem; margin:0.75rem 0; background:var(--paper); }
+  .sub h4 { margin:0 0 0.5rem; font-size:0.6875rem; font-weight:700; font-family:var(--mono);
+            letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-3); }
+  .scores { display:flex; gap:1rem; flex-wrap:wrap; font-family:var(--mono); font-size:0.75rem; }
+  .scores b { color:var(--ink); }
 
-  .muted { color: var(--ink-3); font-size: 0.875rem; }
-  .hidden { display: none !important; }
-  .spinner { font-family: var(--mono); font-size: 0.75rem; color: var(--ink-3); }
+  .note { font-size:0.8125rem; padding:0.75rem 0.875rem; border-radius:2px;
+          border:1px solid; margin-bottom:1.25rem; line-height:1.55; }
+  .note-err{color:var(--issue-ink);border-color:var(--issue);background:var(--issue-wash);}
+  .note-ok{color:var(--ok);border-color:var(--ok);background:var(--ok-wash);}
+
+  table.people { width:100%; border-collapse:collapse; font-size:0.875rem; }
+  table.people th { text-align:left; font-family:var(--mono); font-size:0.625rem;
+                    letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-3);
+                    font-weight:400; padding:0.625rem 0.75rem 0.625rem 0; border-bottom:1px solid var(--ink); }
+  table.people td { padding:0.75rem 0.75rem 0.75rem 0; border-bottom:1px solid var(--rule-2); vertical-align:middle; }
+  table.people select { font-size:0.8125rem; padding:0.3125rem 0.5rem; }
+  .tbl-wrap { overflow-x:auto; }
+
+  .muted { color:var(--ink-3); font-size:0.875rem; }
+  .hidden { display:none !important; }
+  .spinner { font-family:var(--mono); font-size:0.75rem; color:var(--ink-3); }
 </style>
 </head>
 <body>
@@ -181,38 +160,36 @@
     <span class="mark-sub">Editorial portal</span>
     <div class="bar-right">
       <div class="whoami hidden" id="whoami"></div>
-      <button class="btn btn-ghost btn-sm hidden" id="signout" style="border-color:rgba(246,242,243,.35);color:#F6F2F3">Sign out</button>
+      <button class="btn btn-ghost btn-sm hidden" id="signout"
+              style="border-color:rgba(246,242,243,.35);color:#F6F2F3">Sign out</button>
     </div>
   </div>
 </div>
 
-<div class="wrap">
+<nav class="tabs-main hidden" id="nav" aria-label="Sections"><div class="in" id="navin"></div></nav>
 
-  <!-- unconfigured -------------------------------------------------------- -->
+<div class="wrap">
   <div id="v-setup" class="hidden">
     <p class="eyebrow">Setup required</p>
     <h1>The portal isn't connected yet.</h1>
-    <p class="lede">Paste your Supabase project URL and anon key into the <code>CONFIG</code>
-      block at the top of <code>portal.html</code>, then commit and push.</p>
+    <p class="lede">Paste your Supabase project URL and publishable key into the
+      <code>CONFIG</code> block in <code>portal.html</code>.</p>
   </div>
 
-  <!-- loading ------------------------------------------------------------- -->
   <div id="v-load"><p class="spinner">Loading…</p></div>
 
-  <!-- signed out ---------------------------------------------------------- -->
+  <!-- ============================ sign in ============================ -->
   <div id="v-auth" class="hidden">
-    <p class="eyebrow">Authors &amp; editors</p>
+    <p class="eyebrow">Authors, reviewers &amp; editors</p>
     <h1>Sign in to PRISM</h1>
-    <p class="lede">Submitting is free. Create an account to send a manuscript and to follow
-      it through screening, review and decision.</p>
-
+    <p class="lede">Submitting is free. Create an account to send a manuscript, to review for
+      the journal, or to reach the editorial office.</p>
     <div class="card" style="max-width:30rem">
       <div class="tabs" role="tablist">
         <button class="tab" id="tab-in" role="tab" aria-selected="true">Sign in</button>
         <button class="tab" id="tab-up" role="tab" aria-selected="false">Create account</button>
       </div>
       <div id="auth-note"></div>
-
       <form id="form-in">
         <div class="field"><label for="in-email">Email</label>
           <input type="email" id="in-email" autocomplete="email" required></div>
@@ -223,7 +200,6 @@
           <button class="btn btn-ghost btn-sm" type="button" id="reset-pw">Forgot password</button>
         </div>
       </form>
-
       <form id="form-up" class="hidden">
         <div class="field"><label for="up-name">Full name</label>
           <input type="text" id="up-name" autocomplete="name" required></div>
@@ -248,28 +224,13 @@
     </div>
   </div>
 
-  <!-- author -------------------------------------------------------------- -->
-  <div id="v-author" class="hidden">
-    <div class="btn-row" style="justify-content:space-between;margin-bottom:1.5rem">
-      <div>
-        <p class="eyebrow" style="margin-bottom:0.25rem">Your submissions</p>
-        <h1 style="font-size:1.75rem">Manuscripts</h1>
-      </div>
-      <button class="btn btn-solid" id="new-ms">New submission</button>
-    </div>
-    <div id="author-note"></div>
-    <div id="ms-mine"></div>
-  </div>
-
-  <!-- submission form ----------------------------------------------------- -->
+  <!-- ============================ submit ============================ -->
   <div id="v-submit" class="hidden">
     <p class="eyebrow">New submission</p>
     <h1>Send a manuscript</h1>
-    <p class="lede">Formatting is not assessed. These fields are the substance PRISM
-      requires of every submission — a manuscript missing any of them is returned at screening.</p>
-
+    <p class="lede">Formatting is not assessed. These fields are the substance PRISM requires
+      of every submission — a manuscript missing any of them is returned at screening.</p>
     <div id="submit-note"></div>
-
     <form id="form-ms">
       <div class="card">
         <h2>The manuscript</h2>
@@ -280,25 +241,9 @@
           <textarea id="f-abstract" rows="6" minlength="40" maxlength="4000" required></textarea></div>
         <div class="row">
           <div class="field"><label for="f-section">Section <span class="req-tag">Required</span></label>
-            <select id="f-section" required>
-              <option value="">Choose…</option>
-              <option value="physics_astronomy">Physics &amp; Astronomy</option>
-              <option value="chemistry_materials">Chemistry &amp; Materials</option>
-              <option value="biology_health">Biology &amp; Health</option>
-              <option value="earth_environment">Earth &amp; Environment</option>
-              <option value="computation_math">Computation &amp; Mathematics</option>
-              <option value="quantitative_social">Quantitative Social Science</option>
-            </select></div>
+            <select id="f-section" required><option value="">Choose…</option></select></div>
           <div class="field"><label for="f-type">Article type <span class="req-tag">Required</span></label>
-            <select id="f-type" required>
-              <option value="">Choose…</option>
-              <option value="research_article">Research Article</option>
-              <option value="short_report">Short Report</option>
-              <option value="replication">Replication</option>
-              <option value="registered_report">Registered Report</option>
-              <option value="review">Review</option>
-              <option value="comment">Comment</option>
-            </select></div>
+            <select id="f-type" required><option value="">Choose…</option></select></div>
         </div>
         <div class="field"><label for="f-coauthors">Co-authors</label>
           <p class="hint">One per line: name, school. Leave blank if you are the sole author.</p>
@@ -307,11 +252,10 @@
           <p class="hint">A single PDF with figures placed in the text. Max 25 MB.</p>
           <input type="file" id="f-file" accept="application/pdf" required></div>
       </div>
-
       <div class="card">
         <h2>Integrity statements</h2>
         <div class="field"><label for="f-mentor">Mentor contribution <span class="req-tag">Required</span></label>
-          <p class="hint">Name every teacher, mentor, lab host or family member who contributed, and
+          <p class="hint">Name every teacher, mentor, lab host or family member who contributed and
             say exactly what they did. A well-mentored project is not worth less. An undisclosed
             one is not publishable.</p>
           <textarea id="f-mentor" rows="4" minlength="10" required></textarea></div>
@@ -335,34 +279,58 @@
           <p class="hint">What your results do not establish.</p>
           <textarea id="f-limits" rows="3" required></textarea></div>
       </div>
-
       <div class="btn-row" style="margin-top:1.25rem">
         <button class="btn btn-solid" type="submit" id="btn-send">Submit manuscript</button>
-        <button class="btn btn-ghost" type="button" id="cancel-ms">Cancel</button>
         <span class="spinner hidden" id="send-status"></span>
       </div>
     </form>
   </div>
 
-  <!-- editor -------------------------------------------------------------- -->
-  <div id="v-editor" class="hidden">
-    <p class="eyebrow">Editorial office</p>
-    <h1 style="font-size:1.75rem">Submission queue</h1>
-    <p class="lede" id="editor-lede"></p>
-    <div class="tabs" id="filter-tabs" role="tablist"></div>
-    <div id="editor-note"></div>
-    <div id="ms-all"></div>
+  <!-- ============================ my submissions ============================ -->
+  <div id="v-mine" class="hidden">
+    <p class="eyebrow">Your submissions</p>
+    <h1>Manuscripts</h1>
+    <div id="mine-note"></div>
+    <div id="mine-list"></div>
   </div>
 
+  <!-- ============================ my reviews ============================ -->
+  <div id="v-reviews" class="hidden">
+    <p class="eyebrow">Refereeing</p>
+    <h1>Your reviews</h1>
+    <p class="lede">Score each manuscript against the four published criteria. Write the report
+      you would want to receive: specific, and useful rather than harsh.</p>
+    <div id="rev-note"></div>
+    <div id="rev-list"></div>
+  </div>
+
+  <!-- ============================ queue ============================ -->
+  <div id="v-queue" class="hidden">
+    <p class="eyebrow">Editorial office</p>
+    <h1>Submission queue</h1>
+    <p class="lede" id="queue-lede"></p>
+    <div class="tabs" id="queue-filters" role="tablist"></div>
+    <div id="queue-note"></div>
+    <div id="queue-list"></div>
+  </div>
+
+  <!-- ============================ people ============================ -->
+  <div id="v-people" class="hidden">
+    <p class="eyebrow">Editorial office</p>
+    <h1>People</h1>
+    <p class="lede">Everyone who has registered. A role change takes effect the next time that
+      person loads the portal.</p>
+    <div id="people-note"></div>
+    <div class="card"><div class="tbl-wrap"><div id="people-list"></div></div></div>
+  </div>
 </div>
 
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 /* ===========================================================================
-   CONFIG — paste your two public values here.
-   Both are safe in client code: the anon key grants nothing on its own,
-   because every table is protected by row-level security in the database.
+   CONFIG — both values are public by design. The publishable key grants
+   nothing on its own: access is decided by row-level security in the database.
    =========================================================================== */
 const CONFIG = {
   url:     "https://pmlicwkwdeneosijrggu.supabase.co",
@@ -370,338 +338,554 @@ const CONFIG = {
 };
 /* ========================================================================= */
 
-const $  = (id) => document.getElementById(id);
+const $ = (id) => document.getElementById(id);
 const show = (id) => $(id).classList.remove("hidden");
 const hide = (id) => $(id).classList.add("hidden");
-const views = ["v-setup", "v-load", "v-auth", "v-author", "v-submit", "v-editor"];
-const only = (id) => { views.forEach(hide); show(id); };
-
+const VIEWS = ["v-setup","v-load","v-auth","v-submit","v-mine","v-reviews","v-queue","v-people"];
+const only = (id) => { VIEWS.forEach(hide); show(id); };
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g,
-  (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+  (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
 
 const SECTIONS = {
-  physics_astronomy: "Physics & Astronomy", chemistry_materials: "Chemistry & Materials",
-  biology_health: "Biology & Health", earth_environment: "Earth & Environment",
-  computation_math: "Computation & Mathematics", quantitative_social: "Quantitative Social Science",
-};
+  physics_astronomy:"Physics & Astronomy", chemistry_materials:"Chemistry & Materials",
+  biology_health:"Biology & Health", earth_environment:"Earth & Environment",
+  computation_math:"Computation & Mathematics", quantitative_social:"Quantitative Social Science" };
 const TYPES = {
-  research_article: "Research Article", short_report: "Short Report", replication: "Replication",
-  registered_report: "Registered Report", review: "Review", comment: "Comment",
-};
+  research_article:"Research Article", short_report:"Short Report", replication:"Replication",
+  registered_report:"Registered Report", review:"Review", comment:"Comment" };
 const STATUSES = {
-  submitted: "Submitted", screening: "Screening", under_review: "Under review",
-  revision: "Revision requested", accepted: "Accepted", declined: "Declined", withdrawn: "Withdrawn",
-};
-const EDITOR_ROLES = ["section_editor", "faculty_editor", "chief_editor"];
+  submitted:"Submitted", screening:"Screening", under_review:"Under review",
+  revision:"Revision requested", accepted:"Accepted", declined:"Declined", withdrawn:"Withdrawn" };
+const RECS = {
+  accept:"Accept", minor_revision:"Minor revision",
+  major_revision:"Major revision", decline:"Decline" };
+const ROLES = {
+  author:"Author", reviewer:"Reviewer", board_member:"Editorial board",
+  section_editor:"Section editor", faculty_editor:"Faculty editor",
+  deputy_editor:"Deputy editor", chief_editor:"Editor-in-chief" };
+const CRITERIA = [
+  ["sound","Sound","Methods and statistics support the claim, and nothing stronger."],
+  ["honest","Honest","States what was known before, and what the work does not show."],
+  ["checkable","Checkable","A reader with the deposited data and code could repeat the analysis."],
+  ["legible","Legible","A student in another section can follow the argument."]];
 
-// Every ISO 3166-1 country and territory, generated from Intl.DisplayNames so
-// the spellings are the standard English short names, not hand-typed.
-const COUNTRIES = ["Afghanistan", "Åland Islands", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", "Antarctica", "Antigua & Barbuda", "Argentina", "Armenia", "Aruba", "Ascension Island", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia & Herzegovina", "Botswana", "Bouvet Island", "Brazil", "British Indian Ocean Territory", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Canary Islands", "Cape Verde", "Caribbean Netherlands", "Cayman Islands", "Central African Republic", "Ceuta & Melilla", "Chad", "Chile", "China", "Christmas Island", "Clipperton Island", "Cocos (Keeling) Islands", "Colombia", "Comoros", "Congo - Brazzaville", "Congo - Kinshasa", "Cook Islands", "Costa Rica", "Côte d’Ivoire", "Croatia", "Cuba", "Curaçao", "Cyprus", "Czechia", "Denmark", "Diego Garcia", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "European Union", "Eurozone", "Falkland Islands", "Faroe Islands", "Fiji", "Finland", "France", "French Guiana", "French Polynesia", "French Southern Territories", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guadeloupe", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Heard & McDonald Islands", "Honduras", "Hong Kong SAR China", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macao SAR China", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Martinique", "Mauritania", "Mauritius", "Mayotte", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Myanmar (Burma)", "Namibia", "Nauru", "Nepal", "Netherlands", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue", "Norfolk Island", "North Korea", "North Macedonia", "Northern Mariana Islands", "Norway", "Oman", "Outlying Oceania", "Pakistan", "Palau", "Palestinian Territories", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Pitcairn Islands", "Poland", "Portugal", "Pseudo-Accents", "Pseudo-Bidi", "Puerto Rico", "Qatar", "Réunion", "Romania", "Russia", "Rwanda", "Samoa", "San Marino", "São Tomé & Príncipe", "Sark", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Sint Maarten", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Georgia & South Sandwich Islands", "South Korea", "South Sudan", "Spain", "Sri Lanka", "St. Barthélemy", "St. Helena", "St. Kitts & Nevis", "St. Lucia", "St. Martin", "St. Pierre & Miquelon", "St. Vincent & Grenadines", "Sudan", "Suriname", "Svalbard & Jan Mayen", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tokelau", "Tonga", "Trinidad & Tobago", "Tristan da Cunha", "Tunisia", "Türkiye", "Turkmenistan", "Turks & Caicos Islands", "Tuvalu", "U.S. Outlying Islands", "U.S. Virgin Islands", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United Nations", "United States", "Unknown Region", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Wallis & Futuna", "Western Sahara", "Yemen", "Zambia", "Zimbabwe"];
-
-document.getElementById("country-list").innerHTML =
-  COUNTRIES.map((c) => `<option value="${c.replace(/"/g, "&quot;")}"></option>`).join("");
-
-if (CONFIG.url.startsWith("PASTE") || CONFIG.anonKey.startsWith("PASTE")) {
-  only("v-setup");
-  throw new Error("Supabase is not configured yet.");
+// Country list from Intl, so spellings are the standard English short names.
+const COUNTRIES = [];
+{
+  const dn = new Intl.DisplayNames(["en"], { type:"region" });
+  for (let a = 65; a <= 90; a++) for (let b = 65; b <= 90; b++) {
+    const code = String.fromCharCode(a) + String.fromCharCode(b);
+    let name; try { name = dn.of(code); } catch { continue; }
+    if (name && name !== code) COUNTRIES.push(name);
+  }
+  COUNTRIES.sort((x,y) => x.localeCompare(y,"en"));
+  $("country-list").innerHTML = COUNTRIES.map((c) => `<option value="${esc(c)}"></option>`).join("");
 }
+$("f-section").insertAdjacentHTML("beforeend",
+  Object.entries(SECTIONS).map(([k,v]) => `<option value="${k}">${esc(v)}</option>`).join(""));
+$("f-type").insertAdjacentHTML("beforeend",
+  Object.entries(TYPES).map(([k,v]) => `<option value="${k}">${esc(v)}</option>`).join(""));
 
+if (CONFIG.url.startsWith("PASTE")) { only("v-setup"); throw new Error("not configured"); }
 const sb = createClient(CONFIG.url, CONFIG.anonKey);
 
-let me = null;      // auth user
-let profile = null; // profiles row
+let me = null, profile = null;
+const canQueue  = () => ["board_member","section_editor","faculty_editor","deputy_editor","chief_editor"].includes(profile?.role);
+const isEditor  = () => ["section_editor","faculty_editor","deputy_editor","chief_editor"].includes(profile?.role);
+const canDecide = () => ["faculty_editor","deputy_editor","chief_editor"].includes(profile?.role);
+const canPeople = () => ["deputy_editor","chief_editor"].includes(profile?.role);
 
-function notice(el, kind, msg) {
-  $(el).innerHTML = `<div class="note note-${kind}">${esc(msg)}</div>`;
-}
-function clearNotice(el) { $(el).innerHTML = ""; }
+const notice = (el,kind,msg) => { $(el).innerHTML = `<div class="note note-${kind}">${esc(msg)}</div>`; };
+const clearNote = (el) => { $(el).innerHTML = ""; };
+const fmtDate = (s) => s ? new Date(s).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}) : "—";
+const NIL = "00000000-0000-0000-0000-000000000000";
 
-const fmtDate = (s) => new Date(s).toLocaleDateString(undefined,
-  { year: "numeric", month: "short", day: "numeric" });
-
-/* ---------------------------------------------------------------- routing */
+/* ------------------------------------------------------------------ boot */
 async function boot() {
-  only("v-load");
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) { only("v-auth"); paintUser(); return; }
+  only("v-load"); hide("nav");
+  const { data:{ session } } = await sb.auth.getSession();
+  if (!session) { me = profile = null; paintUser(); only("v-auth"); return; }
   me = session.user;
-
   const { data, error } = await sb.from("profiles").select("*").eq("id", me.id).single();
-  if (error) { only("v-auth"); notice("auth-note", "err", "Could not load your profile: " + error.message); return; }
-  profile = data;
-  paintUser();
-
-  if (EDITOR_ROLES.includes(profile.role)) showEditor();
-  else showAuthor();
+  if (error) { only("v-auth"); return notice("auth-note","err","Could not load your profile: " + error.message); }
+  profile = data; paintUser(); buildNav();
+  go(canQueue() ? "v-queue" : "v-mine");
 }
 
 function paintUser() {
-  if (profile) {
-    $("whoami").innerHTML =
-      `<b>${esc(profile.full_name || profile.email)}</b><br>${esc(STATUS_ROLE(profile.role))}`;
-    show("whoami"); show("signout");
-  } else { hide("whoami"); hide("signout"); }
+  if (!profile) { hide("whoami"); hide("signout"); return; }
+  $("whoami").innerHTML =
+    `<b>${esc(profile.full_name || profile.email)}</b><br>${esc(ROLES[profile.role] || profile.role)}`;
+  show("whoami"); show("signout");
 }
-const STATUS_ROLE = (r) => ({
-  author: "Author", reviewer: "Reviewer", section_editor: "Section editor",
-  faculty_editor: "Faculty editor", chief_editor: "Editor-in-chief",
-}[r] || r);
 
-/* ------------------------------------------------------------------- auth */
-$("tab-in").onclick = () => {
-  $("tab-in").setAttribute("aria-selected", "true");
-  $("tab-up").setAttribute("aria-selected", "false");
-  show("form-in"); hide("form-up"); clearNotice("auth-note");
-};
-$("tab-up").onclick = () => {
-  $("tab-up").setAttribute("aria-selected", "true");
-  $("tab-in").setAttribute("aria-selected", "false");
-  show("form-up"); hide("form-in"); clearNotice("auth-note");
-};
+function buildNav() {
+  const tabs = [["v-submit","Submit"],["v-mine","My submissions"],["v-reviews","My reviews"]];
+  if (canQueue())  tabs.push(["v-queue","Queue"]);
+  if (canPeople()) tabs.push(["v-people","People"]);
+  $("navin").innerHTML = tabs.map(([id,label]) =>
+    `<button class="navtab" data-v="${id}" role="tab" aria-selected="false">${esc(label)}</button>`).join("");
+  $("navin").querySelectorAll("[data-v]").forEach((b) => { b.onclick = () => go(b.dataset.v); });
+  show("nav");
+}
+
+function go(view) {
+  only(view);
+  $("navin").querySelectorAll("[data-v]").forEach((b) =>
+    b.setAttribute("aria-selected", String(b.dataset.v === view)));
+  if (view === "v-mine")    loadMine();
+  if (view === "v-reviews") loadReviews();
+  if (view === "v-queue")   loadQueue();
+  if (view === "v-people")  loadPeople();
+}
+
+/* ------------------------------------------------------------------ auth */
+$("tab-in").onclick = () => { $("tab-in").setAttribute("aria-selected","true");
+  $("tab-up").setAttribute("aria-selected","false"); show("form-in"); hide("form-up"); clearNote("auth-note"); };
+$("tab-up").onclick = () => { $("tab-up").setAttribute("aria-selected","true");
+  $("tab-in").setAttribute("aria-selected","false"); show("form-up"); hide("form-in"); clearNote("auth-note"); };
 
 $("form-in").onsubmit = async (e) => {
-  e.preventDefault(); clearNotice("auth-note");
+  e.preventDefault(); clearNote("auth-note");
   const { error } = await sb.auth.signInWithPassword({
-    email: $("in-email").value.trim(), password: $("in-pw").value,
-  });
-  if (error) return notice("auth-note", "err", error.message);
+    email: $("in-email").value.trim(), password: $("in-pw").value });
+  if (error) return notice("auth-note","err",error.message);
   boot();
 };
 
 $("form-up").onsubmit = async (e) => {
-  e.preventDefault(); clearNotice("auth-note");
-
+  e.preventDefault(); clearNote("auth-note");
   // A datalist only suggests — anything can still be typed. Pinning the value
   // to a real entry stops "USA" / "U.S." / "United States" becoming three
   // different countries in the editorial records.
   const typed = $("up-country").value.trim();
   const country = COUNTRIES.find((c) => c.toLowerCase() === typed.toLowerCase());
-  if (!country) return notice("auth-note", "err",
-    "Choose a country from the list \u2014 start typing and pick a suggestion.");
+  if (!country) return notice("auth-note","err",
+    "Choose a country from the list — start typing and pick a suggestion.");
   $("up-country").value = country;
-
   const { error } = await sb.auth.signUp({
-    email: $("up-email").value.trim(),
-    password: $("up-pw").value,
-    options: { data: {
-      full_name: $("up-name").value.trim(),
-      school:    $("up-school").value.trim(),
-      grade:     $("up-grade").value.trim(),
-      country:   country,
-    }},
-  });
-  if (error) return notice("auth-note", "err", error.message);
-  notice("auth-note", "ok",
-    "Account created. Check your email for a confirmation link, then sign in.");
+    email: $("up-email").value.trim(), password: $("up-pw").value,
+    options: { data: { full_name:$("up-name").value.trim(), school:$("up-school").value.trim(),
+                       grade:$("up-grade").value.trim(), country } } });
+  if (error) return notice("auth-note","err",error.message);
+  notice("auth-note","ok","Account created. Check your email for a confirmation link, then sign in.");
 };
 
 $("reset-pw").onclick = async () => {
   const email = $("in-email").value.trim();
-  if (!email) return notice("auth-note", "err", "Enter your email address first.");
+  if (!email) return notice("auth-note","err","Enter your email address first.");
   const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.href });
-  notice("auth-note", error ? "err" : "ok",
-    error ? error.message : "Password reset link sent to " + email);
+  notice("auth-note", error ? "err" : "ok", error ? error.message : "Reset link sent to " + email);
 };
 
 $("signout").onclick = async () => {
-  await sb.auth.signOut();
-  me = null; profile = null; paintUser(); only("v-auth");
+  await sb.auth.signOut(); me = profile = null; paintUser(); hide("nav"); only("v-auth");
 };
 
-/* ----------------------------------------------------------------- author */
-async function showAuthor() {
-  only("v-author");
-  $("ms-mine").innerHTML = `<p class="spinner">Loading your submissions…</p>`;
-  const { data, error } = await sb.from("manuscripts")
-    .select("*").order("submitted_at", { ascending: false });
-  if (error) return notice("author-note", "err", error.message);
-
-  if (!data.length) {
-    $("ms-mine").innerHTML =
-      `<div class="card"><p class="muted" style="margin:0">
-        No submissions yet. Read the requirements on the
-        <a href="./#authors">journal site</a> before you start.</p></div>`;
-    return;
-  }
-  $("ms-mine").innerHTML = `<ul class="ms-list">${data.map(msRow).join("")}</ul>`;
-}
-
-function msRow(m, forEditor = false) {
-  return `<li>
-    <div class="ms-head">
-      <span class="ms-no">${esc(m.ms_number || "—")}</span>
-      <span class="ms-title">${esc(m.title)}</span>
-      <span class="pill p-${m.status}">${esc(STATUSES[m.status] || m.status)}</span>
-    </div>
-    <div class="ms-meta">
-      <span>${esc(TYPES[m.article_type] || m.article_type)}</span>
-      <span>${esc(SECTIONS[m.section] || m.section)}</span>
-      <span>Submitted ${fmtDate(m.submitted_at)}</span>
-    </div>
-    ${m.editor_note ? `<div class="ms-body"><b>From the editors:</b> ${esc(m.editor_note)}</div>` : ""}
-    ${forEditor ? editorControls(m) : ""}
-  </li>`;
-}
-
-/* ----------------------------------------------------------------- submit */
-$("new-ms").onclick = () => { clearNotice("submit-note"); only("v-submit"); };
-$("cancel-ms").onclick = () => showAuthor();
-
+/* ---------------------------------------------------------------- submit */
 $("form-ms").onsubmit = async (e) => {
-  e.preventDefault();
-  clearNotice("submit-note");
-  const btn = $("btn-send"), status = $("send-status");
-  const file = $("f-file").files[0];
-
-  if (!file) return notice("submit-note", "err", "Attach your manuscript PDF.");
-  if (file.type !== "application/pdf")
-    return notice("submit-note", "err", "The manuscript must be a PDF.");
-  if (file.size > 25 * 1024 * 1024)
-    return notice("submit-note", "err", "That file is larger than 25 MB. Compress it and try again.");
+  e.preventDefault(); clearNote("submit-note");
+  const btn = $("btn-send"), status = $("send-status"), file = $("f-file").files[0];
+  if (!file) return notice("submit-note","err","Attach your manuscript PDF.");
+  if (file.type !== "application/pdf") return notice("submit-note","err","The manuscript must be a PDF.");
+  if (file.size > 25*1024*1024) return notice("submit-note","err","That file is larger than 25 MB.");
 
   btn.disabled = true; show("send-status");
-
   try {
     // Upload first: an orphaned file is recoverable, an unattached manuscript is not.
-    status.textContent = "Uploading manuscript…";
-    const safe = file.name.replace(/[^\w.\-]+/g, "_").slice(-80);
+    status.textContent = "Uploading…";
+    const safe = file.name.replace(/[^\w.\-]+/g,"_").slice(-80);
     const path = `${me.id}/${crypto.randomUUID()}-${safe}`;
     const up = await sb.storage.from("manuscripts")
-      .upload(path, file, { contentType: "application/pdf", upsert: false });
+      .upload(path, file, { contentType:"application/pdf", upsert:false });
     if (up.error) throw up.error;
 
-    status.textContent = "Recording submission…";
+    status.textContent = "Recording…";
     const { data: ms, error: msErr } = await sb.from("manuscripts").insert({
-      title:            $("f-title").value.trim(),
-      abstract:         $("f-abstract").value.trim(),
-      section:          $("f-section").value,
-      article_type:     $("f-type").value,
-      author_id:        me.id,
-      coauthors:        $("f-coauthors").value.trim(),
-      mentor_statement: $("f-mentor").value.trim(),
-      data_doi:         $("f-data").value.trim(),
-      code_doi:         $("f-code").value.trim(),
-      ethics_ref:       $("f-ethics").value.trim(),
-      ai_disclosure:    $("f-ai").value.trim(),
-      limitations:      $("f-limits").value.trim(),
-      status:           "submitted",
+      title:$("f-title").value.trim(), abstract:$("f-abstract").value.trim(),
+      section:$("f-section").value, article_type:$("f-type").value, author_id:me.id,
+      coauthors:$("f-coauthors").value.trim(), mentor_statement:$("f-mentor").value.trim(),
+      data_doi:$("f-data").value.trim(), code_doi:$("f-code").value.trim(),
+      ethics_ref:$("f-ethics").value.trim(), ai_disclosure:$("f-ai").value.trim(),
+      limitations:$("f-limits").value.trim(), status:"submitted",
     }).select().single();
     if (msErr) throw msErr;
 
-    const fileErr = (await sb.from("manuscript_files").insert({
-      manuscript_id: ms.id, storage_path: path, filename: file.name,
-      size_bytes: file.size, uploaded_by: me.id,
-    })).error;
-    if (fileErr) throw fileErr;
+    const fErr = (await sb.from("manuscript_files").insert({
+      manuscript_id:ms.id, storage_path:path, filename:file.name,
+      size_bytes:file.size, uploaded_by:me.id })).error;
+    if (fErr) throw fErr;
 
-    $("form-ms").reset();
-    await showAuthor();
-    notice("author-note", "ok",
+    $("form-ms").reset(); go("v-mine");
+    notice("mine-note","ok",
       `Submitted as ${ms.ms_number}. You will get a screening decision within ten working days.`);
-  } catch (err) {
-    notice("submit-note", "err", err.message || String(err));
-  } finally {
-    btn.disabled = false; hide("send-status"); status.textContent = "";
-  }
+  } catch (err) { notice("submit-note","err", err.message || String(err)); }
+  finally { btn.disabled = false; hide("send-status"); status.textContent = ""; }
 };
 
-/* ----------------------------------------------------------------- editor */
-let filter = "all";
-
-async function showEditor() {
-  only("v-editor");
-  $("editor-lede").textContent =
-    profile.role === "chief_editor"
-      ? "Every submission, and the authority to change any decision."
-      : "Every submission currently with the editorial office.";
-
-  const counts = { all: 0 };
-  const { data, error } = await sb.from("manuscripts")
-    .select("*, profiles!manuscripts_author_id_fkey(full_name, school, country)")
-    .order("submitted_at", { ascending: false });
-  if (error) return notice("editor-note", "err", error.message);
-
-  data.forEach((m) => { counts[m.status] = (counts[m.status] || 0) + 1; counts.all++; });
-
-  $("filter-tabs").innerHTML = ["all", ...Object.keys(STATUSES)]
-    .filter((k) => k === "all" || counts[k])
-    .map((k) => `<button class="tab" role="tab" data-f="${k}"
-        aria-selected="${k === filter}">${k === "all" ? "All" : esc(STATUSES[k])}
-        <span class="ms-no"> ${counts[k] || 0}</span></button>`).join("");
-  $("filter-tabs").querySelectorAll("[data-f]").forEach((b) => {
-    b.onclick = () => { filter = b.dataset.f; showEditor(); };
-  });
-
-  const rows = data.filter((m) => filter === "all" || m.status === filter);
-  $("ms-all").innerHTML = rows.length
-    ? `<ul class="ms-list">${rows.map((m) => msRow(m, true)).join("")}</ul>`
-    : `<div class="card"><p class="muted" style="margin:0">Nothing in this queue.</p></div>`;
-
-  $("ms-all").querySelectorAll("[data-ms]").forEach((box) => {
-    box.querySelector(".save-status").onclick = () => saveStatus(box);
-    box.querySelector(".get-pdf").onclick = () => openPdf(box.dataset.ms, box);
-  });
-}
-
-function editorControls(m) {
-  const a = m.profiles || {};
-  return `<div class="ms-body" data-ms="${m.id}">
-    <dl>
-      <dt>Author</dt><dd>${esc(a.full_name || "—")}${a.school ? " · " + esc(a.school) : ""}${a.country ? " · " + esc(a.country) : ""}</dd>
-      <dt>Co-authors</dt><dd>${esc(m.coauthors || "—")}</dd>
-      <dt>Abstract</dt><dd>${esc(m.abstract)}</dd>
-      <dt>Mentor</dt><dd>${esc(m.mentor_statement)}</dd>
-      <dt>Data</dt><dd>${esc(m.data_doi || "—")}</dd>
-      <dt>Code</dt><dd>${esc(m.code_doi || "—")}</dd>
-      <dt>Ethics</dt><dd>${esc(m.ethics_ref || "—")}</dd>
-      <dt>AI use</dt><dd>${esc(m.ai_disclosure || "none declared")}</dd>
-      <dt>Limitations</dt><dd>${esc(m.limitations || "—")}</dd>
-    </dl>
-    <div class="row">
-      <div class="field"><label>Status</label>
-        <select class="set-status">
-          ${Object.entries(STATUSES).map(([k, v]) =>
-            `<option value="${k}"${k === m.status ? " selected" : ""}>${esc(v)}</option>`).join("")}
-        </select></div>
-      <div class="field"><label>Note to the author</label>
-        <input type="text" class="set-note" value="${esc(m.editor_note || "")}"
-               placeholder="Reason for the decision"></div>
-    </div>
-    <div class="btn-row">
-      <button class="btn btn-solid btn-sm save-status" type="button">Save</button>
-      <button class="btn btn-ghost btn-sm get-pdf" type="button">Open PDF</button>
-      <span class="spinner ctl-msg"></span>
-    </div>
+/* -------------------------------------------------------- shared renders */
+const msHead = (m) => `
+  <div class="ms-head">
+    <span class="ms-no">${esc(m.ms_number || "—")}</span>
+    <span class="ms-title">${esc(m.title)}</span>
+    <span class="pill p-${m.status}">${esc(STATUSES[m.status] || m.status)}</span>
+  </div>
+  <div class="ms-meta">
+    <span>${esc(TYPES[m.article_type] || m.article_type)}</span>
+    <span>${esc(SECTIONS[m.section] || m.section)}</span>
+    <span>Submitted ${fmtDate(m.submitted_at)}</span>
   </div>`;
+
+const decBlock = (d) => `<div class="sub">
+  <h4>Decision — ${esc(RECS[d.decision] || d.decision)}</h4>
+  <p style="white-space:pre-wrap;margin:0 0 .5rem">${esc(d.letter)}</p>
+  <p class="muted" style="margin:0">Signed ${esc(d.signed_name)} · ${fmtDate(d.created_at)}</p></div>`;
+
+const reviewBlock = (r) => `<div class="sub">
+  <h4>${r.signed ? "Signed report" : "Referee report"} — ${esc(RECS[r.recommendation] || r.recommendation)}</h4>
+  <div class="scores" style="margin-bottom:.625rem">
+    ${CRITERIA.map(([k,label]) => `<span>${esc(label)} <b>${r[k]}/5</b></span>`).join("")}</div>
+  <p style="white-space:pre-wrap;margin:0 0 .5rem"><b>Summary.</b> ${esc(r.summary)}</p>
+  ${r.major_points ? `<p style="white-space:pre-wrap;margin:0 0 .5rem"><b>Major points.</b> ${esc(r.major_points)}</p>` : ""}
+  ${r.minor_points ? `<p style="white-space:pre-wrap;margin:0 0 .5rem"><b>Minor points.</b> ${esc(r.minor_points)}</p>` : ""}
+  <p class="muted" style="margin:0">${fmtDate(r.submitted_at)}</p></div>`;
+
+const stPill = (s) => `<span class="pill p-${
+  s === "accepted" ? "accepted_a" : s === "declined" ? "declined_a" :
+  s === "submitted" ? "submitted_r" : "invited"}">${esc(s)}</span>`;
+
+/* -------------------------------------------------------- my submissions */
+async function loadMine() {
+  clearNote("mine-note");
+  $("mine-list").innerHTML = `<p class="spinner">Loading…</p>`;
+  const { data, error } = await sb.from("manuscripts").select("*")
+    .eq("author_id", me.id).order("submitted_at",{ascending:false});
+  if (error) return notice("mine-note","err",error.message);
+  if (!data.length) {
+    $("mine-list").innerHTML = `<div class="card"><p class="muted" style="margin:0">
+      No submissions yet. Read the requirements on the <a href="./#authors">journal site</a>,
+      then use the <b>Submit</b> tab above.</p></div>`;
+    return;
+  }
+  const ids = data.map((m) => m.id);
+  const [{ data: decs }, { data: revs }] = await Promise.all([
+    sb.from("decisions").select("*").in("manuscript_id", ids),
+    sb.from("reviews").select("*").in("manuscript_id", ids)]);
+  $("mine-list").innerHTML = `<ul class="ms-list">${data.map((m) => {
+    const d = (decs||[]).filter((x) => x.manuscript_id === m.id);
+    const r = (revs||[]).filter((x) => x.manuscript_id === m.id);
+    return `<li>${msHead(m)}
+      ${m.editor_note ? `<div class="panel"><b>From the editors:</b> ${esc(m.editor_note)}</div>` : ""}
+      ${d.length || r.length ? `<div class="panel">
+        ${d.map(decBlock).join("")}
+        ${r.length ? `<h4 style="font-family:var(--mono);font-size:.6875rem;letter-spacing:.08em;
+           text-transform:uppercase;color:var(--ink-3);margin:.75rem 0 .25rem">Referee reports</h4>
+           ${r.map(reviewBlock).join("")}` : ""}</div>` : ""}
+    </li>`;
+  }).join("")}</ul>`;
 }
 
-async function saveStatus(box) {
-  const id = box.dataset.ms, msg = box.querySelector(".ctl-msg");
-  msg.textContent = "Saving…";
-  const { error } = await sb.from("manuscripts").update({
-    status: box.querySelector(".set-status").value,
-    editor_note: box.querySelector(".set-note").value.trim(),
-    updated_at: new Date().toISOString(),
-  }).eq("id", id);
-  msg.textContent = error ? error.message : "Saved.";
-  if (!error) setTimeout(showEditor, 600);
+/* ------------------------------------------------------------ my reviews */
+async function loadReviews() {
+  clearNote("rev-note");
+  $("rev-list").innerHTML = `<p class="spinner">Loading…</p>`;
+  const { data, error } = await sb.from("review_assignments")
+    .select("*, manuscripts(*)").eq("reviewer_id", me.id).order("assigned_at",{ascending:false});
+  if (error) return notice("rev-note","err",error.message);
+  if (!data.length) {
+    $("rev-list").innerHTML = `<div class="card"><p class="muted" style="margin:0">
+      You have no review invitations. Editors assign referees from the queue.</p></div>`;
+    return;
+  }
+  const { data: mine } = await sb.from("reviews").select("*").eq("reviewer_id", me.id);
+  $("rev-list").innerHTML = `<ul class="ms-list">${data.map((a) => {
+    const m = a.manuscripts, done = (mine||[]).find((r) => r.assignment_id === a.id);
+    return `<li>
+      ${m ? msHead(m) : `<div class="ms-head"><span class="ms-title">(manuscript unavailable)</span></div>`}
+      <div class="panel" data-asg="${a.id}">
+        <dl><dt>Invitation</dt><dd>${stPill(a.state)}${a.due_at ? ` · due ${fmtDate(a.due_at)}` : ""}</dd>
+          ${m ? `<dt>Abstract</dt><dd>${esc(m.abstract)}</dd>` : ""}</dl>
+        ${a.state === "invited" ? `<div class="btn-row">
+            <button class="btn btn-solid btn-sm" data-act="accept">Accept invitation</button>
+            <button class="btn btn-ghost btn-sm" data-act="decline">Decline</button>
+            <button class="btn btn-ghost btn-sm" data-act="pdf">Open PDF</button>
+            <span class="spinner msg"></span></div>` : ""}
+        ${a.state === "accepted" && !done ? reviewForm(a) : ""}
+        ${done ? reviewBlock(done) : ""}
+      </div></li>`;
+  }).join("")}</ul>`;
+  wireReviews();
 }
 
-async function openPdf(id, box) {
-  const msg = box.querySelector(".ctl-msg");
+const reviewForm = (a) => `
+  <div class="btn-row" style="margin-bottom:1rem">
+    <button class="btn btn-ghost btn-sm" data-act="pdf">Open PDF</button>
+    <span class="spinner msg"></span></div>
+  <form data-form="${a.id}">
+    ${CRITERIA.map(([k,label,help]) => `<div class="field">
+      <label for="sc-${k}-${a.id}">${esc(label)} <span class="req-tag">1–5</span></label>
+      <p class="hint">${esc(help)}</p>
+      <select id="sc-${k}-${a.id}" data-sc="${k}" required><option value="">Choose…</option>
+        ${[1,2,3,4,5].map((n) => `<option value="${n}">${n}</option>`).join("")}</select></div>`).join("")}
+    <div class="field"><label>Summary <span class="req-tag">Required</span></label>
+      <p class="hint">What the study did and whether it holds. At least 20 characters.</p>
+      <textarea data-f="summary" rows="4" minlength="20" required></textarea></div>
+    <div class="field"><label>Major points</label><textarea data-f="major_points" rows="3"></textarea></div>
+    <div class="field"><label>Minor points</label><textarea data-f="minor_points" rows="3"></textarea></div>
+    <div class="field"><label>Confidential note to the editors</label>
+      <p class="hint">Never shown to the author, and never published.</p>
+      <textarea data-f="note" rows="2"></textarea></div>
+    <div class="field"><label for="rec-${a.id}">Recommendation <span class="req-tag">Required</span></label>
+      <select id="rec-${a.id}" data-f="recommendation" required><option value="">Choose…</option>
+        ${Object.entries(RECS).map(([k,v]) => `<option value="${k}">${esc(v)}</option>`).join("")}</select></div>
+    <div class="field"><label style="font-weight:400;display:flex;gap:.5rem;align-items:flex-start">
+      <input type="checkbox" data-f="signed" style="width:auto;margin-top:.35rem">
+      <span>Sign this report with my name. PRISM publishes referee reports with the accepted
+        article either way; signing means yours carries your name and you are credited.</span></label></div>
+    <div class="btn-row"><button class="btn btn-solid btn-sm" type="submit">Submit report</button>
+      <span class="spinner msg2"></span></div>
+  </form>`;
+
+function wireReviews() {
+  $("rev-list").querySelectorAll("[data-asg]").forEach((box) => {
+    const id = box.dataset.asg, msg = box.querySelector(".msg");
+    box.querySelectorAll("[data-act]").forEach((b) => {
+      b.onclick = async () => {
+        if (b.dataset.act === "pdf") {
+          const a = (await sb.from("review_assignments").select("manuscript_id").eq("id", id).single()).data;
+          return openPdf(a.manuscript_id, msg);
+        }
+        msg.textContent = "Saving…";
+        const state = b.dataset.act === "accept" ? "accepted" : "declined";
+        const { error } = await sb.from("review_assignments").update({ state }).eq("id", id);
+        msg.textContent = error ? error.message : "";
+        if (!error) loadReviews();
+      };
+    });
+    const form = box.querySelector("[data-form]");
+    if (form) form.onsubmit = (e) => submitReview(e, form, id, box);
+  });
+}
+
+async function submitReview(e, form, assignmentId, box) {
+  e.preventDefault();
+  const msg = box.querySelector(".msg2"); msg.textContent = "Submitting…";
+  const g = (f) => form.querySelector(`[data-f="${f}"]`);
+  const asg = (await sb.from("review_assignments").select("manuscript_id").eq("id", assignmentId).single()).data;
+  const payload = { assignment_id:assignmentId, manuscript_id:asg.manuscript_id, reviewer_id:me.id,
+    summary:g("summary").value.trim(), major_points:g("major_points").value.trim(),
+    minor_points:g("minor_points").value.trim(), recommendation:g("recommendation").value,
+    signed:g("signed").checked };
+  CRITERIA.forEach(([k]) => { payload[k] = Number(form.querySelector(`[data-sc="${k}"]`).value); });
+
+  const { data: rev, error } = await sb.from("reviews").insert(payload).select().single();
+  if (error) { msg.textContent = error.message; return; }
+  const note = g("note").value.trim();
+  if (note) await sb.from("review_notes").insert({ review_id: rev.id, note });
+  await sb.from("review_assignments").update({ state:"submitted" }).eq("id", assignmentId);
+  msg.textContent = "Submitted."; loadReviews();
+}
+
+async function openPdf(msId, msg) {
   msg.textContent = "Fetching…";
-  const { data, error } = await sb.from("manuscript_files")
-    .select("storage_path").eq("manuscript_id", id)
-    .order("uploaded_at", { ascending: false }).limit(1).single();
-  if (error) { msg.textContent = "No file attached."; return; }
+  const { data, error } = await sb.from("manuscript_files").select("storage_path")
+    .eq("manuscript_id", msId).order("uploaded_at",{ascending:false}).limit(1).maybeSingle();
+  if (error || !data) { msg.textContent = "No file attached."; return; }
   const signed = await sb.storage.from("manuscripts").createSignedUrl(data.storage_path, 300);
   if (signed.error) { msg.textContent = signed.error.message; return; }
-  msg.textContent = "";
-  window.open(signed.data.signedUrl, "_blank", "noopener");
+  msg.textContent = ""; window.open(signed.data.signedUrl, "_blank", "noopener");
+}
+
+/* ----------------------------------------------------------------- queue */
+let qFilter = "all";
+
+async function loadQueue() {
+  clearNote("queue-note");
+  $("queue-lede").textContent = isEditor()
+    ? "Assign referees, move manuscripts through the workflow, and record decisions."
+    : "Advisory view: every submission currently with the editorial office.";
+  $("queue-list").innerHTML = `<p class="spinner">Loading…</p>`;
+
+  const [{ data: rows, error }, { data: people }] = await Promise.all([
+    sb.from("manuscripts").select("*, profiles!manuscripts_author_id_fkey(full_name,school,country)")
+      .order("submitted_at",{ascending:false}),
+    sb.from("profiles").select("id,full_name,email,role")]);
+  if (error) return notice("queue-note","err",error.message);
+
+  const ids = rows.length ? rows.map((m) => m.id) : [NIL];
+  const [{ data: asgs }, { data: revs }, { data: decs }] = await Promise.all([
+    sb.from("review_assignments")
+      .select("*, profiles!review_assignments_reviewer_id_fkey(full_name)").in("manuscript_id", ids),
+    sb.from("reviews").select("*").in("manuscript_id", ids),
+    sb.from("decisions").select("*").in("manuscript_id", ids)]);
+
+  const counts = { all: rows.length };
+  rows.forEach((m) => { counts[m.status] = (counts[m.status]||0)+1; });
+  $("queue-filters").innerHTML = ["all", ...Object.keys(STATUSES)]
+    .filter((k) => k === "all" || counts[k])
+    .map((k) => `<button class="tab" role="tab" data-f="${k}" aria-selected="${k===qFilter}">
+      ${k==="all"?"All":esc(STATUSES[k])}<span class="ms-no"> ${counts[k]||0}</span></button>`).join("");
+  $("queue-filters").querySelectorAll("[data-f]").forEach((b) => {
+    b.onclick = () => { qFilter = b.dataset.f; loadQueue(); }; });
+
+  const view = rows.filter((m) => qFilter === "all" || m.status === qFilter);
+  if (!view.length) {
+    $("queue-list").innerHTML = `<div class="card"><p class="muted" style="margin:0">
+      ${rows.length ? "Nothing in this queue." : "No submissions yet."}</p></div>`;
+    return;
+  }
+
+  const referees = (people||[]).filter((p) => p.role !== "author");
+  $("queue-list").innerHTML = `<ul class="ms-list">${view.map((m) => {
+    const a = (asgs||[]).filter((x) => x.manuscript_id === m.id);
+    const r = (revs||[]).filter((x) => x.manuscript_id === m.id);
+    const d = (decs||[]).filter((x) => x.manuscript_id === m.id);
+    const au = m.profiles || {};
+    return `<li>${msHead(m)}
+      <div class="panel" data-ms="${m.id}">
+        <dl>
+          <dt>Author</dt><dd>${esc(au.full_name || "—")}${au.school?" · "+esc(au.school):""}${au.country?" · "+esc(au.country):""}</dd>
+          <dt>Co-authors</dt><dd>${esc(m.coauthors || "—")}</dd>
+          <dt>Abstract</dt><dd>${esc(m.abstract)}</dd>
+          <dt>Mentor</dt><dd>${esc(m.mentor_statement)}</dd>
+          <dt>Data</dt><dd>${esc(m.data_doi || "—")}</dd>
+          <dt>Code</dt><dd>${esc(m.code_doi || "—")}</dd>
+          <dt>Ethics</dt><dd>${esc(m.ethics_ref || "—")}</dd>
+          <dt>AI use</dt><dd>${esc(m.ai_disclosure || "none declared")}</dd>
+          <dt>Limitations</dt><dd>${esc(m.limitations || "—")}</dd>
+        </dl>
+        <div class="btn-row" style="margin-bottom:1rem">
+          <button class="btn btn-ghost btn-sm" data-act="pdf">Open PDF</button>
+          <span class="spinner msg"></span></div>
+
+        <div class="sub"><h4>Referees (${a.length})</h4>
+          ${a.length ? a.map((x) => `<div style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;margin-bottom:.375rem">
+              <span>${esc(x.profiles?.full_name || "—")}</span>${stPill(x.state)}
+              ${x.due_at?`<span class="muted">due ${fmtDate(x.due_at)}</span>`:""}</div>`).join("")
+            : `<p class="muted" style="margin:0 0 .5rem">None assigned.</p>`}
+          ${isEditor() ? `<div class="row" style="margin-top:.75rem">
+            <div class="field" style="margin:0"><label>Invite a referee</label>
+              <select data-f="reviewer"><option value="">Choose…</option>
+                ${referees.map((p) => `<option value="${p.id}">${esc(p.full_name||p.email)} — ${esc(ROLES[p.role]||p.role)}</option>`).join("")}
+              </select></div>
+            <div class="field" style="margin:0"><label>Due date</label>
+              <input type="date" data-f="due"></div></div>
+            <div class="btn-row" style="margin-top:.625rem">
+              <button class="btn btn-ghost btn-sm" data-act="assign">Send invitation</button>
+              <span class="spinner msg-a"></span></div>` : ""}
+        </div>
+
+        ${r.length ? `<div class="sub"><h4>Reports received (${r.length})</h4>
+          ${r.map(reviewBlock).join("")}</div>` : ""}
+        ${d.map(decBlock).join("")}
+
+        ${isEditor() ? `<div class="row">
+            <div class="field"><label>Status</label>
+              <select data-f="status">${Object.entries(STATUSES).map(([k,v]) =>
+                `<option value="${k}"${k===m.status?" selected":""}>${esc(v)}</option>`).join("")}</select></div>
+            <div class="field"><label>Note to the author</label>
+              <input type="text" data-f="note" value="${esc(m.editor_note||"")}" placeholder="Shown to the author"></div>
+          </div>
+          <div class="btn-row"><button class="btn btn-solid btn-sm" data-act="save">Save status</button>
+            <span class="spinner msg-s"></span></div>` : ""}
+
+        ${canDecide() ? `<div class="sub" style="margin-top:1rem"><h4>Write a decision</h4>
+          <p class="hint">Your name is attached and published with the article. State which referee
+            points are binding and which are optional.</p>
+          <div class="field"><label>Decision</label>
+            <select data-f="decision"><option value="">Choose…</option>
+              ${Object.entries(RECS).map(([k,v]) => `<option value="${k}">${esc(v)}</option>`).join("")}</select></div>
+          <div class="field"><label>Letter</label><textarea data-f="letter" rows="5"></textarea></div>
+          <div class="btn-row"><button class="btn btn-solid btn-sm" data-act="decide">Sign and record</button>
+            <span class="spinner msg-d"></span></div></div>` : ""}
+      </div></li>`;
+  }).join("")}</ul>`;
+  wireQueue();
+}
+
+function wireQueue() {
+  $("queue-list").querySelectorAll("[data-ms]").forEach((box) => {
+    const id = box.dataset.ms;
+    const g = (f) => box.querySelector(`[data-f="${f}"]`);
+    const act = (n) => box.querySelector(`[data-act="${n}"]`);
+
+    if (act("pdf")) act("pdf").onclick = () => openPdf(id, box.querySelector(".msg"));
+
+    if (act("assign")) act("assign").onclick = async () => {
+      const msg = box.querySelector(".msg-a"), rid = g("reviewer").value;
+      if (!rid) { msg.textContent = "Pick a referee."; return; }
+      msg.textContent = "Inviting…";
+      const { error } = await sb.from("review_assignments").insert({
+        manuscript_id:id, reviewer_id:rid, assigned_by:me.id, due_at:g("due").value || null });
+      msg.textContent = error ? error.message : "Invited.";
+      if (!error) setTimeout(loadQueue, 400);
+    };
+
+    if (act("save")) act("save").onclick = async () => {
+      const msg = box.querySelector(".msg-s"); msg.textContent = "Saving…";
+      const { error } = await sb.from("manuscripts")
+        .update({ status:g("status").value, editor_note:g("note").value.trim() }).eq("id", id);
+      msg.textContent = error ? error.message : "Saved.";
+      if (!error) setTimeout(loadQueue, 500);
+    };
+
+    if (act("decide")) act("decide").onclick = async () => {
+      const msg = box.querySelector(".msg-d");
+      const decision = g("decision").value, letter = g("letter").value.trim();
+      if (!decision) { msg.textContent = "Choose a decision."; return; }
+      if (letter.length < 20) { msg.textContent = "The letter needs at least 20 characters."; return; }
+      msg.textContent = "Recording…";
+      const { error } = await sb.from("decisions").insert({
+        manuscript_id:id, editor_id:me.id, decision, letter,
+        signed_name: profile.full_name || profile.email });
+      if (error) { msg.textContent = error.message; return; }
+      // A decision is not a status — move the manuscript to match it.
+      const next = decision === "accept" ? "accepted"
+                 : decision === "decline" ? "declined" : "revision";
+      await sb.from("manuscripts").update({ status: next }).eq("id", id);
+      msg.textContent = "Recorded."; setTimeout(loadQueue, 500);
+    };
+  });
+}
+
+/* ---------------------------------------------------------------- people */
+async function loadPeople() {
+  clearNote("people-note");
+  $("people-list").innerHTML = `<p class="spinner">Loading…</p>`;
+  const { data, error } = await sb.from("profiles").select("*").order("created_at");
+  if (error) return notice("people-note","err",error.message);
+  // Only a chief editor may create another chief editor; the database enforces
+  // this too, so a tampered dropdown gains nothing.
+  const assignable = Object.keys(ROLES).filter((r) => r !== "chief_editor" || profile.role === "chief_editor");
+
+  $("people-list").innerHTML = `<table class="people">
+    <thead><tr><th>Name</th><th>School</th><th>Country</th><th>Email</th><th>Role</th><th></th></tr></thead>
+    <tbody>${data.map((p) => `<tr data-p="${p.id}">
+      <td>${esc(p.full_name || "—")}</td><td>${esc(p.school || "—")}</td>
+      <td>${esc(p.country || "—")}</td>
+      <td class="muted" style="font-family:var(--mono);font-size:.75rem">${esc(p.email)}</td>
+      <td>${p.id === me.id
+        ? `<span class="role-pill">${esc(ROLES[p.role]||p.role)} (you)</span>`
+        : `<select data-f="role">${assignable.map((r) =>
+            `<option value="${r}"${r===p.role?" selected":""}>${esc(ROLES[r])}</option>`).join("")}</select>`}</td>
+      <td>${p.id === me.id ? "" :
+        `<button class="btn btn-ghost btn-sm" data-act="setrole">Save</button>
+         <span class="spinner msg"></span>`}</td></tr>`).join("")}</tbody></table>`;
+
+  $("people-list").querySelectorAll("[data-p]").forEach((row) => {
+    const b = row.querySelector('[data-act="setrole"]');
+    if (!b) return;
+    b.onclick = async () => {
+      const msg = row.querySelector(".msg"); msg.textContent = "Saving…";
+      const { error } = await sb.from("profiles")
+        .update({ role: row.querySelector('[data-f="role"]').value }).eq("id", row.dataset.p);
+      msg.textContent = error ? error.message : "Saved.";
+    };
+  });
 }
 
 sb.auth.onAuthStateChange((event) => {
-  if (event === "SIGNED_OUT") { me = null; profile = null; paintUser(); only("v-auth"); }
+  if (event === "SIGNED_OUT") { me = profile = null; paintUser(); hide("nav"); only("v-auth"); }
 });
 
 boot();
