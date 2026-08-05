@@ -97,7 +97,7 @@ create index if not exists manuscripts_status_idx on public.manuscripts(status);
 create sequence if not exists public.ms_seq;
 
 create or replace function public.set_ms_number()
-returns trigger language plpgsql as $$
+returns trigger language plpgsql security definer set search_path = public as $$
 begin
   if new.ms_number is null then
     new.ms_number := 'PRISM-' || to_char(now(), 'YYYY') || '-' ||
@@ -236,11 +236,13 @@ create policy "read own profile" on public.profiles
 create policy "editors read profiles" on public.profiles
   for select using (public.is_editor());
 
--- A user may edit their own details but MAY NOT promote themselves: the role
--- column is pinned to its current value for everyone except a chief editor.
+-- A user may edit their own details but MAY NOT promote themselves. my_role()
+-- is SECURITY DEFINER and STABLE, so it reports the role as of the start of the
+-- statement — a plain subquery here could observe the row mid-update and let an
+-- escalation through.
 create policy "update own profile" on public.profiles
   for update using (id = auth.uid())
-  with check (id = auth.uid() and role = (select role from public.profiles where id = auth.uid()));
+  with check (id = auth.uid() and role = public.my_role());
 
 create policy "chief updates roles" on public.profiles
   for update using (public.is_chief()) with check (public.is_chief());
@@ -300,6 +302,31 @@ create policy "read own events" on public.status_events
 
 create policy "editors read events" on public.status_events
   for select using (public.is_editor());
+
+
+
+-- ---------------------------------------------------------------------------
+-- Table privileges.
+--
+-- Supabase can be told to expose new tables to the API automatically. Rather
+-- than depend on that project setting being one way or the other, the grants
+-- are written out here. This is the coarse layer: it says which tables the API
+-- may touch at all. The RLS policies above are the fine layer, deciding which
+-- ROWS. Both are required; neither substitutes for the other.
+--
+-- `anon` is granted nothing on purpose. Every portal action requires a signed-in
+-- user, so an unauthenticated caller holding the public key can reach no data.
+-- ---------------------------------------------------------------------------
+grant usage on schema public to anon, authenticated;
+
+grant select, insert, update on public.profiles         to authenticated;
+grant select, insert, update on public.manuscripts      to authenticated;
+grant select, insert         on public.manuscript_files to authenticated;
+grant select                 on public.status_events    to authenticated;
+
+grant execute on function public.my_role()   to authenticated;
+grant execute on function public.is_editor() to authenticated;
+grant execute on function public.is_chief()  to authenticated;
 
 
 -- ---------------------------------------------------------------------------
