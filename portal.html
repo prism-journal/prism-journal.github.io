@@ -404,7 +404,13 @@ const NIL = "00000000-0000-0000-0000-000000000000";
 async function boot() {
   only("v-load"); hide("nav");
   const { data:{ session } } = await sb.auth.getSession();
-  if (!session) { me = profile = null; paintUser(); only("v-auth"); return; }
+  if (!session) {
+    me = profile = null; paintUser(); only("v-auth");
+    // Arriving from "Create account" on the journal site should land on that
+    // tab, not on the sign-in form the visitor cannot use yet.
+    if (location.hash === "#register") $("tab-up").click();
+    return;
+  }
   me = session.user;
   const { data, error } = await sb.from("profiles").select("*").eq("id", me.id).single();
   if (error) { only("v-auth"); return notice("auth-note","err","Could not load your profile: " + error.message); }

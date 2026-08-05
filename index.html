@@ -739,6 +739,44 @@
     gap: 0.5rem 1.5rem;
   }
 
+
+  /* ============================ TOP UTILITY BAR ============================ */
+  .topbar { background: var(--plate); color: #F6F2F3; }
+  .topbar-in {
+    max-width: 78rem; margin: 0 auto;
+    padding: 0.5rem var(--pad);
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    border-bottom: 1px solid rgba(246,242,243,0.12);
+  }
+  .topbar-tag {
+    font-family: var(--mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: rgba(246,242,243,0.45);
+  }
+  .topbar-links { margin-left: auto; display: flex; align-items: center; gap: 0.25rem; }
+  .topbar-links a {
+    font-size: 0.75rem; font-weight: 550; letter-spacing: 0.01em;
+    color: rgba(246,242,243,0.75); text-decoration: none;
+    padding: 0.375rem 0.75rem; border-radius: 2px; white-space: nowrap;
+    border: 1px solid transparent; transition: color 130ms ease, border-color 130ms ease;
+  }
+  .topbar-links a:hover { color: #F6F2F3; }
+  .topbar-links a.tb-cta { border-color: rgba(246,242,243,0.35); }
+  .topbar-links a.tb-cta:hover { border-color: #F6F2F3; background: rgba(246,242,243,0.08); }
+  @media (max-width: 34rem) {
+    .topbar-tag { display: none; }
+    .topbar-links { margin-left: 0; width: 100%; justify-content: flex-start; }
+  }
+
+  /* sign-in reachable from the sticky contents rail as well */
+  .rail-auth { display: flex; flex-direction: column; gap: 0.375rem; margin: 1.5rem 1.25rem 0 0; }
+  .rail-auth a {
+    font-size: 0.75rem; font-weight: 600; text-decoration: none; text-align: center;
+    padding: 0.4375rem 0.625rem; border-radius: 2px; border: 1px solid var(--rule); color: var(--ink);
+  }
+  .rail-auth a.primary { background: var(--issue); border-color: var(--issue); color: #fff; }
+  .rail-auth a:hover { border-color: var(--ink); }
+  .rail-auth a.primary:hover { background: var(--ink); border-color: var(--ink); }
+
   /* ============================ RESPONSIVE ============================ */
 
   @media (max-width: 62rem) {
@@ -766,7 +804,7 @@
       gap: 1rem;
     }
     .rail-mark { margin: 0; font-size: 1.125rem; flex: none; }
-    .rail-tag, .rail-foot { display: none; }
+    .rail-tag, .rail-foot, .rail-auth { display: none; }
     .rail-list {
       display: flex;
       gap: 0;
@@ -798,6 +836,16 @@
 </style>
 
 <!-- ============================ COVER ============================ -->
+<div class="topbar">
+  <div class="topbar-in">
+    <span class="topbar-tag">Open access · Transparent review · No fees</span>
+    <nav class="topbar-links" aria-label="Account">
+      <a href="./portal.html#signin">Sign in</a>
+      <a class="tb-cta" href="./portal.html#register">Create account</a>
+    </nav>
+  </div>
+</div>
+
 <header class="cover">
   <canvas id="scene" aria-hidden="true"></canvas>
   <div class="cover-scrim"></div>
@@ -847,6 +895,10 @@
       <li><a class="rail-link" href="#issues"><span class="n">09</span>Issues</a></li>
       <li><a class="rail-link" href="#submit"><span class="n">10</span>Submit</a></li>
     </ul>
+    <div class="rail-auth">
+      <a class="primary" href="./portal.html#register">Create account</a>
+      <a href="./portal.html#signin">Sign in</a>
+    </div>
     <div class="rail-foot">
       ISSN <span class="tbd">0000-0000</span><br>
       Continuous publication<br>
