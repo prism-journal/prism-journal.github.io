@@ -233,13 +233,16 @@
           <div class="field"><label for="up-grade">Year / grade</label>
             <input type="text" id="up-grade" placeholder="e.g. Grade 11" required></div>
         </div>
-        <div class="field"><label for="up-country">Country</label>
-          <input type="text" id="up-country" required></div>
+        <div class="field"><label for="up-country">Country or territory</label>
+          <p class="hint">Start typing to search.</p>
+          <input type="text" id="up-country" list="country-list" autocomplete="country-name"
+                 placeholder="Search…" spellcheck="false" required>
+          <datalist id="country-list"></datalist></div>
         <div class="field"><label for="up-email">Email</label>
           <input type="email" id="up-email" autocomplete="email" required></div>
         <div class="field"><label for="up-pw">Password</label>
-          <p class="hint">At least 8 characters.</p>
-          <input type="password" id="up-pw" autocomplete="new-password" minlength="8" required></div>
+          <p class="hint">At least 6 characters. A passphrase is fine.</p>
+          <input type="password" id="up-pw" autocomplete="new-password" minlength="6" required></div>
         <button class="btn btn-solid" type="submit">Create account</button>
       </form>
     </div>
@@ -391,6 +394,13 @@ const STATUSES = {
 };
 const EDITOR_ROLES = ["section_editor", "faculty_editor", "chief_editor"];
 
+// Every ISO 3166-1 country and territory, generated from Intl.DisplayNames so
+// the spellings are the standard English short names, not hand-typed.
+const COUNTRIES = ["Afghanistan", "Åland Islands", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", "Antarctica", "Antigua & Barbuda", "Argentina", "Armenia", "Aruba", "Ascension Island", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia & Herzegovina", "Botswana", "Bouvet Island", "Brazil", "British Indian Ocean Territory", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Canary Islands", "Cape Verde", "Caribbean Netherlands", "Cayman Islands", "Central African Republic", "Ceuta & Melilla", "Chad", "Chile", "China", "Christmas Island", "Clipperton Island", "Cocos (Keeling) Islands", "Colombia", "Comoros", "Congo - Brazzaville", "Congo - Kinshasa", "Cook Islands", "Costa Rica", "Côte d’Ivoire", "Croatia", "Cuba", "Curaçao", "Cyprus", "Czechia", "Denmark", "Diego Garcia", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "European Union", "Eurozone", "Falkland Islands", "Faroe Islands", "Fiji", "Finland", "France", "French Guiana", "French Polynesia", "French Southern Territories", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guadeloupe", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Heard & McDonald Islands", "Honduras", "Hong Kong SAR China", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macao SAR China", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Martinique", "Mauritania", "Mauritius", "Mayotte", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Myanmar (Burma)", "Namibia", "Nauru", "Nepal", "Netherlands", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue", "Norfolk Island", "North Korea", "North Macedonia", "Northern Mariana Islands", "Norway", "Oman", "Outlying Oceania", "Pakistan", "Palau", "Palestinian Territories", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Pitcairn Islands", "Poland", "Portugal", "Pseudo-Accents", "Pseudo-Bidi", "Puerto Rico", "Qatar", "Réunion", "Romania", "Russia", "Rwanda", "Samoa", "San Marino", "São Tomé & Príncipe", "Sark", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Sint Maarten", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Georgia & South Sandwich Islands", "South Korea", "South Sudan", "Spain", "Sri Lanka", "St. Barthélemy", "St. Helena", "St. Kitts & Nevis", "St. Lucia", "St. Martin", "St. Pierre & Miquelon", "St. Vincent & Grenadines", "Sudan", "Suriname", "Svalbard & Jan Mayen", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tokelau", "Tonga", "Trinidad & Tobago", "Tristan da Cunha", "Tunisia", "Türkiye", "Turkmenistan", "Turks & Caicos Islands", "Tuvalu", "U.S. Outlying Islands", "U.S. Virgin Islands", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United Nations", "United States", "Unknown Region", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Wallis & Futuna", "Western Sahara", "Yemen", "Zambia", "Zimbabwe"];
+
+document.getElementById("country-list").innerHTML =
+  COUNTRIES.map((c) => `<option value="${c.replace(/"/g, "&quot;")}"></option>`).join("");
+
 if (CONFIG.url.startsWith("PASTE") || CONFIG.anonKey.startsWith("PASTE")) {
   only("v-setup");
   throw new Error("Supabase is not configured yet.");
@@ -460,6 +470,16 @@ $("form-in").onsubmit = async (e) => {
 
 $("form-up").onsubmit = async (e) => {
   e.preventDefault(); clearNotice("auth-note");
+
+  // A datalist only suggests — anything can still be typed. Pinning the value
+  // to a real entry stops "USA" / "U.S." / "United States" becoming three
+  // different countries in the editorial records.
+  const typed = $("up-country").value.trim();
+  const country = COUNTRIES.find((c) => c.toLowerCase() === typed.toLowerCase());
+  if (!country) return notice("auth-note", "err",
+    "Choose a country from the list \u2014 start typing and pick a suggestion.");
+  $("up-country").value = country;
+
   const { error } = await sb.auth.signUp({
     email: $("up-email").value.trim(),
     password: $("up-pw").value,
@@ -467,7 +487,7 @@ $("form-up").onsubmit = async (e) => {
       full_name: $("up-name").value.trim(),
       school:    $("up-school").value.trim(),
       grade:     $("up-grade").value.trim(),
-      country:   $("up-country").value.trim(),
+      country:   country,
     }},
   });
   if (error) return notice("auth-note", "err", error.message);
