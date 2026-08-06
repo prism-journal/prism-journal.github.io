@@ -235,7 +235,7 @@
       <div class="card">
         <h2>The manuscript</h2>
         <div class="field"><label for="f-title">Title <span class="req-tag">Required</span></label>
-          <input type="text" id="f-title" maxlength="400" required></div>
+          <input type="text" id="f-title" minlength="3" maxlength="400" required></div>
         <div class="field"><label for="f-abstract">Abstract <span class="req-tag">Required</span></label>
           <p class="hint">What was already known, what you did, what you found, what it does not show.</p>
           <textarea id="f-abstract" rows="6" minlength="40" maxlength="4000" required></textarea></div>
@@ -395,6 +395,38 @@ const isEditor  = () => ["section_editor","faculty_editor","deputy_editor","chie
 const canDecide = () => ["faculty_editor","deputy_editor","chief_editor"].includes(profile?.role);
 const canPeople = () => ["deputy_editor","chief_editor"].includes(profile?.role);
 
+/* Postgres reports a violated constraint by its internal name. Surfacing that
+   raw text tells an author nothing, so every constraint the forms can trip is
+   mapped to the sentence describing what to change. Anything unmapped still
+   falls through to the original message rather than being swallowed. */
+const CONSTRAINT_TEXT = {
+  manuscripts_title_check:      "The title must be between 3 and 400 characters.",
+  manuscripts_abstract_check:   "The abstract must be between 40 and 4,000 characters.",
+  manuscripts_mentor_statement_check:
+    "The mentor contribution statement needs at least 10 characters. If nobody helped, say so explicitly.",
+  reviews_summary_check:        "The summary needs at least 20 characters.",
+  decisions_letter_check:       "The decision letter needs at least 20 characters.",
+  reviews_sound_check:          "Each score must be between 1 and 5.",
+  reviews_honest_check:         "Each score must be between 1 and 5.",
+  reviews_checkable_check:      "Each score must be between 1 and 5.",
+  reviews_legible_check:        "Each score must be between 1 and 5.",
+  profiles_role_check:          "That is not a role this journal recognises.",
+  review_assignments_manuscript_id_reviewer_id_key:
+    "That person has already been invited to review this manuscript.",
+  reviews_assignment_id_key:    "You have already submitted a report for this manuscript.",
+};
+
+function friendly(err) {
+  if (!err) return "";
+  const raw = friendly(err);
+  for (const [name, text] of Object.entries(CONSTRAINT_TEXT)) if (raw.includes(name)) return text;
+  if (err.code === "42501" || /row-level security/i.test(raw))
+    return "You do not have permission to do that.";
+  if (err.code === "23505") return "That record already exists.";
+  if (err.code === "23503") return "That refers to something which no longer exists.";
+  return raw;
+}
+
 const notice = (el,kind,msg) => { $(el).innerHTML = `<div class="note note-${kind}">${esc(msg)}</div>`; };
 const clearNote = (el) => { $(el).innerHTML = ""; };
 const fmtDate = (s) => s ? new Date(s).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}) : "—";
@@ -413,7 +445,7 @@ async function boot() {
   }
   me = session.user;
   const { data, error } = await sb.from("profiles").select("*").eq("id", me.id).single();
-  if (error) { only("v-auth"); return notice("auth-note","err","Could not load your profile: " + error.message); }
+  if (error) { only("v-auth"); return notice("auth-note","err","Could not load your profile: " + friendly(error)); }
   profile = data; paintUser(); buildNav();
   go(canQueue() ? "v-queue" : "v-mine");
 }
@@ -455,7 +487,7 @@ $("form-in").onsubmit = async (e) => {
   e.preventDefault(); clearNote("auth-note");
   const { error } = await sb.auth.signInWithPassword({
     email: $("in-email").value.trim(), password: $("in-pw").value });
-  if (error) return notice("auth-note","err",error.message);
+  if (error) return notice("auth-note","err",friendly(error));
   boot();
 };
 
@@ -473,7 +505,7 @@ $("form-up").onsubmit = async (e) => {
     email: $("up-email").value.trim(), password: $("up-pw").value,
     options: { data: { full_name:$("up-name").value.trim(), school:$("up-school").value.trim(),
                        grade:$("up-grade").value.trim(), country } } });
-  if (error) return notice("auth-note","err",error.message);
+  if (error) return notice("auth-note","err",friendly(error));
   notice("auth-note","ok","Account created. Check your email for a confirmation link, then sign in.");
 };
 
@@ -481,7 +513,7 @@ $("reset-pw").onclick = async () => {
   const email = $("in-email").value.trim();
   if (!email) return notice("auth-note","err","Enter your email address first.");
   const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.href });
-  notice("auth-note", error ? "err" : "ok", error ? error.message : "Reset link sent to " + email);
+  notice("auth-note", error ? "err" : "ok", error ? friendly(error) : "Reset link sent to " + email);
 };
 
 $("signout").onclick = async () => {
@@ -492,6 +524,19 @@ $("signout").onclick = async () => {
 $("form-ms").onsubmit = async (e) => {
   e.preventDefault(); clearNote("submit-note");
   const btn = $("btn-send"), status = $("send-status"), file = $("f-file").files[0];
+
+  // Values are trimmed before sending, so a field padded with spaces can pass
+  // the browser's minlength and still be too short by the time it lands.
+  const lenChecks = [
+    ["f-title", 3, "The title must be at least 3 characters."],
+    ["f-abstract", 40, "The abstract must be at least 40 characters."],
+    ["f-mentor", 10, "The mentor contribution statement needs at least 10 characters."],
+    ["f-limits", 1, "State what your results do not establish."],
+    ["f-data", 1, "A data DOI or accession is required."],
+  ];
+  for (const [id, min, msg] of lenChecks)
+    if ($(id).value.trim().length < min) { $(id).focus(); return notice("submit-note","err",msg); }
+
   if (!file) return notice("submit-note","err","Attach your manuscript PDF.");
   if (file.type !== "application/pdf") return notice("submit-note","err","The manuscript must be a PDF.");
   if (file.size > 25*1024*1024) return notice("submit-note","err","That file is larger than 25 MB.");
@@ -525,7 +570,7 @@ $("form-ms").onsubmit = async (e) => {
     $("form-ms").reset(); go("v-mine");
     notice("mine-note","ok",
       `Submitted as ${ms.ms_number}. You will get a screening decision within ten working days.`);
-  } catch (err) { notice("submit-note","err", err.message || String(err)); }
+  } catch (err) { notice("submit-note","err", friendly(err)); }
   finally { btn.disabled = false; hide("send-status"); status.textContent = ""; }
 };
 
@@ -566,7 +611,7 @@ async function loadMine() {
   $("mine-list").innerHTML = `<p class="spinner">Loading…</p>`;
   const { data, error } = await sb.from("manuscripts").select("*")
     .eq("author_id", me.id).order("submitted_at",{ascending:false});
-  if (error) return notice("mine-note","err",error.message);
+  if (error) return notice("mine-note","err",friendly(error));
   if (!data.length) {
     $("mine-list").innerHTML = `<div class="card"><p class="muted" style="margin:0">
       No submissions yet. Read the requirements on the <a href="./#authors">journal site</a>,
@@ -597,7 +642,7 @@ async function loadReviews() {
   $("rev-list").innerHTML = `<p class="spinner">Loading…</p>`;
   const { data, error } = await sb.from("review_assignments")
     .select("*, manuscripts(*)").eq("reviewer_id", me.id).order("assigned_at",{ascending:false});
-  if (error) return notice("rev-note","err",error.message);
+  if (error) return notice("rev-note","err",friendly(error));
   if (!data.length) {
     $("rev-list").innerHTML = `<div class="card"><p class="muted" style="margin:0">
       You have no review invitations. Editors assign referees from the queue.</p></div>`;
@@ -664,7 +709,7 @@ function wireReviews() {
         msg.textContent = "Saving…";
         const state = b.dataset.act === "accept" ? "accepted" : "declined";
         const { error } = await sb.from("review_assignments").update({ state }).eq("id", id);
-        msg.textContent = error ? error.message : "";
+        msg.textContent = error ? friendly(error) : "";
         if (!error) loadReviews();
       };
     });
@@ -685,7 +730,7 @@ async function submitReview(e, form, assignmentId, box) {
   CRITERIA.forEach(([k]) => { payload[k] = Number(form.querySelector(`[data-sc="${k}"]`).value); });
 
   const { data: rev, error } = await sb.from("reviews").insert(payload).select().single();
-  if (error) { msg.textContent = error.message; return; }
+  if (error) { msg.textContent = friendly(error); return; }
   const note = g("note").value.trim();
   if (note) await sb.from("review_notes").insert({ review_id: rev.id, note });
   await sb.from("review_assignments").update({ state:"submitted" }).eq("id", assignmentId);
@@ -698,7 +743,7 @@ async function openPdf(msId, msg) {
     .eq("manuscript_id", msId).order("uploaded_at",{ascending:false}).limit(1).maybeSingle();
   if (error || !data) { msg.textContent = "No file attached."; return; }
   const signed = await sb.storage.from("manuscripts").createSignedUrl(data.storage_path, 300);
-  if (signed.error) { msg.textContent = signed.error.message; return; }
+  if (signed.error) { msg.textContent = friendly(signed.error); return; }
   msg.textContent = ""; window.open(signed.data.signedUrl, "_blank", "noopener");
 }
 
@@ -716,7 +761,7 @@ async function loadQueue() {
     sb.from("manuscripts").select("*, profiles!manuscripts_author_id_fkey(full_name,school,country)")
       .order("submitted_at",{ascending:false}),
     sb.from("profiles").select("id,full_name,email,role")]);
-  if (error) return notice("queue-note","err",error.message);
+  if (error) return notice("queue-note","err",friendly(error));
 
   const ids = rows.length ? rows.map((m) => m.id) : [NIL];
   const [{ data: asgs }, { data: revs }, { data: decs }] = await Promise.all([
@@ -823,7 +868,7 @@ function wireQueue() {
       msg.textContent = "Inviting…";
       const { error } = await sb.from("review_assignments").insert({
         manuscript_id:id, reviewer_id:rid, assigned_by:me.id, due_at:g("due").value || null });
-      msg.textContent = error ? error.message : "Invited.";
+      msg.textContent = error ? friendly(error) : "Invited.";
       if (!error) setTimeout(loadQueue, 400);
     };
 
@@ -831,7 +876,7 @@ function wireQueue() {
       const msg = box.querySelector(".msg-s"); msg.textContent = "Saving…";
       const { error } = await sb.from("manuscripts")
         .update({ status:g("status").value, editor_note:g("note").value.trim() }).eq("id", id);
-      msg.textContent = error ? error.message : "Saved.";
+      msg.textContent = error ? friendly(error) : "Saved.";
       if (!error) setTimeout(loadQueue, 500);
     };
 
@@ -844,7 +889,7 @@ function wireQueue() {
       const { error } = await sb.from("decisions").insert({
         manuscript_id:id, editor_id:me.id, decision, letter,
         signed_name: profile.full_name || profile.email });
-      if (error) { msg.textContent = error.message; return; }
+      if (error) { msg.textContent = friendly(error); return; }
       // A decision is not a status — move the manuscript to match it.
       const next = decision === "accept" ? "accepted"
                  : decision === "decline" ? "declined" : "revision";
@@ -859,7 +904,7 @@ async function loadPeople() {
   clearNote("people-note");
   $("people-list").innerHTML = `<p class="spinner">Loading…</p>`;
   const { data, error } = await sb.from("profiles").select("*").order("created_at");
-  if (error) return notice("people-note","err",error.message);
+  if (error) return notice("people-note","err",friendly(error));
   // Only a chief editor may create another chief editor; the database enforces
   // this too, so a tampered dropdown gains nothing.
   const assignable = Object.keys(ROLES).filter((r) => r !== "chief_editor" || profile.role === "chief_editor");
@@ -885,7 +930,7 @@ async function loadPeople() {
       const msg = row.querySelector(".msg"); msg.textContent = "Saving…";
       const { error } = await sb.from("profiles")
         .update({ role: row.querySelector('[data-f="role"]').value }).eq("id", row.dataset.p);
-      msg.textContent = error ? error.message : "Saved.";
+      msg.textContent = error ? friendly(error) : "Saved.";
     };
   });
 }
