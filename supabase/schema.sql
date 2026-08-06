@@ -573,6 +573,57 @@ create policy "editors read manuscripts" on storage.objects
       and a.state in ('invited','accepted','submitted'))));
 
 
+
+-- ---------------------------------------------------------------------------
+-- THE PUBLISHING LAYER
+--
+-- Everything above is the editorial office: RLS hides it from the public, which
+-- is correct while a manuscript is under consideration. But an accepted article
+-- has to be readable by anyone, including Google Scholar, with no key at all.
+--
+-- These views are the only public surface. They are security-definer by design
+-- so they can read past RLS, which makes the WHERE clause the entire gate —
+-- `status = 'accepted'` is what separates a published paper from a manuscript
+-- still in review. Nothing else may be added to these views loosely: note that
+-- author email, grade and every unaccepted manuscript stay out.
+-- ---------------------------------------------------------------------------
+
+drop view if exists public.published_articles cascade;
+create view public.published_articles as
+  select m.id, m.ms_number, m.title, m.abstract, m.section, m.article_type,
+         m.coauthors, m.data_doi, m.code_doi, m.ethics_ref, m.ai_disclosure,
+         m.limitations, m.mentor_statement, m.submitted_at, m.updated_at,
+         p.full_name as author_name,
+         p.school    as author_school,
+         p.country   as author_country
+  from public.manuscripts m
+  join public.profiles p on p.id = m.author_id
+  where m.status = 'accepted';
+
+-- The review record, published with the article. Confidential notes live in a
+-- separate table and are deliberately absent here.
+drop view if exists public.published_reviews cascade;
+create view public.published_reviews as
+  select r.id, r.manuscript_id, r.sound, r.honest, r.checkable, r.legible,
+         r.summary, r.major_points, r.minor_points, r.recommendation,
+         r.signed, r.submitted_at,
+         case when r.signed then p.full_name else null end as reviewer_name
+  from public.reviews r
+  join public.manuscripts m on m.id = r.manuscript_id
+  join public.profiles p    on p.id = r.reviewer_id
+  where m.status = 'accepted';
+
+drop view if exists public.published_decisions cascade;
+create view public.published_decisions as
+  select d.id, d.manuscript_id, d.decision, d.letter, d.signed_name, d.created_at
+  from public.decisions d
+  join public.manuscripts m on m.id = d.manuscript_id
+  where m.status = 'accepted';
+
+grant select on public.published_articles  to anon, authenticated;
+grant select on public.published_reviews   to anon, authenticated;
+grant select on public.published_decisions to anon, authenticated;
+
 -- ---------------------------------------------------------------------------
 -- The first chief editor can only be made here, because the application has
 -- no path that lets anyone change their own role:

@@ -3,3 +3,14 @@ node_modules/
 package-lock.json
 # build intermediate; og.png is the artefact the site actually serves
 og.svg
+
+# Reference material from other publishers — study locally, never redistribute.
+# These are third-party copyrighted PDFs; publishing them from this repo would
+# be republication, not fair use.
+TheLancet.com_*/
+reference/
+*.pdf
+
+# fixture used to preview the article design; never published, because a
+# fabricated paper on a real journal's site reads as a real one
+preview-article.html
