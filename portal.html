@@ -155,12 +155,37 @@
   table.people select { font-size:0.8125rem; padding:0.3125rem 0.5rem; }
   .tbl-wrap { overflow-x:auto; }
 
+  /* Lucide icons (ISC) as one inline sprite — no CDN, no build step. They
+     inherit currentColor, so they follow the theme and the issue colour. */
+  .ic { width:1em; height:1em; stroke:currentColor; fill:none;
+        stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+        vertical-align:-0.135em; flex:none; }
+  .navtab .ic { margin-right:0.4375rem; opacity:0.85; }
+  .btn .ic { margin-right:0.375rem; }
+  #sprite { position:absolute; width:0; height:0; overflow:hidden; }
+
   .muted { color:var(--ink-3); font-size:0.875rem; }
   .hidden { display:none !important; }
   .spinner { font-family:var(--mono); font-size:0.75rem; color:var(--ink-3); }
 </style>
 </head>
 <body>
+
+<svg id="sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-files" viewBox="0 0 24 24"><path d="M15 2h-4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8" /> <path d="M16.706 2.706A2.4 2.4 0 0 0 15 2v5a1 1 0 0 0 1 1h5a2.4 2.4 0 0 0-.706-1.706z" /> <path d="M5 7a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 1.732-1" /></symbol>
+    <symbol id="i-clipboard-check" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1" /> <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /> <path d="m9 14 2 2 4-4" /></symbol>
+    <symbol id="i-inbox" viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12" /> <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" /></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <path d="M16 3.128a4 4 0 0 1 0 7.744" /> <path d="M22 21v-2a4 4 0 0 0-3-3.87" /> <circle cx="9" cy="7" r="4" /></symbol>
+    <symbol id="i-file-text" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M10 9H8" /> <path d="M16 13H8" /> <path d="M16 17H8" /></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" /> <path d="m21.854 2.147-10.94 10.939" /></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol>
+    <symbol id="i-pen-line" viewBox="0 0 24 24"><path d="M13 21h8" /> <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /></symbol>
+    <symbol id="i-log-out" viewBox="0 0 24 24"><path d="m16 17 5-5-5-5" /> <path d="M21 12H9" /> <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /></symbol>
+    <symbol id="i-file-plus" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M9 15h6" /> <path d="M12 18v-6" /></symbol>
+  </defs>
+</svg>
+
 
 <div class="bar">
   <div class="bar-in">
@@ -170,7 +195,7 @@
       <a class="bar-back" href="./">&larr; <span class="long">Back to the </span>journal</a>
       <div class="whoami hidden" id="whoami"></div>
       <button class="btn btn-ghost btn-sm hidden" id="signout"
-              style="border-color:rgba(246,242,243,.35);color:#F6F2F3">Sign out</button>
+              style="border-color:rgba(246,242,243,.35);color:#F6F2F3"><svg class="ic" aria-hidden="true"><use href="#i-log-out"/></svg>Sign out</button>
     </div>
   </div>
 </div>
@@ -444,6 +469,7 @@ function friendly(err) {
 
 const notice = (el,kind,msg) => { $(el).innerHTML = `<div class="note note-${kind}">${esc(msg)}</div>`; };
 const clearNote = (el) => { $(el).innerHTML = ""; };
+const ic = (name) => `<svg class="ic" aria-hidden="true"><use href="#i-${name}"/></svg>`;
 const fmtDate = (s) => s ? new Date(s).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}) : "—";
 const NIL = "00000000-0000-0000-0000-000000000000";
 
@@ -473,11 +499,13 @@ function paintUser() {
 }
 
 function buildNav() {
-  const tabs = [["v-submit","Submit"],["v-mine","My submissions"],["v-reviews","My reviews"]];
-  if (canQueue())  tabs.push(["v-queue","Queue"]);
-  if (canPeople()) tabs.push(["v-people","People"]);
-  $("navin").innerHTML = tabs.map(([id,label]) =>
-    `<button class="navtab" data-v="${id}" role="tab" aria-selected="false">${esc(label)}</button>`).join("");
+  const tabs = [["v-submit","Submit","file-plus"],
+                ["v-mine","My submissions","files"],
+                ["v-reviews","My reviews","clipboard-check"]];
+  if (canQueue())  tabs.push(["v-queue","Queue","inbox"]);
+  if (canPeople()) tabs.push(["v-people","People","users"]);
+  $("navin").innerHTML = tabs.map(([id,label,icon]) =>
+    `<button class="navtab" data-v="${id}" role="tab" aria-selected="false">${ic(icon)}${esc(label)}</button>`).join("");
   $("navin").querySelectorAll("[data-v]").forEach((b) => { b.onclick = () => go(b.dataset.v); });
   show("nav");
 }
@@ -674,7 +702,7 @@ async function loadReviews() {
         ${a.state === "invited" ? `<div class="btn-row">
             <button class="btn btn-solid btn-sm" data-act="accept">Accept invitation</button>
             <button class="btn btn-ghost btn-sm" data-act="decline">Decline</button>
-            <button class="btn btn-ghost btn-sm" data-act="pdf">Open PDF</button>
+            <button class="btn btn-ghost btn-sm" data-act="pdf">${ic("file-text")}Open PDF</button>
             <span class="spinner msg"></span></div>` : ""}
         ${a.state === "accepted" && !done ? reviewForm(a) : ""}
         ${done ? reviewBlock(done) : ""}
@@ -685,7 +713,7 @@ async function loadReviews() {
 
 const reviewForm = (a) => `
   <div class="btn-row" style="margin-bottom:1rem">
-    <button class="btn btn-ghost btn-sm" data-act="pdf">Open PDF</button>
+    <button class="btn btn-ghost btn-sm" data-act="pdf">${ic("file-text")}Open PDF</button>
     <span class="spinner msg"></span></div>
   <form data-form="${a.id}">
     ${CRITERIA.map(([k,label,help]) => `<div class="field">
@@ -708,7 +736,7 @@ const reviewForm = (a) => `
       <input type="checkbox" data-f="signed" style="width:auto;margin-top:.35rem">
       <span>Sign this report with my name. PRISM publishes referee reports with the accepted
         article either way; signing means yours carries your name and you are credited.</span></label></div>
-    <div class="btn-row"><button class="btn btn-solid btn-sm" type="submit">Submit report</button>
+    <div class="btn-row"><button class="btn btn-solid btn-sm" type="submit">${ic("check")}Submit report</button>
       <span class="spinner msg2"></span></div>
   </form>`;
 
@@ -821,7 +849,7 @@ async function loadQueue() {
           <dt>Limitations</dt><dd>${esc(m.limitations || "—")}</dd>
         </dl>
         <div class="btn-row" style="margin-bottom:1rem">
-          <button class="btn btn-ghost btn-sm" data-act="pdf">Open PDF</button>
+          <button class="btn btn-ghost btn-sm" data-act="pdf">${ic("file-text")}Open PDF</button>
           <span class="spinner msg"></span></div>
 
         <div class="sub"><h4>Referees (${a.length})</h4>
@@ -837,7 +865,7 @@ async function loadQueue() {
             <div class="field" style="margin:0"><label>Due date</label>
               <input type="date" data-f="due"></div></div>
             <div class="btn-row" style="margin-top:.625rem">
-              <button class="btn btn-ghost btn-sm" data-act="assign">Send invitation</button>
+              <button class="btn btn-ghost btn-sm" data-act="assign">${ic("send")}Send invitation</button>
               <span class="spinner msg-a"></span></div>` : ""}
         </div>
 
@@ -852,7 +880,7 @@ async function loadQueue() {
             <div class="field"><label>Note to the author</label>
               <input type="text" data-f="note" value="${esc(m.editor_note||"")}" placeholder="Shown to the author"></div>
           </div>
-          <div class="btn-row"><button class="btn btn-solid btn-sm" data-act="save">Save status</button>
+          <div class="btn-row"><button class="btn btn-solid btn-sm" data-act="save">${ic("check")}Save status</button>
             <span class="spinner msg-s"></span></div>` : ""}
 
         ${canDecide() ? `<div class="sub" style="margin-top:1rem"><h4>Write a decision</h4>
@@ -862,7 +890,7 @@ async function loadQueue() {
             <select data-f="decision"><option value="">Choose…</option>
               ${Object.entries(RECS).map(([k,v]) => `<option value="${k}">${esc(v)}</option>`).join("")}</select></div>
           <div class="field"><label>Letter</label><textarea data-f="letter" rows="5"></textarea></div>
-          <div class="btn-row"><button class="btn btn-solid btn-sm" data-act="decide">Sign and record</button>
+          <div class="btn-row"><button class="btn btn-solid btn-sm" data-act="decide">${ic("pen-line")}Sign and record</button>
             <span class="spinner msg-d"></span></div></div>` : ""}
       </div></li>`;
   }).join("")}</ul>`;
