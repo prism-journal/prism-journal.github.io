@@ -460,6 +460,12 @@ function friendly(err) {
   if (!err) return "";
   const raw = friendly(err);
   for (const [name, text] of Object.entries(CONSTRAINT_TEXT)) if (raw.includes(name)) return text;
+  // Raised when the database predates a role the interface already offers.
+  if (err.code === "22P02" && /enum prism_role/.test(raw)) {
+    const bad = (raw.match(/"([^"]+)"\s*$/) || [])[1] || "that role";
+    return `The database does not know the role "${bad}" yet. Re-run supabase/schema.sql ` +
+           `in the Supabase SQL editor, then try again.`;
+  }
   if (err.code === "42501" || /row-level security/i.test(raw))
     return "You do not have permission to do that.";
   if (err.code === "23505") return "That record already exists.";
