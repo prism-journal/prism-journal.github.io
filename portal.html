@@ -318,8 +318,9 @@
   <div id="v-people" class="hidden">
     <p class="eyebrow">Editorial office</p>
     <h1>People</h1>
-    <p class="lede">Everyone who has registered. A role change takes effect the next time that
-      person loads the portal.</p>
+    <p class="lede">Everyone who has registered. You can appoint people below your own rank;
+      roles at or above it are shown but locked. A change takes effect the next time that person
+      loads the portal.</p>
     <div id="people-note"></div>
     <div class="card"><div class="tbl-wrap"><div id="people-list"></div></div></div>
   </div>
@@ -363,6 +364,11 @@ const ROLES = {
   author:"Author", reviewer:"Reviewer", board_member:"Editorial board",
   section_editor:"Section editor", faculty_editor:"Faculty editor",
   deputy_editor:"Deputy editor", chief_editor:"Editor-in-chief" };
+// Mirrors public.role_rank() in the database. The database is authoritative —
+// this only keeps the interface from offering actions that would be rejected.
+const RANK = { author:10, reviewer:20, board_member:30, section_editor:40,
+               faculty_editor:50, deputy_editor:80, chief_editor:100 };
+
 const CRITERIA = [
   ["sound","Sound","Methods and statistics support the claim, and nothing stronger."],
   ["honest","Honest","States what was known before, and what the work does not show."],
@@ -905,9 +911,13 @@ async function loadPeople() {
   $("people-list").innerHTML = `<p class="spinner">Loading…</p>`;
   const { data, error } = await sb.from("profiles").select("*").order("created_at");
   if (error) return notice("people-note","err",friendly(error));
-  // Only a chief editor may create another chief editor; the database enforces
-  // this too, so a tampered dropdown gains nothing.
-  const assignable = Object.keys(ROLES).filter((r) => r !== "chief_editor" || profile.role === "chief_editor");
+  // You may manage people below your rank and grant roles below your rank; the
+  // chief editor is exempt from both. The database enforces this independently,
+  // so editing the dropdown in devtools gains nothing.
+  const chief = profile.role === "chief_editor";
+  const myRank = RANK[profile.role] || 0;
+  const canManage = (p) => p.id !== me.id && (chief || (RANK[p.role] || 0) < myRank);
+  const assignable = Object.keys(ROLES).filter((r) => chief || (RANK[r] || 0) < myRank);
 
   $("people-list").innerHTML = `<table class="people">
     <thead><tr><th>Name</th><th>School</th><th>Country</th><th>Email</th><th>Role</th><th></th></tr></thead>
@@ -915,11 +925,11 @@ async function loadPeople() {
       <td>${esc(p.full_name || "—")}</td><td>${esc(p.school || "—")}</td>
       <td>${esc(p.country || "—")}</td>
       <td class="muted" style="font-family:var(--mono);font-size:.75rem">${esc(p.email)}</td>
-      <td>${p.id === me.id
-        ? `<span class="role-pill">${esc(ROLES[p.role]||p.role)} (you)</span>`
+      <td>${!canManage(p)
+        ? `<span class="role-pill">${esc(ROLES[p.role]||p.role)}${p.id === me.id ? " (you)" : ""}</span>`
         : `<select data-f="role">${assignable.map((r) =>
             `<option value="${r}"${r===p.role?" selected":""}>${esc(ROLES[r])}</option>`).join("")}</select>`}</td>
-      <td>${p.id === me.id ? "" :
+      <td>${!canManage(p) ? "" :
         `<button class="btn btn-ghost btn-sm" data-act="setrole">Save</button>
          <span class="spinner msg"></span>`}</td></tr>`).join("")}</tbody></table>`;
 

@@ -290,6 +290,22 @@ returns boolean language sql security definer stable set search_path = public as
                      from public.profiles where id = auth.uid()), false);
 $$;
 
+-- Roles are a hierarchy, so authority over them is expressed as a rank. You may
+-- only manage people strictly below you, and only hand out roles strictly below
+-- your own. The chief editor is the single exception and may do either.
+create or replace function public.role_rank(r text)
+returns int language sql immutable as $$
+  select case r
+    when 'author'         then 10
+    when 'reviewer'       then 20
+    when 'board_member'   then 30
+    when 'section_editor' then 40
+    when 'faculty_editor' then 50
+    when 'deputy_editor'  then 80
+    when 'chief_editor'   then 100
+    else 0 end;
+$$;
+
 create or replace function public.is_chief()
 returns boolean language sql security definer stable set search_path = public as $$
   select coalesce((select role = 'chief_editor' from public.profiles where id = auth.uid()), false);
@@ -328,13 +344,25 @@ create policy "update own profile" on public.profiles
   for update using (id = auth.uid())
   with check (id = auth.uid() and role = public.my_role());
 
--- Deputies and the chief may change roles, but only the chief may create
--- another chief — otherwise a deputy could promote themselves past the person
--- who appointed them.
+-- Deputies and the chief may appoint people, bounded by rank.
+--
+--   USING      tests the row as it stands  -> whose role you may touch
+--   WITH CHECK tests the row as it will be -> which role you may grant
+--
+-- Both must clear your own rank, so a deputy can neither demote the chief who
+-- appointed them nor quietly promote a friend to deputy. Nobody edits their own
+-- role here at all; the "update own profile" policy covers your own details and
+-- pins the role column, which also stops a chief from accidentally demoting
+-- themselves and locking everyone out.
 create policy "managers update roles" on public.profiles
-  for update using (public.can_manage_people())
+  for update
+  using (public.can_manage_people()
+         and id <> auth.uid()
+         and (public.is_chief()
+              or public.role_rank(role) < public.role_rank(public.my_role())))
   with check (public.can_manage_people()
-              and (role <> 'chief_editor' or public.is_chief()));
+              and (public.is_chief()
+                   or public.role_rank(role) < public.role_rank(public.my_role())));
 
 -- manuscripts ---------------------------------------------------------------
 drop policy if exists "authors read own ms"     on public.manuscripts;
@@ -476,6 +504,7 @@ grant execute on function public.is_editor()         to authenticated;
 grant execute on function public.can_decide()        to authenticated;
 grant execute on function public.can_manage_people() to authenticated;
 grant execute on function public.is_chief()          to authenticated;
+grant execute on function public.role_rank(text)     to authenticated;
 
 -- If the project has "automatically expose new tables" switched on, Supabase
 -- will already have granted these to anon. RLS reduces anon to zero rows

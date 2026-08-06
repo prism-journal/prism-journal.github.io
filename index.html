@@ -762,6 +762,22 @@
   .topbar-links a:hover { color: #F6F2F3; }
   .topbar-links a.tb-cta { border-color: rgba(246,242,243,0.35); }
   .topbar-links a.tb-cta:hover { border-color: #F6F2F3; background: rgba(246,242,243,0.08); }
+  .topbar-links .who {
+    font-family: var(--mono); font-size: 0.625rem; letter-spacing: 0.06em;
+    color: rgba(246,242,243,0.5); padding-right: 0.5rem; white-space: nowrap;
+  }
+  .topbar-links button.linklike {
+    font: inherit; font-size: 0.75rem; font-weight: 550; background: none; cursor: pointer;
+    color: rgba(246,242,243,0.75); border: 1px solid transparent;
+    padding: 0.375rem 0.75rem; border-radius: 2px;
+  }
+  .topbar-links button.linklike:hover { color: #F6F2F3; }
+  .rail-auth button.linklike {
+    font: inherit; font-size: 0.75rem; font-weight: 600; cursor: pointer;
+    background: transparent; border: 1px solid var(--rule); color: var(--ink);
+    padding: 0.4375rem 0.625rem; border-radius: 2px;
+  }
+  .rail-auth button.linklike:hover { border-color: var(--ink); }
   @media (max-width: 34rem) {
     .topbar-tag { display: none; }
     .topbar-links { margin-left: 0; width: 100%; justify-content: flex-start; }
@@ -839,7 +855,7 @@
 <div class="topbar">
   <div class="topbar-in">
     <span class="topbar-tag">Open access · Transparent review · No fees</span>
-    <nav class="topbar-links" aria-label="Account">
+    <nav class="topbar-links" aria-label="Account" id="acct-top">
       <a href="./portal.html#signin">Sign in</a>
       <a class="tb-cta" href="./portal.html#register">Create account</a>
     </nav>
@@ -895,7 +911,7 @@
       <li><a class="rail-link" href="#issues"><span class="n">09</span>Issues</a></li>
       <li><a class="rail-link" href="#submit"><span class="n">10</span>Submit</a></li>
     </ul>
-    <div class="rail-auth">
+    <div class="rail-auth" id="acct-rail">
       <a class="primary" href="./portal.html#register">Create account</a>
       <a href="./portal.html#signin">Sign in</a>
     </div>
@@ -1452,6 +1468,66 @@
     <span>Indexing applications follow the first complete volume</span>
   </div>
 </footer>
+<script>
+/* The journal site is static, so it has no idea who is reading it. Rather than
+   pull the whole auth library onto a public page, this reads the session
+   Supabase already stored in localStorage and swaps the account links
+   synchronously — no flash of "Sign in" for someone who is signed in. The
+   library is fetched only if they actually click Sign out, because clearing
+   localStorage alone would leave the refresh token alive on the server. */
+(function () {
+  var URL_ = "https://pmlicwkwdeneosijrggu.supabase.co";
+  var KEY  = "sb-pmlicwkwdeneosijrggu-auth-token";
+
+  function readSession() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (!raw) return null;
+      if (raw.indexOf("base64-") === 0) raw = atob(raw.slice(7));
+      var s = JSON.parse(raw);
+      s = s && s.currentSession ? s.currentSession : s;
+      return s && s.access_token ? s : null;
+    } catch (e) { return null; }
+  }
+
+  var s = readSession();
+  if (!s) return;
+
+  var u = s.user || {};
+  var name = (u.user_metadata && u.user_metadata.full_name) || u.email || "your account";
+
+  var top = document.getElementById("acct-top");
+  if (top) top.innerHTML =
+    '<span class="who">' + escapeHtml(name) + '</span>' +
+    '<a class="tb-cta" href="./portal.html">Editorial portal</a>' +
+    '<button type="button" class="linklike" data-signout>Sign out</button>';
+
+  var rail = document.getElementById("acct-rail");
+  if (rail) rail.innerHTML =
+    '<a class="primary" href="./portal.html">Editorial portal</a>' +
+    '<button type="button" class="linklike" data-signout>Sign out</button>';
+
+  document.querySelectorAll("[data-signout]").forEach(function (b) {
+    b.addEventListener("click", async function () {
+      b.disabled = true; b.textContent = "Signing out…";
+      try {
+        var m = await import("https://esm.sh/@supabase/supabase-js@2");
+        await m.createClient(URL_, "sb_publishable_eJW3TwTx6h7LywJLk30jfw_PIKnJdw0")
+               .auth.signOut();
+      } catch (e) {
+        localStorage.removeItem(KEY);   // network down: at least clear this device
+      }
+      location.reload();
+    });
+  });
+
+  function escapeHtml(t) {
+    return String(t).replace(/[&<>"']/g, function (c) {
+      return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c];
+    });
+  }
+})();
+</script>
 
 <script>
 (function () {
