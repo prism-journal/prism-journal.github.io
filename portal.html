@@ -809,7 +809,7 @@ const SIGNUP_BTN = () => $("form-up").querySelector('button[type="submit"]');
    Disabling also makes the double-click impossible rather than merely
    discouraged, and the guard below means a second event finds the button
    already taken. If a cooldown claimed the button meanwhile, leave it alone. */
-async function busy(btn, label, fn) {
+async function busy(btn, label, fn, errorSlot) {
   if (!btn) return fn();
   if (btn.disabled) return;
   const restore = btn.textContent;
@@ -818,6 +818,11 @@ async function busy(btn, label, fn) {
   btn.textContent = label;
   try {
     return await fn();
+  } catch (err) {
+    // Without this an unexpected throw restored the button and vanished, which
+    // is indistinguishable from the action having quietly done nothing.
+    console.error(err);
+    notice(errorSlot || "set-note", "err", friendly(err));
   } finally {
     btn.removeAttribute("aria-busy");
     if (!timers.has(btn)) { btn.disabled = false; btn.textContent = restore; }
@@ -1341,10 +1346,19 @@ $("s-delete").onclick = () => {
   return busy($("s-delete"), "Deleting…", async () => {
     const { error } = await sb.rpc("delete_my_account");
     if (error) return notice("s-del-note", "err", friendly(error));
-    await sb.auth.signOut();
+
+    // The row this session belonged to no longer exists, so a server-side
+    // sign-out would be a request authenticated as nobody. Clear the session
+    // locally instead, and never let that step decide whether the user is told
+    // the deletion worked.
+    try { await sb.auth.signOut({ scope: "local" }); } catch (e) { console.warn(e); }
+    try { localStorage.removeItem("sb-pmlicwkwdeneosijrggu-auth-token"); } catch (e) {}
+
     me = profile = null; paintUser(); hide("nav"); only("v-auth");
-    notice("auth-note", "ok", "Your account has been deleted.");
-  });
+    $("tab-in").click();
+    notice("auth-note", "ok",
+      "Your account has been deleted. Nothing of yours remains in the journal.");
+  }, "s-del-note");
 };
 
 sb.auth.onAuthStateChange((event) => {
