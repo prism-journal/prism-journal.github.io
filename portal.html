@@ -556,9 +556,9 @@ let recovering =
   new URLSearchParams(location.search).get("mode") === "reset" ||
   /(^|[#&])type=recovery(&|$)/.test(location.hash);
 
-// When something still routes wrongly, the address that arrived is the only
-// evidence that matters, and it is gone a moment later. Keep a copy.
-try { sessionStorage.setItem("prism:lastLink", location.href); } catch (e) {}
+// Any copy of this address left behind would contain the access token it
+// arrived with, so nothing keeps one.
+try { sessionStorage.removeItem("prism:lastLink"); } catch (e) {}
 const canQueue  = () => ["board_member","section_editor","faculty_editor","deputy_editor","chief_editor"].includes(profile?.role);
 const isEditor  = () => ["section_editor","faculty_editor","deputy_editor","chief_editor"].includes(profile?.role);
 const canDecide = () => ["faculty_editor","deputy_editor","chief_editor"].includes(profile?.role);
