@@ -480,11 +480,29 @@ const fmtDate = (s) => s ? new Date(s).toLocaleDateString(undefined,{year:"numer
 const NIL = "00000000-0000-0000-0000-000000000000";
 
 /* ------------------------------------------------------------------ boot */
+// Supabase reports a failed or expired confirmation link by putting the reason
+// in the URL fragment. Left unread it looks like nothing happened at all.
+function readLinkResult() {
+  const p = new URLSearchParams(location.hash.slice(1));
+  const err = p.get("error_description") || p.get("error");
+  if (err) {
+    notice("auth-note", "err", decodeURIComponent(err).replace(/\+/g, " ") +
+      " — request a new link with Forgot password.");
+    history.replaceState(null, "", location.pathname);
+    return "error";
+  }
+  if (p.get("access_token")) { history.replaceState(null, "", location.pathname); return "ok"; }
+  return null;
+}
+
 async function boot() {
   only("v-load"); hide("nav");
+  const linkResult = readLinkResult();
   const { data:{ session } } = await sb.auth.getSession();
   if (!session) {
     me = profile = null; paintUser(); only("v-auth");
+    if (linkResult === "ok") notice("auth-note", "ok",
+      "Email confirmed. Sign in below.");
     // Arriving from "Create account" on the journal site should land on that
     // tab, not on the sign-in form the visitor cannot use yet.
     if (location.hash === "#register") $("tab-up").click();
@@ -552,8 +570,13 @@ $("form-up").onsubmit = async (e) => {
   $("up-country").value = country;
   const { error } = await sb.auth.signUp({
     email: $("up-email").value.trim(), password: $("up-pw").value,
-    options: { data: { full_name:$("up-name").value.trim(), school:$("up-school").value.trim(),
-                       grade:$("up-grade").value.trim(), country } } });
+    options: {
+      // Without this the confirmation link uses the project's Site URL, which
+      // ships as http://localhost:3000 — a dead address on the reader's machine.
+      emailRedirectTo: `${location.origin}${location.pathname}`,
+      data: { full_name:$("up-name").value.trim(), school:$("up-school").value.trim(),
+              grade:$("up-grade").value.trim(), country },
+    } });
   if (error) return notice("auth-note","err",friendly(error));
   notice("auth-note","ok","Account created. Check your email for a confirmation link, then sign in.");
 };
@@ -561,7 +584,7 @@ $("form-up").onsubmit = async (e) => {
 $("reset-pw").onclick = async () => {
   const email = $("in-email").value.trim();
   if (!email) return notice("auth-note","err","Enter your email address first.");
-  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.href });
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: `${location.origin}${location.pathname}` });
   notice("auth-note", error ? "err" : "ok", error ? friendly(error) : "Reset link sent to " + email);
 };
 
