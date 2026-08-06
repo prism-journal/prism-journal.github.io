@@ -543,6 +543,16 @@ if (CONFIG.url.startsWith("PASTE")) { only("v-setup"); throw new Error("not conf
 const sb = createClient(CONFIG.url, CONFIG.anonKey);
 
 let me = null, profile = null;
+
+/* A recovery link carries a real session, so boot() would find one, load the
+   profile and route to the queue — overwriting the set-a-new-password screen
+   that the PASSWORD_RECOVERY event had just opened. Whichever finished last
+   won, and it was usually boot().
+
+   The fragment says what kind of link this is, and reading it costs nothing
+   and happens before any await, so the decision is made once and boot() simply
+   stands down. */
+let recovering = /(^|[#&])type=recovery(&|$)/.test(location.hash);
 const canQueue  = () => ["board_member","section_editor","faculty_editor","deputy_editor","chief_editor"].includes(profile?.role);
 const isEditor  = () => ["section_editor","faculty_editor","deputy_editor","chief_editor"].includes(profile?.role);
 const canDecide = () => ["faculty_editor","deputy_editor","chief_editor"].includes(profile?.role);
@@ -635,9 +645,12 @@ async function readLinkResult() {
 }
 
 async function boot() {
+  if (recovering) { hide("nav"); only("v-newpw"); return; }
   only("v-load"); hide("nav");
   const linkResult = await readLinkResult();
+  if (recovering) return;
   const { data:{ session } } = await sb.auth.getSession();
+  if (recovering) return;
   if (!session) {
     me = profile = null; paintUser(); only("v-auth");
     if (linkResult === "ok") notice("auth-note", "ok",
@@ -650,6 +663,7 @@ async function boot() {
   }
   me = session.user;
   const { data, error } = await sb.from("profiles").select("*").eq("id", me.id).single();
+  if (recovering) return;
   if (error) { only("v-auth"); return notice("auth-note","err","Could not load your profile: " + friendly(error)); }
   profile = data; paintUser(); buildNav();
   go(canQueue() ? "v-queue" : "v-mine");
@@ -1330,6 +1344,7 @@ sb.auth.onAuthStateChange((event) => {
   // Arriving from a reset link gives a session, but the visitor came to change
   // a password, not to be silently logged in somewhere.
   if (event === "PASSWORD_RECOVERY") {
+    recovering = true;
     clearNote("newpw-note");
     hide("nav");
     only("v-newpw");
@@ -1347,6 +1362,7 @@ $("form-newpw").onsubmit = (e) => {
     const { error } = await sb.auth.updateUser({ password: a });
     if (error) return notice("newpw-note", "err", friendly(error));
     $("form-newpw").reset();
+    recovering = false;
     // Sign out rather than continuing into the portal on the recovery session:
     // the point of the exercise was the new password, so prove it works.
     await sb.auth.signOut();
