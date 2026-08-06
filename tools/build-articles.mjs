@@ -69,6 +69,9 @@ function scholarTags(a, url) {
     ["citation_publication_date", iso(a.updated_at).replace(/-/g, "/")],
     ["citation_online_date", iso(a.updated_at).replace(/-/g, "/")],
     ["citation_abstract_html_url", url],
+    // Scholar indexes the abstract page and the file separately; giving it both
+    // is what makes the full text discoverable rather than just the title.
+    ["citation_pdf_url", url.replace(/\.html$/, ".pdf")],
     ["citation_language", "en"],
     ["citation_id", a.ms_number],
   ];
@@ -190,6 +193,12 @@ ${jsonLd(a, url)}
     padding:.875rem 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
     margin:0 0 2.5rem}
   .meta b{color:var(--ink);font-weight:600}
+  .pdf-btn{font:inherit;font-family:var(--sans);font-size:.6875rem;font-weight:600;
+    text-decoration:none;display:inline-block;
+    letter-spacing:.04em;margin-left:auto;cursor:pointer;color:var(--ink);
+    background:transparent;border:1px solid var(--rule);border-radius:2px;
+    padding:.3125rem .75rem}
+  .pdf-btn:hover{border-color:var(--issue);color:var(--issue-ink)}
 
   h2{font-family:var(--serif);font-weight:400;font-size:1.5rem;margin:2.75rem 0 .875rem}
   h3{font-size:1rem;font-weight:600;margin:1.75rem 0 .5rem}
@@ -225,6 +234,59 @@ ${jsonLd(a, url)}
   .cite{background:var(--rule-2);border:1px solid var(--rule);border-radius:3px;
     padding:1rem 1.25rem;font-family:var(--mono);font-size:.8125rem;line-height:1.6;
     overflow-wrap:anywhere;margin:.75rem 0 0}
+
+  /* ===================== PRINT / PDF =====================
+     Also what Puppeteer renders, so this is the PDF's typography, not a
+     degraded copy of the screen design. Measurements are in pt and mm
+     because that is what a page is actually made of. */
+  @page { size: A4; margin: 22mm 20mm 20mm; }
+
+  @media print {
+    :root {
+      --paper:#fff; --surface:#fff; --ink:#000; --ink-2:#333; --ink-3:#555;
+      --rule:#bbb; --rule-2:#e6e6e6; --issue:#A3132E; --issue-ink:#A3132E;
+    }
+    body { background:#fff; font-family:var(--serif); font-size:10.5pt; line-height:1.5; }
+    .bar, .back, .noprint { display:none !important; }
+    main { max-width:none; padding:0; margin:0; }
+
+    .print-head { display:block !important; }
+
+    h1 { font-size:19pt; line-height:1.18; margin:0 0 10pt; }
+    h2 { font-size:12.5pt; margin:16pt 0 5pt; break-after:avoid; }
+    h3 { font-size:10.5pt; margin:10pt 0 3pt; break-after:avoid; }
+    h4 { font-size:7.5pt; margin:8pt 0 2pt; break-after:avoid; }
+    p  { margin:0 0 7pt; max-width:none; orphans:3; widows:3; }
+    .authors { font-size:11pt; margin-bottom:2pt; }
+    .affil { font-size:9pt; margin-bottom:10pt; }
+    .kicker { font-size:7.5pt; margin-bottom:6pt; }
+    .abstract { font-size:10.5pt; }
+
+    .meta { font-size:7.5pt; padding:5pt 0; margin-bottom:14pt; gap:4pt 14pt; }
+
+    /* A referee report split across a page break is unreadable; keep each
+       whole where it fits on one page. */
+    .facts, .rev, .dec, .cite { break-inside:avoid; }
+    .record { break-before:page; border-top:none; padding-top:0; margin-top:0; }
+    .record > h2 { margin-top:0; }
+    .rev, .dec, .facts, .cite { border:1px solid #ccc; padding:9pt 11pt; margin:8pt 0; }
+    .dec { border-left:2.5pt solid var(--issue); }
+    ul.scores li { border-color:#ccc; font-size:8pt; padding:2pt 5pt; }
+    .facts dl { gap:3pt 10pt; }
+    .facts dt, .facts dd { font-size:9pt; }
+
+    footer { border-top:1px solid #ccc; padding:8pt 0 0; margin-top:14pt; font-size:8pt; }
+    a { color:#000; text-decoration:none; }
+  }
+
+  /* Masthead block that exists only on paper: a printed page has to say what
+     journal it came from, because it travels without the site around it. */
+  .print-head { display:none; border-bottom:1.5pt solid var(--issue);
+    padding-bottom:6pt; margin-bottom:14pt; }
+  .print-head .j { font-family:var(--serif); font-size:13pt; letter-spacing:.14em; }
+  .print-head .d { font-family:var(--mono); font-size:7.5pt; color:#444; float:right;
+    padding-top:4pt; }
+
   footer{max-width:52rem;margin:0 auto;padding:2rem 1.25rem 4rem;border-top:1px solid var(--rule);
     font-size:.8125rem;color:var(--ink-3)}
 </style>
@@ -237,6 +299,11 @@ ${jsonLd(a, url)}
 </div></div>
 
 <main>
+  <div class="print-head">
+    <span class="d">${esc(a.ms_number)} · ${human(a.updated_at)} · CC BY 4.0</span>
+    <span class="j">PRISM</span>
+  </div>
+
   <p class="kicker">${esc(TYPES[a.article_type] || a.article_type)}
     <span class="sec">· ${esc(SECTIONS[a.section] || a.section)}</span></p>
 
@@ -252,6 +319,7 @@ ${jsonLd(a, url)}
     <span>Published <b>${human(a.updated_at)}</b></span>
     <span>Licence <b>CC BY 4.0</b></span>
     <span>Peer review <b>published below</b></span>
+    <a class="pdf-btn noprint" href="${esc(a.ms_number)}.pdf" download>Download PDF</a>
   </div>
 
   <h2>Abstract</h2>
