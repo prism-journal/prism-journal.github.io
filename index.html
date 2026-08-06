@@ -799,6 +799,29 @@
   .rail-auth a.primary:hover { background: var(--ink); border-color: var(--ink); }
 
 
+
+  /* ===================== DISPERSION KEY ===================== */
+  /* Six discrete bands, not a smooth rainbow: they are the six section colours
+     used by the ticks below, so this reads as the key to that list rather than
+     as decoration. It sits here and nowhere else, because this is the only
+     place on the page where a wavelength stands for something. */
+  .scope-key {
+    height: 3px;
+    border-radius: 2px;
+    margin: 0 0 0.75rem;
+    background: linear-gradient(to right,
+      var(--w-violet) 0 16.667%, var(--w-blue) 16.667% 33.333%,
+      var(--w-cyan) 33.333% 50%,  var(--w-green) 50% 66.667%,
+      var(--w-amber) 66.667% 83.333%, var(--w-red) 83.333% 100%);
+  }
+  .scope-key-note {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-3);
+    margin: 0 0 2rem;
+  }
+
   /* ===================== FULL-COLUMN STATEMENT BAND ===================== */
   /* Spans the whole main column rather than the 34rem measure, which breaks
      the single-column rhythm without fighting the rail's grid track. */
@@ -1027,6 +1050,9 @@
       <p class="eyebrow">02 — Aims &amp; scope</p>
       <h2>Deliberately broad in subject. Deliberately narrow in standard.</h2>
       <p class="lede">PRISM considers original research, replications, and critical reviews in any of six sections. Work that sits between two sections is welcome and will be reviewed by both.</p>
+
+      <div class="scope-key" role="presentation"></div>
+      <p class="scope-key-note">One beam, six wavelengths — the sections below, in spectral order.</p>
 
       <ul class="scope">
         <li style="--tick: var(--w-violet)">
