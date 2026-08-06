@@ -49,6 +49,14 @@
               text-transform:uppercase; color:rgba(246,242,243,0.5);
               padding-left:0.875rem; border-left:1px solid rgba(246,242,243,0.25); }
   .bar-right { margin-left:auto; display:flex; align-items:center; gap:0.875rem; }
+  .bar-back {
+    font-size:0.75rem; font-weight:550; text-decoration:none; white-space:nowrap;
+    color:rgba(246,242,243,0.7); border:1px solid rgba(246,242,243,0.28);
+    padding:0.375rem 0.75rem; border-radius:2px;
+    transition:color 130ms ease, border-color 130ms ease, background-color 130ms ease;
+  }
+  .bar-back:hover { color:#F6F2F3; border-color:#F6F2F3; background:rgba(246,242,243,0.08); }
+  @media (max-width:32rem) { .bar-back span.long { display:none; } }
   .whoami { font-family:var(--mono); font-size:0.6875rem;
             color:rgba(246,242,243,0.65); text-align:right; line-height:1.5; }
   .whoami b { color:#F6F2F3; font-weight:600; }
@@ -156,9 +164,10 @@
 
 <div class="bar">
   <div class="bar-in">
-    <a class="mark" href="./">PRISM</a>
+    <a class="mark" href="./" title="Back to the journal">PRISM</a>
     <span class="mark-sub">Editorial portal</span>
     <div class="bar-right">
+      <a class="bar-back" href="./">&larr; <span class="long">Back to the </span>journal</a>
       <div class="whoami hidden" id="whoami"></div>
       <button class="btn btn-ghost btn-sm hidden" id="signout"
               style="border-color:rgba(246,242,243,.35);color:#F6F2F3">Sign out</button>
