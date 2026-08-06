@@ -1,0 +1,5 @@
+# dev-only: sharp is needed to regenerate og.png, never shipped
+node_modules/
+package-lock.json
+# build intermediate; og.png is the artefact the site actually serves
+og.svg

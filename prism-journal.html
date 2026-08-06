@@ -764,6 +764,84 @@
   .rail-auth a:hover { border-color: var(--ink); }
   .rail-auth a.primary:hover { background: var(--ink); border-color: var(--ink); }
 
+
+  /* ===================== FULL-COLUMN STATEMENT BAND ===================== */
+  /* Spans the whole main column rather than the 34rem measure, which breaks
+     the single-column rhythm without fighting the rail's grid track. */
+  .statement-band {
+    background: var(--plate);
+    color: #F6F2F3;
+    border-radius: 3px;
+    padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 3rem);
+    margin: 0 0 clamp(3.5rem, 8vw, 6rem);
+    position: relative;
+    overflow: hidden;
+  }
+  .statement-band::before {
+    content: "";
+    position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: linear-gradient(to bottom,
+      var(--w-violet), var(--w-blue), var(--w-cyan),
+      var(--w-green), var(--w-amber), var(--w-red));
+  }
+  .statement-band blockquote {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(1.375rem, 3.4vw, 2.125rem);
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+    max-width: 24ch;
+    text-wrap: balance;
+  }
+  .statement-band .attrib {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(246,242,243,0.45);
+    margin: 1.5rem 0 0;
+  }
+
+  /* ===================== ISSUE COLOUR PREVIEW ===================== */
+  .issues li { position: relative; }
+  .issue-btn {
+    all: unset;
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 9rem) 1fr auto;
+    align-items: baseline;
+    gap: 0 1.25rem;
+    width: 100%;
+    padding: 1rem 0;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+  .issue-btn:hover .nm { color: var(--ink); }
+  .issue-btn:focus-visible { outline: 2px solid var(--issue); outline-offset: 2px; }
+  .issues li[aria-current="true"] .vol { font-weight: 600; }
+  .issues li[aria-current="true"]::after {
+    content: "";
+    position: absolute; left: -0.875rem; top: 50%; transform: translateY(-50%);
+    width: 3px; height: 1.5rem; border-radius: 2px; background: var(--c);
+  }
+  .preview-hint {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-3);
+    margin: 0.875rem 0 0;
+    display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+  }
+  .preview-hint button {
+    font: inherit; font-family: var(--mono); font-size: 0.6875rem;
+    background: none; border: 1px solid var(--rule); color: var(--ink-2);
+    padding: 0.1875rem 0.5rem; border-radius: 2px; cursor: pointer;
+  }
+  .preview-hint button:hover { border-color: var(--ink); color: var(--ink); }
+  @media (max-width: 52rem) {
+    .issue-btn { grid-template-columns: 2.5rem 1fr; row-gap: 0.25rem; }
+    .issue-btn .st2 { grid-column: 2; }
+  }
+
   /* ============================ RESPONSIVE ============================ */
 
   @media (max-width: 62rem) {
@@ -905,10 +983,6 @@
         <p>That is the whole editorial argument. A reader does not have to take our word for the quality of a paper, because the record of how it was judged is attached to it.</p>
       </div>
 
-      <div class="stance">
-        <p>We do not claim that everything we publish is important. We claim that everything we publish can be checked.</p>
-      </div>
-
       <div class="prose">
         <p>The name is the method. A prism belongs to no single discipline; it takes one beam and separates it into its wavelengths. PRISM takes one question and lets several fields answer it — a result in ecology and a result in statistics belong in the same issue when both are sound, and a reader in one should be able to follow the other.</p>
       </div>
@@ -947,6 +1021,12 @@
         </li>
       </ul>
     </section>
+
+    <div class="statement-band">
+      <blockquote>We do not claim that everything we publish is important. We claim that
+        everything we publish can be checked.</blockquote>
+      <p class="attrib">The editorial position of PRISM</p>
+    </div>
 
     <!-- 03 CRITERIA -->
     <section id="criteria">
@@ -1331,31 +1411,47 @@
       <p class="lede">Each issue takes a single colour and keeps it across the cover, the site, and the typeset articles. The colours advance along the visible spectrum, beginning at the red end — so an issue's number and its colour are the same fact stated twice.</p>
 
       <ul class="issues">
-        <li class="now" style="--c: #C4213D">
-          <span class="chip"></span>
-          <span class="vol">Vol. 1 No. 1</span>
-          <span class="nm">656 nm — Hydrogen alpha</span>
-          <span class="st2">Open for submissions</span>
+        <li class="now" style="--c: #C4213D" aria-current="true">
+          <button class="issue-btn" type="button" data-light="#C4213D|#A3132E|#FBEDEF" data-dark="#FF5F73|#FF7385|#2A1418"
+                  aria-label="Preview the colour of Vol. 1 No. 1">
+            <span class="chip"></span>
+            <span class="vol">Vol. 1 No. 1</span>
+            <span class="nm">656 nm — Hydrogen alpha</span>
+            <span class="st2">Open for submissions</span>
+          </button>
         </li>
-        <li style="--c: #D89A16">
-          <span class="chip"></span>
-          <span class="vol">Vol. 1 No. 2</span>
-          <span class="nm">589 nm — Sodium D</span>
-          <span class="st2">Planned</span>
+        <li style="--c: #D89A16" aria-current="false">
+          <button class="issue-btn" type="button" data-light="#D89A16|#8A5C08|#FBF3E2" data-dark="#E8B846|#EFC65E|#2A2110"
+                  aria-label="Preview the colour of Vol. 1 No. 2">
+            <span class="chip"></span>
+            <span class="vol">Vol. 1 No. 2</span>
+            <span class="nm">589 nm — Sodium D</span>
+            <span class="st2">Planned</span>
+          </button>
         </li>
-        <li style="--c: #2E9B4F">
-          <span class="chip"></span>
-          <span class="vol">Vol. 1 No. 3</span>
-          <span class="nm">546 nm — Mercury green</span>
-          <span class="st2">Planned</span>
+        <li style="--c: #2E9B4F" aria-current="false">
+          <button class="issue-btn" type="button" data-light="#2E9B4F|#1D7238|#E8F5EC" data-dark="#56C077|#6FCB8B|#14251A"
+                  aria-label="Preview the colour of Vol. 1 No. 3">
+            <span class="chip"></span>
+            <span class="vol">Vol. 1 No. 3</span>
+            <span class="nm">546 nm — Mercury green</span>
+            <span class="st2">Planned</span>
+          </button>
         </li>
-        <li style="--c: #0E93B8">
-          <span class="chip"></span>
-          <span class="vol">Vol. 2 No. 1</span>
-          <span class="nm">486 nm — Hydrogen beta</span>
-          <span class="st2">Planned</span>
+        <li style="--c: #0E93B8" aria-current="false">
+          <button class="issue-btn" type="button" data-light="#0E93B8|#06718F|#E3F2F8" data-dark="#3FB8DC|#5FC7E5|#0F262E"
+                  aria-label="Preview the colour of Vol. 2 No. 1">
+            <span class="chip"></span>
+            <span class="vol">Vol. 2 No. 1</span>
+            <span class="nm">486 nm — Hydrogen beta</span>
+            <span class="st2">Planned</span>
+          </button>
         </li>
       </ul>
+      <p class="preview-hint">
+        <span>Click an issue to take its colour across the whole page.</span>
+        <button type="button" id="issue-reset">Reset to current issue</button>
+      </p>
 
       <div class="prose" style="margin-top: 1.75rem;">
         <p>Every wavelength is a real emission line. The four you see above are among the first spectral lines ever catalogued — which is a small way of saying that separating light into its parts is where a great deal of modern science began.</p>
@@ -1439,6 +1535,53 @@
     <span>Indexing applications follow the first complete volume</span>
   </div>
 </footer>
+<script>
+/* The issue colour is the one thing in this identity meant to move: three
+   tokens re-skin the publication while the wordmark, prism, type and grid stay
+   fixed. Describing that in prose convinces nobody, so the issue list applies
+   it live. Inline styles on :root outrank both the media query and the theme
+   attribute, which is why the correct light/dark triple has to be chosen here
+   and re-chosen whenever the viewer's theme changes. */
+(function () {
+  var list = document.querySelector(".issues");
+  if (!list) return;
+  var rows = Array.prototype.slice.call(list.querySelectorAll("li"));
+  var active = rows.findIndex(function (li) { return li.classList.contains("now"); });
+  if (active < 0) active = 0;
+  var current = active;
+
+  function darkNow() {
+    var t = document.documentElement.getAttribute("data-theme");
+    if (t === "dark") return true;
+    if (t === "light") return false;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+
+  function apply(i) {
+    current = i;
+    var btn = rows[i].querySelector(".issue-btn");
+    var trio = (darkNow() ? btn.dataset.dark : btn.dataset.light).split("|");
+    var root = document.documentElement.style;
+    root.setProperty("--issue", trio[0]);
+    root.setProperty("--issue-ink", trio[1]);
+    root.setProperty("--issue-wash", trio[2]);
+    rows.forEach(function (li, n) { li.setAttribute("aria-current", n === i ? "true" : "false"); });
+  }
+
+  rows.forEach(function (li, i) {
+    li.querySelector(".issue-btn").addEventListener("click", function () { apply(i); });
+  });
+  var reset = document.getElementById("issue-reset");
+  if (reset) reset.addEventListener("click", function () { apply(active); });
+
+  // Keep the preview correct if the viewer flips theme while it is applied.
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
+    if (current !== active) apply(current);
+  });
+  new MutationObserver(function () { if (current !== active) apply(current); })
+    .observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+})();
+</script>
 <script>
 /* The journal site is static, so it has no idea who is reading it. Rather than
    pull the whole auth library onto a public page, this reads the session
