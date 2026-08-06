@@ -624,6 +624,40 @@ grant select on public.published_articles  to anon, authenticated;
 grant select on public.published_reviews   to anon, authenticated;
 grant select on public.published_decisions to anon, authenticated;
 
+
+-- ---------------------------------------------------------------------------
+-- Account deletion.
+--
+-- The publishable key cannot touch auth.users, so this runs as definer. It
+-- deletes only the caller's own row — auth.uid() is not a parameter, so there
+-- is nothing to tamper with.
+--
+-- It refuses when the account has submissions. manuscripts.author_id is
+-- ON DELETE RESTRICT on purpose: a paper in the editorial record, and the
+-- referee reports attached to it, cannot point at an author who no longer
+-- exists. Erasure and the permanence of the scholarly record genuinely
+-- conflict here, and publication is the point at which the record wins.
+-- ---------------------------------------------------------------------------
+create or replace function public.delete_my_account()
+returns text language plpgsql security definer set search_path = public, auth as $$
+declare n int;
+begin
+  if auth.uid() is null then
+    raise exception 'Not signed in.';
+  end if;
+
+  select count(*) into n from public.manuscripts where author_id = auth.uid();
+  if n > 0 then
+    raise exception 'This account has % submission(s) on record. Ask the editors to withdraw them before deleting the account.', n;
+  end if;
+
+  delete from auth.users where id = auth.uid();   -- profiles cascades
+  return 'deleted';
+end $$;
+
+revoke all    on function public.delete_my_account() from public, anon;
+grant execute on function public.delete_my_account() to authenticated;
+
 -- ---------------------------------------------------------------------------
 -- The first chief editor can only be made here, because the application has
 -- no path that lets anyone change their own role:

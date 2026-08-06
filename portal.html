@@ -170,6 +170,15 @@
   .sent-tips li::before { content:""; position:absolute; left:0; top:0.6875rem;
     width:5px; height:5px; border-radius:50%; background:var(--issue); }
 
+  .card.danger { border-color:var(--issue); border-left-width:3px; }
+  .card.danger h2 { color:var(--issue-ink); }
+  .btn-danger { background:var(--issue); color:#fff; }
+  .btn-danger:hover:not(:disabled) { background:var(--ink); }
+  dl.acct { display:grid; grid-template-columns:minmax(0,7rem) 1fr; gap:.4375rem 1rem; margin:0 0 1rem; }
+  dl.acct dt { font-family:var(--mono); font-size:.6875rem; letter-spacing:.06em;
+               text-transform:uppercase; color:var(--ink-3); }
+  dl.acct dd { margin:0; font-size:.9375rem; }
+
   .muted { color:var(--ink-3); font-size:0.875rem; }
   .hidden { display:none !important; }
   .spinner { font-family:var(--mono); font-size:0.75rem; color:var(--ink-3); }
@@ -189,6 +198,7 @@
     <symbol id="i-pen-line" viewBox="0 0 24 24"><path d="M13 21h8" /> <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /></symbol>
     <symbol id="i-log-out" viewBox="0 0 24 24"><path d="m16 17 5-5-5-5" /> <path d="M21 12H9" /> <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /></symbol>
     <symbol id="i-file-plus" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M9 15h6" /> <path d="M12 18v-6" /></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"> <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" /> <circle cx="12" cy="12" r="3" /></symbol>
   </defs>
 </svg>
 
@@ -393,6 +403,64 @@
     <div id="queue-list"></div>
   </div>
 
+  <!-- ============================ settings ============================ -->
+  <div id="v-settings" class="hidden">
+    <p class="eyebrow">Your account</p>
+    <h1>Settings</h1>
+    <div id="set-note"></div>
+
+    <div class="card" style="max-width:34rem">
+      <h2>Your details</h2>
+      <p class="hint" style="margin:-0.5rem 0 1.25rem">These appear on anything you publish.</p>
+      <form id="form-profile">
+        <div class="field"><label for="s-name">Full name</label>
+          <input type="text" id="s-name" required></div>
+        <div class="row">
+          <div class="field"><label for="s-school">School</label>
+            <input type="text" id="s-school"></div>
+          <div class="field"><label for="s-grade">Year / grade</label>
+            <input type="text" id="s-grade"></div>
+        </div>
+        <div class="field"><label for="s-country">Country or territory</label>
+          <input type="text" id="s-country" list="country-list" spellcheck="false"></div>
+        <div class="field"><label for="s-orcid">ORCID</label>
+          <p class="hint">Optional. Free at orcid.org — it keeps your work attached to you
+            even after you change schools or your name.</p>
+          <input type="text" id="s-orcid" placeholder="0000-0002-1825-0097"></div>
+        <button class="btn btn-solid" type="submit">Save changes</button>
+      </form>
+    </div>
+
+    <div class="card" style="max-width:34rem">
+      <h2>Sign-in</h2>
+      <dl class="acct">
+        <dt>Email</dt><dd id="s-email"></dd>
+        <dt>Role</dt><dd id="s-role"></dd>
+      </dl>
+      <p class="hint">Your email address and role cannot be changed here. Ask an editor to
+        change a role; write to the editorial office to change an address.</p>
+      <div class="btn-row" style="margin-top:1rem">
+        <button class="btn btn-ghost btn-sm" id="s-pw">Send me a password reset link</button>
+        <span class="spinner" id="s-pw-msg"></span>
+      </div>
+    </div>
+
+    <div class="card danger" style="max-width:34rem">
+      <h2>Delete this account</h2>
+      <p>Deleting removes your profile and sign-in permanently. It cannot be undone.</p>
+      <p class="hint" id="s-del-why">An account with submissions on record cannot be deleted:
+        a manuscript, and the referee reports attached to it, cannot point at an author who no
+        longer exists. Ask the editors to withdraw a submission first.</p>
+      <div class="field" style="margin-top:1rem">
+        <label for="s-del-confirm">Type your email address to confirm</label>
+        <input type="text" id="s-del-confirm" autocomplete="off" spellcheck="false"></div>
+      <div id="s-del-note"></div>
+      <div class="btn-row">
+        <button class="btn btn-danger" id="s-delete">Delete my account</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ============================ people ============================ -->
   <div id="v-people" class="hidden">
     <p class="eyebrow">Editorial office</p>
@@ -421,7 +489,7 @@ const CONFIG = {
 const $ = (id) => document.getElementById(id);
 const show = (id) => $(id).classList.remove("hidden");
 const hide = (id) => $(id).classList.add("hidden");
-const VIEWS = ["v-setup","v-load","v-auth","v-newpw","v-sent","v-submit","v-mine","v-reviews","v-queue","v-people"];
+const VIEWS = ["v-setup","v-load","v-auth","v-newpw","v-sent","v-submit","v-mine","v-reviews","v-queue","v-people","v-settings"];
 const only = (id) => { VIEWS.forEach(hide); show(id); };
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g,
   (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
@@ -600,6 +668,7 @@ function buildNav() {
                 ["v-reviews","My reviews","clipboard-check"]];
   if (canQueue())  tabs.push(["v-queue","Queue","inbox"]);
   if (canPeople()) tabs.push(["v-people","People","users"]);
+  tabs.push(["v-settings","Settings","settings"]);
   $("navin").innerHTML = tabs.map(([id,label,icon]) =>
     `<button class="navtab" data-v="${id}" role="tab" aria-selected="false">${ic(icon)}${esc(label)}</button>`).join("");
   $("navin").querySelectorAll("[data-v]").forEach((b) => { b.onclick = () => go(b.dataset.v); });
@@ -614,6 +683,7 @@ function go(view) {
   if (view === "v-reviews") loadReviews();
   if (view === "v-queue")   loadQueue();
   if (view === "v-people")  loadPeople();
+  if (view === "v-settings") loadSettings();
 }
 
 /* ------------------------------------------------------------------ auth */
@@ -1199,6 +1269,62 @@ async function loadPeople() {
     };
   });
 }
+
+/* ------------------------------------------------------------- settings */
+function loadSettings() {
+  clearNote("set-note"); clearNote("s-del-note");
+  $("s-name").value    = profile.full_name || "";
+  $("s-school").value  = profile.school || "";
+  $("s-grade").value   = profile.grade || "";
+  $("s-country").value = profile.country || "";
+  $("s-orcid").value   = profile.orcid || "";
+  $("s-email").textContent = profile.email;
+  $("s-role").textContent  = ROLES[profile.role] || profile.role;
+  $("s-del-confirm").value = "";
+  $("s-pw-msg").textContent = "";
+}
+
+$("form-profile").onsubmit = (e) => {
+  e.preventDefault(); clearNote("set-note");
+  const country = $("s-country").value.trim();
+  if (country && !COUNTRIES.some((c) => c.toLowerCase() === country.toLowerCase()))
+    return notice("set-note", "err", "Choose a country from the list, or leave it blank.");
+  return busy(e.target.querySelector('button[type="submit"]'), "Saving…", async () => {
+    // role is deliberately absent: the policy pins it, and sending it would
+    // only produce a refusal.
+    const { data, error } = await sb.from("profiles").update({
+      full_name: $("s-name").value.trim(), school: $("s-school").value.trim(),
+      grade: $("s-grade").value.trim(),
+      country: COUNTRIES.find((c) => c.toLowerCase() === country.toLowerCase()) || null,
+      orcid: $("s-orcid").value.trim() || null,
+    }).eq("id", me.id).select().single();
+    if (error) return notice("set-note", "err", friendly(error));
+    profile = data; paintUser();
+    notice("set-note", "ok", "Saved.");
+  });
+};
+
+$("s-pw").onclick = () => busy($("s-pw"), "Sending…", async () => {
+  const { error } = await sb.auth.resetPasswordForEmail(profile.email,
+    { redirectTo: `${location.origin}${location.pathname}` });
+  $("s-pw-msg").textContent = error ? friendly(error) : "Sent — check your email.";
+  cooldownButton($("s-pw"), waitFrom(error), "Send me a password reset link");
+});
+
+$("s-delete").onclick = () => {
+  clearNote("s-del-note");
+  // Typing the address is the confirmation: a dialog is dismissed reflexively,
+  // and this is the one action in the portal that cannot be undone.
+  if ($("s-del-confirm").value.trim().toLowerCase() !== String(profile.email).toLowerCase())
+    return notice("s-del-note", "err", "Type your email address exactly to confirm.");
+  return busy($("s-delete"), "Deleting…", async () => {
+    const { error } = await sb.rpc("delete_my_account");
+    if (error) return notice("s-del-note", "err", friendly(error));
+    await sb.auth.signOut();
+    me = profile = null; paintUser(); hide("nav"); only("v-auth");
+    notice("auth-note", "ok", "Your account has been deleted.");
+  });
+};
 
 sb.auth.onAuthStateChange((event) => {
   // Arriving from a reset link gives a session, but the visitor came to change
