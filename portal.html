@@ -609,6 +609,7 @@ $("form-up").onsubmit = async (e) => {
       data: { full_name:$("up-name").value.trim(), school:$("up-school").value.trim(),
               grade:$("up-grade").value.trim(), country },
     } });
+  cooldownButton(SIGNUP_BTN(), waitFrom(error), "Create account");
   if (error) return notice("auth-note","err",friendly(error));
   showSent($("up-email").value.trim(), "signup", "Confirm your email");
 };
@@ -618,6 +619,9 @@ $("reset-pw").onclick = async () => {
   if (!email) return notice("auth-note","err","Enter your email address first.");
   const { error } = await sb.auth.resetPasswordForEmail(email,
     { redirectTo: `${location.origin}${location.pathname}` });
+  // Cool the button down either way: a refusal still means the address is
+  // inside its window, and a success means an email just went out.
+  cooldownButton($("reset-pw"), waitFrom(error), "Forgot password");
   if (error) return notice("auth-note", "err", friendly(error));
   showSent(email, "recover", "Reset your password");
 };
@@ -627,7 +631,36 @@ $("reset-pw").onclick = async () => {
    button and makes people click it again — straight into the per-address
    cooldown. The view names the address, and the resend button counts down so
    the wait is visible rather than arriving as an error. */
-let resendFor = null, resendKind = "signup", cooldown = 0, cooldownTimer = null;
+let resendFor = null, resendKind = "signup";
+
+// Every button that causes an email shares one cooldown implementation, because
+// they all share one server-side limit. The timer lives against the element, so
+// it keeps running while the view is switched away and back.
+const timers = new WeakMap();
+function cooldownButton(btn, seconds, label) {
+  if (!btn) return;
+  clearInterval(timers.get(btn));
+  let left = Math.ceil(seconds);
+  const tick = () => {
+    if (left <= 0) {
+      clearInterval(timers.get(btn));
+      btn.disabled = false; btn.textContent = label;
+      return;
+    }
+    btn.disabled = true; btn.textContent = `${label} (${left}s)`;
+    left--;
+  };
+  tick();
+  timers.set(btn, setInterval(tick, 1000));
+}
+
+// Supabase states the real wait in its refusal; honour it rather than guessing.
+const waitFrom = (err, fallback = 60) => {
+  const n = Number((String(err?.message || "").match(/(\d+)\s*seconds?/) || [])[1]);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+};
+
+const SIGNUP_BTN = () => $("form-up").querySelector('button[type="submit"]');
 
 function showSent(email, kind, heading) {
   resendFor = email; resendKind = kind;
@@ -635,24 +668,7 @@ function showSent(email, kind, heading) {
   $("sent-h").textContent = heading;
   clearNote("sent-note");
   only("v-sent");
-  startCooldown(60);
-}
-
-function startCooldown(seconds) {
-  cooldown = seconds;
-  clearInterval(cooldownTimer);
-  const btn = $("sent-resend");
-  const tick = () => {
-    if (cooldown <= 0) {
-      clearInterval(cooldownTimer);
-      btn.disabled = false; btn.textContent = "Send it again";
-      return;
-    }
-    btn.disabled = true; btn.textContent = `Send it again (${cooldown}s)`;
-    cooldown--;
-  };
-  tick();
-  cooldownTimer = setInterval(tick, 1000);
+  cooldownButton($("sent-resend"), 60, "Send it again");
 }
 
 async function sendLink(email, kind) {
@@ -667,12 +683,11 @@ $("sent-resend").onclick = async () => {
   const { error } = await sendLink(resendFor, resendKind);
   if (error) {
     notice("sent-note", "err", friendly(error));
-    const wait = Number((error.message.match(/(\d+)\s*seconds?/) || [])[1]);
-    startCooldown(Number.isFinite(wait) && wait > 0 ? wait : 60);
+    cooldownButton($("sent-resend"), waitFrom(error), "Send it again");
     return;
   }
   notice("sent-note", "ok", "Sent again.");
-  startCooldown(60);
+  cooldownButton($("sent-resend"), 60, "Send it again");
 };
 
 $("sent-back").onclick = () => { clearInterval(cooldownTimer); only("v-auth"); };
