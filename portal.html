@@ -164,6 +164,12 @@
   .btn .ic { margin-right:0.375rem; }
   #sprite { position:absolute; width:0; height:0; overflow:hidden; }
 
+  .sent-tips { list-style:none; margin:0 0 1.25rem; padding:0; font-size:0.875rem;
+               color:var(--ink-2); display:flex; flex-direction:column; gap:0.5rem; }
+  .sent-tips li { padding-left:1.125rem; position:relative; }
+  .sent-tips li::before { content:""; position:absolute; left:0; top:0.6875rem;
+    width:5px; height:5px; border-radius:50%; background:var(--issue); }
+
   .muted { color:var(--ink-3); font-size:0.875rem; }
   .hidden { display:none !important; }
   .spinner { font-family:var(--mono); font-size:0.75rem; color:var(--ink-3); }
@@ -255,6 +261,27 @@
           <input type="password" id="up-pw" autocomplete="new-password" minlength="6" required></div>
         <button class="btn btn-solid" type="submit">Create account</button>
       </form>
+    </div>
+  </div>
+
+  <!-- ======================= link sent ======================= -->
+  <div id="v-sent" class="hidden">
+    <p class="eyebrow">Check your email</p>
+    <h1 id="sent-h">Link sent</h1>
+    <div class="card" style="max-width:32rem">
+      <p class="lede" style="margin-bottom:1.25rem">We sent a link to
+        <b id="sent-addr" style="font-family:var(--mono);font-size:.9375rem"></b>.
+        Open it on this device to continue.</p>
+      <ul class="sent-tips">
+        <li>The link works once and expires after 24 hours.</li>
+        <li>Not there? Look in spam — a message from a new sender often lands there first.</li>
+        <li>Still nothing after a few minutes? Send it again below.</li>
+      </ul>
+      <div id="sent-note"></div>
+      <div class="btn-row">
+        <button class="btn btn-solid" id="sent-resend">Send it again</button>
+        <button class="btn btn-ghost" id="sent-back">Use a different address</button>
+      </div>
     </div>
   </div>
 
@@ -376,7 +403,7 @@ const CONFIG = {
 const $ = (id) => document.getElementById(id);
 const show = (id) => $(id).classList.remove("hidden");
 const hide = (id) => $(id).classList.add("hidden");
-const VIEWS = ["v-setup","v-load","v-auth","v-submit","v-mine","v-reviews","v-queue","v-people"];
+const VIEWS = ["v-setup","v-load","v-auth","v-sent","v-submit","v-mine","v-reviews","v-queue","v-people"];
 const only = (id) => { VIEWS.forEach(hide); show(id); };
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g,
   (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
@@ -465,6 +492,11 @@ function friendly(err) {
     const bad = (raw.match(/"([^"]+)"\s*$/) || [])[1] || "that role";
     return `The database does not know the role "${bad}" yet. Re-run supabase/schema.sql ` +
            `in the Supabase SQL editor, then try again.`;
+  }
+  if (/for security purposes|only request this after/i.test(raw)) {
+    const n = (raw.match(/(\d+)\s*seconds?/) || [])[1];
+    return `Too many requests. Wait ${n || 60} seconds and try again — ` +
+           `the limit is per address, not per person.`;
   }
   if (err.code === "42501" || /row-level security/i.test(raw))
     return "You do not have permission to do that.";
@@ -578,15 +610,72 @@ $("form-up").onsubmit = async (e) => {
               grade:$("up-grade").value.trim(), country },
     } });
   if (error) return notice("auth-note","err",friendly(error));
-  notice("auth-note","ok","Account created. Check your email for a confirmation link, then sign in.");
+  showSent($("up-email").value.trim(), "signup", "Confirm your email");
 };
 
 $("reset-pw").onclick = async () => {
   const email = $("in-email").value.trim();
   if (!email) return notice("auth-note","err","Enter your email address first.");
-  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: `${location.origin}${location.pathname}` });
-  notice("auth-note", error ? "err" : "ok", error ? friendly(error) : "Reset link sent to " + email);
+  const { error } = await sb.auth.resetPasswordForEmail(email,
+    { redirectTo: `${location.origin}${location.pathname}` });
+  if (error) return notice("auth-note", "err", friendly(error));
+  showSent(email, "recover", "Reset your password");
 };
+
+/* ------------------------------------------------- "check your inbox" ----
+   Sending a link used to leave the page unchanged, which reads as a dead
+   button and makes people click it again — straight into the per-address
+   cooldown. The view names the address, and the resend button counts down so
+   the wait is visible rather than arriving as an error. */
+let resendFor = null, resendKind = "signup", cooldown = 0, cooldownTimer = null;
+
+function showSent(email, kind, heading) {
+  resendFor = email; resendKind = kind;
+  $("sent-addr").textContent = email;
+  $("sent-h").textContent = heading;
+  clearNote("sent-note");
+  only("v-sent");
+  startCooldown(60);
+}
+
+function startCooldown(seconds) {
+  cooldown = seconds;
+  clearInterval(cooldownTimer);
+  const btn = $("sent-resend");
+  const tick = () => {
+    if (cooldown <= 0) {
+      clearInterval(cooldownTimer);
+      btn.disabled = false; btn.textContent = "Send it again";
+      return;
+    }
+    btn.disabled = true; btn.textContent = `Send it again (${cooldown}s)`;
+    cooldown--;
+  };
+  tick();
+  cooldownTimer = setInterval(tick, 1000);
+}
+
+async function sendLink(email, kind) {
+  const opts = { redirectTo: `${location.origin}${location.pathname}` };
+  return kind === "recover"
+    ? sb.auth.resetPasswordForEmail(email, opts)
+    : sb.auth.resend({ type: "signup", email, options: { emailRedirectTo: opts.redirectTo } });
+}
+
+$("sent-resend").onclick = async () => {
+  clearNote("sent-note");
+  const { error } = await sendLink(resendFor, resendKind);
+  if (error) {
+    notice("sent-note", "err", friendly(error));
+    const wait = Number((error.message.match(/(\d+)\s*seconds?/) || [])[1]);
+    startCooldown(Number.isFinite(wait) && wait > 0 ? wait : 60);
+    return;
+  }
+  notice("sent-note", "ok", "Sent again.");
+  startCooldown(60);
+};
+
+$("sent-back").onclick = () => { clearInterval(cooldownTimer); only("v-auth"); };
 
 $("signout").onclick = async () => {
   await sb.auth.signOut(); me = profile = null; paintUser(); hide("nav"); only("v-auth");
