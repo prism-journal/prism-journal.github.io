@@ -1,0 +1,52 @@
+# Deploys the site to GitHub Pages.
+#
+# Replaces the legacy Pages builder, which failed intermittently on unchanged
+# input and reported nothing beyond "Page build failed." — leaving no way to
+# tell a real problem from a flaky run. A workflow leaves logs.
+
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never let two deploys race; queue them instead of cancelling, so the last
+# push always ends up being the one that is live.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fail early on a symlink pointing outside the repository
+        run: |
+          # One of these silently broke every build for an hour. .gitignore did
+          # not catch it because the rule ended in a slash, which matches
+          # directories, and git records a symlink as a file.
+          if git ls-files -s | awk '$1 == "120000" { print $4 }' | grep .; then
+            echo "::error::Symlink committed — GitHub Pages cannot build this."
+            exit 1
+          fi
+          echo "No symlinks."
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
