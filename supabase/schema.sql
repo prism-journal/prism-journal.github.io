@@ -52,6 +52,28 @@ create table if not exists public.profiles (
 -- in the same transaction that added it, which would break this script the
 -- moment a new role is introduced. Text with a check constraint gives the same
 -- integrity guarantee and can grow without that trap.
+--
+-- Postgres refuses to alter a column's type while a policy or function depends
+-- on it, so everything that touches `role` comes down first. All of it is
+-- recreated further down this same file, which is why this is safe to run
+-- repeatedly and safe on a database that has never seen the old enum.
+drop policy if exists "read own profile"      on public.profiles;
+drop policy if exists "editors read profiles" on public.profiles;
+drop policy if exists "update own profile"    on public.profiles;
+drop policy if exists "chief updates roles"   on public.profiles;
+drop policy if exists "managers update roles" on public.profiles;
+
+-- my_role() was declared to RETURN prism_role, and CREATE OR REPLACE cannot
+-- change a return type. cascade also clears the policies on the other tables
+-- that call these helpers; every one is recreated below.
+drop function if exists public.my_role()           cascade;
+drop function if exists public.can_see_queue()     cascade;
+drop function if exists public.is_editor()         cascade;
+drop function if exists public.can_decide()        cascade;
+drop function if exists public.can_manage_people() cascade;
+drop function if exists public.is_chief()          cascade;
+drop function if exists public.role_rank(text)     cascade;
+
 do $$
 begin
   if exists (select 1 from information_schema.columns
@@ -62,6 +84,9 @@ begin
     alter table public.profiles alter column role set default 'author';
   end if;
 end $$;
+
+-- Nothing references the enum any more, so retire it. Harmless if absent.
+drop type if exists prism_role;
 
 alter table public.profiles drop constraint if exists profiles_role_check;
 alter table public.profiles add constraint profiles_role_check check (role in (
