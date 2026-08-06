@@ -994,6 +994,25 @@
 </style>
 
 <!-- ============================ COVER ============================ -->
+<script>
+/* A recovery or confirmation link can land here rather than on the portal —
+   an email sent before the redirect was set, or a Site URL that points at the
+   root. This page has no way to change a password, so it looked like the link
+   had simply logged the visitor in and done nothing.
+
+   Hand the fragment to the portal untouched; whatever token it carries is
+   still unread, so nothing is spent by moving it. */
+(function () {
+  var h = location.hash || "";
+  var q = location.search || "";
+  var isAuthLink = /(^|[#&])(access_token|error_description|error_code)=/.test(h)
+                || /[?&]token_hash=/.test(q);
+  if (isAuthLink && !/portal\.html$/.test(location.pathname)) {
+    location.replace("./portal.html" + q + h);
+  }
+})();
+</script>
+
 <div class="topbar">
   <div class="topbar-in">
     <span class="topbar-tag">Open access · Transparent review · No fees</span>

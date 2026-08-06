@@ -1347,7 +1347,12 @@ $("form-newpw").onsubmit = (e) => {
     const { error } = await sb.auth.updateUser({ password: a });
     if (error) return notice("newpw-note", "err", friendly(error));
     $("form-newpw").reset();
-    boot();
+    // Sign out rather than continuing into the portal on the recovery session:
+    // the point of the exercise was the new password, so prove it works.
+    await sb.auth.signOut();
+    me = profile = null; paintUser(); hide("nav");
+    only("v-auth"); $("tab-in").click();
+    notice("auth-note", "ok", "Password updated. Sign in with your new password.");
   });
 };
 
