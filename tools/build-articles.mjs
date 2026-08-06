@@ -12,7 +12,7 @@
 //
 // Run it after accepting an article, then commit the result.
 
-import { writeFileSync, mkdirSync, rmSync, existsSync, readdirSync } from "node:fs";
+import { writeFileSync, readFileSync, mkdirSync, rmSync, existsSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -369,6 +369,47 @@ ${jsonLd(a, url)}
 `;
 }
 
+
+/* --------------------------------------------------- homepage article list */
+// Written between markers in index.html rather than fetched in the browser:
+// the homepage is the page crawlers hit first, and a list that only exists
+// after JavaScript runs is a list search engines never see.
+function homepageList(articles) {
+  return articles.map((a) => {
+    const names = [a.author_name, ...String(a.coauthors || "").split("\n")
+      .map((x) => x.split(",")[0].trim()).filter(Boolean)].join(", ");
+    const href = `articles/${a.ms_number}.html`;
+    return `        <li>
+          <p class="paper-kicker">${esc(TYPES[a.article_type] || a.article_type)}
+            <span class="sec">· ${esc(SECTIONS[a.section] || a.section)}</span></p>
+          <h3 class="paper-title"><a href="${href}">${esc(a.title)}</a></h3>
+          <p class="paper-authors">${esc(names)}${a.author_school ? " · " + esc(a.author_school) : ""}</p>
+          <p class="paper-abs">${esc(a.abstract)}</p>
+          <p class="paper-links">
+            <a href="${href}">Read</a>
+            <a href="articles/${a.ms_number}.pdf" download>PDF</a>
+            <span class="rr">${esc(a.ms_number)} · ${human(a.updated_at)} · CC BY 4.0</span>
+          </p>
+        </li>`;
+  }).join("\n");
+}
+
+function writeHomepage(articles) {
+  const file = join(ROOT, "index.html");
+  let html = readFileSync(file, "utf8");
+  const body = articles.length
+    ? `      <ol class="papers">\n${homepageList(articles)}\n      </ol>`
+    : null;
+  if (!body) { console.log("  homepage: no articles, empty state left in place"); return; }
+
+  html = html.replace(/(<!--ARTICLES:START-->)[\s\S]*?(<!--ARTICLES:END-->)/,
+    `$1\n${body}\n      $2`);
+  html = html.replace(/(<!--ARTICLES:COUNT-->)[\s\S]*?(<!--\/ARTICLES:COUNT-->)/,
+    `$1${articles.length} article${articles.length === 1 ? "" : "s"}$2`);
+  writeFileSync(file, html);
+  console.log(`  homepage: ${articles.length} article(s) listed`);
+}
+
 /* ------------------------------------------------------------------- run */
 const SAMPLE = process.argv.includes("--sample");
 
@@ -433,6 +474,7 @@ if (SAMPLE) {
   }
   writeFileSync(join(ROOT, "sitemap.txt"),
     [`${SITE}/`, ...articles.map((a) => `${SITE}/articles/${a.ms_number}.html`)].join("\n"));
+  writeHomepage(articles);
   console.log(`${articles.length} article page(s) written to articles/`);
   console.log(readdirSync(OUT).map((f) => "  " + f).join("\n"));
 }
