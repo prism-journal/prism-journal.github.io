@@ -264,6 +264,24 @@
     </div>
   </div>
 
+  <!-- ======================= set a new password ======================= -->
+  <div id="v-newpw" class="hidden">
+    <p class="eyebrow">Password reset</p>
+    <h1>Choose a new password</h1>
+    <p class="lede">Your link is valid. Set a password and you will be signed in.</p>
+    <div class="card" style="max-width:30rem">
+      <div id="newpw-note"></div>
+      <form id="form-newpw">
+        <div class="field"><label for="np1">New password</label>
+          <p class="hint">At least 6 characters. A passphrase is fine.</p>
+          <input type="password" id="np1" autocomplete="new-password" minlength="6" required></div>
+        <div class="field"><label for="np2">Type it again</label>
+          <input type="password" id="np2" autocomplete="new-password" minlength="6" required></div>
+        <button class="btn btn-solid" type="submit">Save password</button>
+      </form>
+    </div>
+  </div>
+
   <!-- ======================= link sent ======================= -->
   <div id="v-sent" class="hidden">
     <p class="eyebrow">Check your email</p>
@@ -403,7 +421,7 @@ const CONFIG = {
 const $ = (id) => document.getElementById(id);
 const show = (id) => $(id).classList.remove("hidden");
 const hide = (id) => $(id).classList.add("hidden");
-const VIEWS = ["v-setup","v-load","v-auth","v-sent","v-submit","v-mine","v-reviews","v-queue","v-people"];
+const VIEWS = ["v-setup","v-load","v-auth","v-newpw","v-sent","v-submit","v-mine","v-reviews","v-queue","v-people"];
 const only = (id) => { VIEWS.forEach(hide); show(id); };
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g,
   (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
@@ -541,7 +559,10 @@ async function readLinkResult() {
     history.replaceState(null, "", location.pathname);
     return "error";
   }
-  if (p.get("access_token")) { history.replaceState(null, "", location.pathname); return "ok"; }
+  // Deliberately not touching an access_token here. supabase-js reads the
+  // fragment asynchronously when the client is created; clearing it first was
+  // a race that could throw the session away before it was ever established.
+  // The PASSWORD_RECOVERY listener below takes it from there.
   return null;
 }
 
@@ -1180,8 +1201,29 @@ async function loadPeople() {
 }
 
 sb.auth.onAuthStateChange((event) => {
+  // Arriving from a reset link gives a session, but the visitor came to change
+  // a password, not to be silently logged in somewhere.
+  if (event === "PASSWORD_RECOVERY") {
+    clearNote("newpw-note");
+    hide("nav");
+    only("v-newpw");
+    history.replaceState(null, "", location.pathname);
+    return;
+  }
   if (event === "SIGNED_OUT") { me = profile = null; paintUser(); hide("nav"); only("v-auth"); }
 });
+
+$("form-newpw").onsubmit = (e) => {
+  e.preventDefault(); clearNote("newpw-note");
+  const a = $("np1").value, b = $("np2").value;
+  if (a !== b) return notice("newpw-note", "err", "The two passwords do not match.");
+  return busy(e.target.querySelector('button[type="submit"]'), "Saving…", async () => {
+    const { error } = await sb.auth.updateUser({ password: a });
+    if (error) return notice("newpw-note", "err", friendly(error));
+    $("form-newpw").reset();
+    boot();
+  });
+};
 
 boot();
 </script>
