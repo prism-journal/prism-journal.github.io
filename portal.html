@@ -601,16 +601,20 @@ $("tab-in").onclick = () => { $("tab-in").setAttribute("aria-selected","true");
 $("tab-up").onclick = () => { $("tab-up").setAttribute("aria-selected","true");
   $("tab-in").setAttribute("aria-selected","false"); show("form-up"); hide("form-in"); clearNote("auth-note"); };
 
-$("form-in").onsubmit = async (e) => {
+$("form-in").onsubmit = (e) => {
   e.preventDefault(); clearNote("auth-note");
-  const { error } = await sb.auth.signInWithPassword({
-    email: $("in-email").value.trim(), password: $("in-pw").value });
-  if (error) return notice("auth-note","err",friendly(error));
-  boot();
+  const btn = e.target.querySelector('button[type="submit"]');
+  return busy(btn, "Signing in…", async () => {
+    const { error } = await sb.auth.signInWithPassword({
+      email: $("in-email").value.trim(), password: $("in-pw").value });
+    if (error) return notice("auth-note","err",friendly(error));
+    boot();
+  });
 };
 
-$("form-up").onsubmit = async (e) => {
+$("form-up").onsubmit = (e) => {
   e.preventDefault(); clearNote("auth-note");
+  return busy(SIGNUP_BTN(), "Creating account…", async () => {
   // A datalist only suggests — anything can still be typed. Pinning the value
   // to a real entry stops "USA" / "U.S." / "United States" becoming three
   // different countries in the editorial records.
@@ -631,11 +635,14 @@ $("form-up").onsubmit = async (e) => {
   cooldownButton(SIGNUP_BTN(), waitFrom(error), "Create account");
   if (error) return notice("auth-note","err",friendly(error));
   showSent($("up-email").value.trim(), "signup", "Confirm your email");
+  });
 };
 
-$("reset-pw").onclick = async () => {
+$("reset-pw").onclick = () => {
   const email = $("in-email").value.trim();
   if (!email) return notice("auth-note","err","Enter your email address first.");
+  clearNote("auth-note");
+  return busy($("reset-pw"), "Sending…", async () => {
   const { error } = await sb.auth.resetPasswordForEmail(email,
     { redirectTo: `${location.origin}${location.pathname}` });
   // Cool the button down either way: a refusal still means the address is
@@ -643,6 +650,7 @@ $("reset-pw").onclick = async () => {
   cooldownButton($("reset-pw"), waitFrom(error), "Forgot password");
   if (error) return notice("auth-note", "err", friendly(error));
   showSent(email, "recover", "Reset your password");
+  });
 };
 
 /* ------------------------------------------------- "check your inbox" ----
@@ -663,6 +671,7 @@ function cooldownButton(btn, seconds, label) {
   const tick = () => {
     if (left <= 0) {
       clearInterval(timers.get(btn));
+      timers.delete(btn);
       btn.disabled = false; btn.textContent = label;
       return;
     }
@@ -681,6 +690,29 @@ const waitFrom = (err, fallback = 60) => {
 
 const SIGNUP_BTN = () => $("form-up").querySelector('button[type="submit"]');
 
+/* A request to Supabase takes seconds, and until it answered the button stayed
+   live and unchanged — which reads as a click the page never received, so
+   people click again, and each click sends another email. Feedback has to
+   happen on the click itself, not on the reply.
+
+   Disabling also makes the double-click impossible rather than merely
+   discouraged, and the guard below means a second event finds the button
+   already taken. If a cooldown claimed the button meanwhile, leave it alone. */
+async function busy(btn, label, fn) {
+  if (!btn) return fn();
+  if (btn.disabled) return;
+  const restore = btn.textContent;
+  btn.disabled = true;
+  btn.setAttribute("aria-busy", "true");
+  btn.textContent = label;
+  try {
+    return await fn();
+  } finally {
+    btn.removeAttribute("aria-busy");
+    if (!timers.has(btn)) { btn.disabled = false; btn.textContent = restore; }
+  }
+}
+
 function showSent(email, kind, heading) {
   resendFor = email; resendKind = kind;
   $("sent-addr").textContent = email;
@@ -697,8 +729,9 @@ async function sendLink(email, kind) {
     : sb.auth.resend({ type: "signup", email, options: { emailRedirectTo: opts.redirectTo } });
 }
 
-$("sent-resend").onclick = async () => {
+$("sent-resend").onclick = () => {
   clearNote("sent-note");
+  return busy($("sent-resend"), "Sending…", async () => {
   const { error } = await sendLink(resendFor, resendKind);
   if (error) {
     notice("sent-note", "err", friendly(error));
@@ -707,6 +740,7 @@ $("sent-resend").onclick = async () => {
   }
   notice("sent-note", "ok", "Sent again.");
   cooldownButton($("sent-resend"), 60, "Send it again");
+  });
 };
 
 $("sent-back").onclick = () => { clearInterval(cooldownTimer); only("v-auth"); };
@@ -909,7 +943,11 @@ function wireReviews() {
       };
     });
     const form = box.querySelector("[data-form]");
-    if (form) form.onsubmit = (e) => submitReview(e, form, id, box);
+    if (form) form.onsubmit = (e) => {
+      e.preventDefault();
+      return busy(form.querySelector('button[type="submit"]'), "Submitting…",
+        () => submitReview(e, form, id, box));
+    };
   });
 }
 
@@ -1057,30 +1095,36 @@ function wireQueue() {
 
     if (act("pdf")) act("pdf").onclick = () => openPdf(id, box.querySelector(".msg"));
 
-    if (act("assign")) act("assign").onclick = async () => {
+    if (act("assign")) act("assign").onclick = () => {
       const msg = box.querySelector(".msg-a"), rid = g("reviewer").value;
       if (!rid) { msg.textContent = "Pick a referee."; return; }
-      msg.textContent = "Inviting…";
+      return busy(act("assign"), "Inviting…", async () => {
+      msg.textContent = "";
       const { error } = await sb.from("review_assignments").insert({
         manuscript_id:id, reviewer_id:rid, assigned_by:me.id, due_at:g("due").value || null });
       msg.textContent = error ? friendly(error) : "Invited.";
       if (!error) setTimeout(loadQueue, 400);
+      });
     };
 
-    if (act("save")) act("save").onclick = async () => {
-      const msg = box.querySelector(".msg-s"); msg.textContent = "Saving…";
+    if (act("save")) act("save").onclick = () => {
+      const msg = box.querySelector(".msg-s"); msg.textContent = "";
+      return busy(act("save"), "Saving…", async () => {
       const { error } = await sb.from("manuscripts")
         .update({ status:g("status").value, editor_note:g("note").value.trim() }).eq("id", id);
       msg.textContent = error ? friendly(error) : "Saved.";
       if (!error) setTimeout(loadQueue, 500);
+      });
     };
 
-    if (act("decide")) act("decide").onclick = async () => {
+    if (act("decide")) act("decide").onclick = () => {
       const msg = box.querySelector(".msg-d");
       const decision = g("decision").value, letter = g("letter").value.trim();
       if (!decision) { msg.textContent = "Choose a decision."; return; }
       if (letter.length < 20) { msg.textContent = "The letter needs at least 20 characters."; return; }
-      msg.textContent = "Recording…";
+      // Two clicks here used to write two decision rows against one manuscript.
+      return busy(act("decide"), "Recording…", async () => {
+      msg.textContent = "";
       const { error } = await sb.from("decisions").insert({
         manuscript_id:id, editor_id:me.id, decision, letter,
         signed_name: profile.full_name || profile.email });
@@ -1090,6 +1134,7 @@ function wireQueue() {
                  : decision === "decline" ? "declined" : "revision";
       await sb.from("manuscripts").update({ status: next }).eq("id", id);
       msg.textContent = "Recorded."; setTimeout(loadQueue, 500);
+      });
     };
   });
 }
