@@ -512,9 +512,27 @@ const fmtDate = (s) => s ? new Date(s).toLocaleDateString(undefined,{year:"numer
 const NIL = "00000000-0000-0000-0000-000000000000";
 
 /* ------------------------------------------------------------------ boot */
-// Supabase reports a failed or expired confirmation link by putting the reason
-// in the URL fragment. Left unread it looks like nothing happened at all.
-function readLinkResult() {
+// Two shapes of link arrive here.
+//
+// The default one carries its result in the URL fragment, and reports failure
+// as error_description — unread, a dead link looks like a click that did
+// nothing at all.
+//
+// The second carries ?token_hash=…&type=…, which is what an email template
+// produces when it writes the destination itself instead of deriving it from
+// the project's Site URL. That path is worth supporting because Site URL ships
+// as http://localhost:3000 and a template can be pinned to the real domain.
+async function readLinkResult() {
+  const q = new URLSearchParams(location.search);
+  const th = q.get("token_hash"), type = q.get("type");
+  if (th && type) {
+    const { error } = await sb.auth.verifyOtp({ token_hash: th, type });
+    history.replaceState(null, "", location.pathname);
+    if (error) { notice("auth-note", "err", friendly(error) +
+      " Request a new link with Forgot password."); return "error"; }
+    return "ok";
+  }
+
   const p = new URLSearchParams(location.hash.slice(1));
   const err = p.get("error_description") || p.get("error");
   if (err) {
@@ -529,12 +547,13 @@ function readLinkResult() {
 
 async function boot() {
   only("v-load"); hide("nav");
-  const linkResult = readLinkResult();
+  const linkResult = await readLinkResult();
   const { data:{ session } } = await sb.auth.getSession();
   if (!session) {
     me = profile = null; paintUser(); only("v-auth");
     if (linkResult === "ok") notice("auth-note", "ok",
       "Email confirmed. Sign in below.");
+    if (linkResult === "error") $("tab-in").click();
     // Arriving from "Create account" on the journal site should land on that
     // tab, not on the sign-in form the visitor cannot use yet.
     if (location.hash === "#register") $("tab-up").click();
