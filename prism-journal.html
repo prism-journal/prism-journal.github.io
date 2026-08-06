@@ -972,7 +972,7 @@
   var h = location.hash || "";
   var q = location.search || "";
   var isAuthLink = /(^|[#&])(access_token|error_description|error_code)=/.test(h)
-                || /[?&]token_hash=/.test(q);
+                || /[?&](token_hash|mode)=/.test(q);
   if (isAuthLink && !/portal\.html$/.test(location.pathname)) {
     location.replace("./portal.html" + q + h);
   }

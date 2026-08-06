@@ -552,7 +552,13 @@ let me = null, profile = null;
    The fragment says what kind of link this is, and reading it costs nothing
    and happens before any await, so the decision is made once and boot() simply
    stands down. */
-let recovering = /(^|[#&])type=recovery(&|$)/.test(location.hash);
+let recovering =
+  new URLSearchParams(location.search).get("mode") === "reset" ||
+  /(^|[#&])type=recovery(&|$)/.test(location.hash);
+
+// When something still routes wrongly, the address that arrived is the only
+// evidence that matters, and it is gone a moment later. Keep a copy.
+try { sessionStorage.setItem("prism:lastLink", location.href); } catch (e) {}
 const canQueue  = () => ["board_member","section_editor","faculty_editor","deputy_editor","chief_editor"].includes(profile?.role);
 const isEditor  = () => ["section_editor","faculty_editor","deputy_editor","chief_editor"].includes(profile?.role);
 const canDecide = () => ["faculty_editor","deputy_editor","chief_editor"].includes(profile?.role);
@@ -749,7 +755,7 @@ $("reset-pw").onclick = () => {
   clearNote("auth-note");
   return busy($("reset-pw"), "Sending…", async () => {
   const { error } = await sb.auth.resetPasswordForEmail(email,
-    { redirectTo: `${location.origin}${location.pathname}` });
+    { redirectTo: `${location.origin}${location.pathname}?mode=reset` });
   // Cool the button down either way: a refusal still means the address is
   // inside its window, and a success means an email just went out.
   cooldownButton($("reset-pw"), waitFrom(error), "Forgot password");
@@ -830,7 +836,8 @@ function showSent(email, kind, heading) {
 async function sendLink(email, kind) {
   const opts = { redirectTo: `${location.origin}${location.pathname}` };
   return kind === "recover"
-    ? sb.auth.resetPasswordForEmail(email, opts)
+    ? sb.auth.resetPasswordForEmail(email,
+        { redirectTo: `${location.origin}${location.pathname}?mode=reset` })
     : sb.auth.resend({ type: "signup", email, options: { emailRedirectTo: opts.redirectTo } });
 }
 
@@ -1320,7 +1327,7 @@ $("form-profile").onsubmit = (e) => {
 
 $("s-pw").onclick = () => busy($("s-pw"), "Sending…", async () => {
   const { error } = await sb.auth.resetPasswordForEmail(profile.email,
-    { redirectTo: `${location.origin}${location.pathname}` });
+    { redirectTo: `${location.origin}${location.pathname}?mode=reset` });
   $("s-pw-msg").textContent = error ? friendly(error) : "Sent — check your email.";
   cooldownButton($("s-pw"), waitFrom(error), "Send me a password reset link");
 });
@@ -1363,6 +1370,7 @@ $("form-newpw").onsubmit = (e) => {
     if (error) return notice("newpw-note", "err", friendly(error));
     $("form-newpw").reset();
     recovering = false;
+    history.replaceState(null, "", location.pathname);
     // Sign out rather than continuing into the portal on the recovery session:
     // the point of the exercise was the new password, so prove it works.
     await sb.auth.signOut();
