@@ -574,6 +574,75 @@ create policy "editors read manuscripts" on storage.objects
 
 
 
+
+-- ---------------------------------------------------------------------------
+-- Journal settings — one row, edited by the chief editor.
+-- ---------------------------------------------------------------------------
+create table if not exists public.journal_settings (
+  id             int primary key default 1 check (id = 1),
+  current_volume int  not null default 1,
+  current_issue  int  not null default 1,
+  issn           text,
+  updated_at     timestamptz not null default now()
+);
+insert into public.journal_settings (id) values (1) on conflict (id) do nothing;
+
+alter table public.journal_settings enable row level security;
+drop policy if exists "anyone reads settings" on public.journal_settings;
+drop policy if exists "chief edits settings"  on public.journal_settings;
+-- The ISSN and the current issue are printed on every page, so they are public.
+create policy "anyone reads settings" on public.journal_settings for select using (true);
+create policy "chief edits settings"  on public.journal_settings
+  for update using (public.is_chief()) with check (public.is_chief());
+
+grant select on public.journal_settings to anon, authenticated;
+grant update on public.journal_settings to authenticated;
+
+
+-- ---------------------------------------------------------------------------
+-- Article numbers.
+--
+-- ms_number is assigned on submission, so publishing under it would tell the
+-- world how many manuscripts were received to produce this one — a reader can
+-- read the rejection rate straight off the identifier, and the gaps look like
+-- missing articles.
+--
+-- The public number is therefore assigned at acceptance and counts only what
+-- was published. The submission number stays, and stays internal: it is what
+-- the editorial office and the author refer to while the paper is in review.
+-- ---------------------------------------------------------------------------
+alter table public.manuscripts add column if not exists volume     int;
+alter table public.manuscripts add column if not exists issue      int;
+alter table public.manuscripts add column if not exists article_no int;
+
+create unique index if not exists manuscripts_article_no_idx
+  on public.manuscripts(volume, issue, article_no)
+  where article_no is not null;
+
+create or replace function public.assign_article_number()
+returns trigger language plpgsql security definer set search_path = public as $$
+declare v int; i int;
+begin
+  -- Only on the transition into accepted, and only once: a paper that is
+  -- accepted, reverted and accepted again keeps the number it was published
+  -- under, because citations to it already exist.
+  if new.status = 'accepted'
+     and (tg_op = 'INSERT' or old.status is distinct from 'accepted')
+     and new.article_no is null then
+    select current_volume, current_issue into v, i from public.journal_settings where id = 1;
+    new.volume := coalesce(v, 1);
+    new.issue  := coalesce(i, 1);
+    select coalesce(max(article_no), 0) + 1 into new.article_no
+      from public.manuscripts
+      where volume = new.volume and issue = new.issue;
+  end if;
+  return new;
+end $$;
+
+drop trigger if exists article_number_trigger on public.manuscripts;
+create trigger article_number_trigger before insert or update on public.manuscripts
+  for each row execute function public.assign_article_number();
+
 -- ---------------------------------------------------------------------------
 -- THE PUBLISHING LAYER
 --
@@ -590,7 +659,8 @@ create policy "editors read manuscripts" on storage.objects
 
 drop view if exists public.published_articles cascade;
 create view public.published_articles as
-  select m.id, m.ms_number, m.title, m.abstract, m.section, m.article_type,
+  select m.id, m.ms_number, m.volume, m.issue, m.article_no,
+         m.title, m.abstract, m.section, m.article_type,
          m.coauthors, m.data_doi, m.code_doi, m.ethics_ref, m.ai_disclosure,
          m.limitations, m.mentor_statement, m.submitted_at, m.updated_at,
          p.full_name as author_name,

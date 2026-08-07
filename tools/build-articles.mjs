@@ -20,6 +20,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "articles");
 
 const SITE = "https://prism-journal.github.io";
+let ISSN = null;   // read from journal_settings at build time
 const JOURNAL = "PRISM";
 const SUPABASE_URL = "https://pmlicwkwdeneosijrggu.supabase.co";
 const SUPABASE_KEY = "sb_publishable_eJW3TwTx6h7LywJLk30jfw_PIKnJdw0";
@@ -39,6 +40,16 @@ const RECS = {
 };
 const CRITERIA = [["sound", "Sound"], ["honest", "Honest"],
                   ["checkable", "Checkable"], ["legible", "Legible"]];
+
+// The public identifier. Built from the article number, which counts only what
+// was published — never from ms_number, which counts what was submitted.
+const artId = (a) => `PRISM-${a.volume ?? 1}-${String(a.article_no ?? 0).padStart(3, "0")}`;
+const citationOf = (a) => {
+  const names = [a.author_name, ...String(a.coauthors || "").split("\n")
+    .map((x) => x.split(",")[0].trim()).filter(Boolean)].join(", ");
+  return `${names}. ${a.title}. ${JOURNAL} ${new Date(a.updated_at).getFullYear()};` +
+         `${a.volume ?? 1}(${a.issue ?? 1}):${a.article_no ?? 0}.`;
+};
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g,
   (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -73,10 +84,16 @@ function scholarTags(a, url) {
     // is what makes the full text discoverable rather than just the title.
     ["citation_pdf_url", url.replace(/\.html$/, ".pdf")],
     ["citation_language", "en"],
-    ["citation_id", a.ms_number],
+    ["citation_volume", String(a.volume ?? 1)],
+    ["citation_issue", String(a.issue ?? 1)],
+    // Continuous publication has no page range, so the article number stands in
+    // for the first page — the field Scholar expects to key a citation on.
+    ["citation_firstpage", String(a.article_no ?? 0)],
+    ["citation_id", artId(a)],
   ];
   authors.forEach((n) => t.push(["citation_author", n]));
   if (a.author_school) t.push(["citation_author_institution", a.author_school]);
+  if (ISSN) t.push(["citation_issn", ISSN]);
   // Deliberately no citation_doi. The data DOI identifies the dataset, not the
   // paper; publishing it here would tell Scholar the article and the dataset
   // are the same object. Omitting the tag is correct until PRISM registers its
@@ -114,10 +131,8 @@ function reviewBlock(r, n) {
 }
 
 function page(a, reviews, decisions) {
-  const url = `${SITE}/articles/${a.ms_number}.html`;
-  const cite = `${[a.author_name, ...String(a.coauthors || "").split("\n")
-    .map((x) => x.split(",")[0].trim()).filter(Boolean)].join(", ")}. ` +
-    `${a.title}. ${JOURNAL} ${new Date(a.updated_at).getFullYear()}; ${a.ms_number}.`;
+  const url = `${SITE}/articles/${artId(a)}.html`;
+  const cite = citationOf(a);
 
   return `<!doctype html>
 <html lang="en">
@@ -300,7 +315,7 @@ ${jsonLd(a, url)}
 
 <main>
   <div class="print-head">
-    <span class="d">${esc(a.ms_number)} · ${human(a.updated_at)} · CC BY 4.0</span>
+    <span class="d">${esc(artId(a))} · ${human(a.updated_at)} · CC BY 4.0</span>
     <span class="j">PRISM</span>
   </div>
 
@@ -315,11 +330,11 @@ ${jsonLd(a, url)}
   <p class="affil">${esc([a.author_school, a.author_country].filter(Boolean).join(" · "))}</p>
 
   <div class="meta">
-    <span><b>${esc(a.ms_number)}</b></span>
+    <span><b>${esc(artId(a))}</b></span>\n    <span>Vol <b>${a.volume ?? 1}</b>, No <b>${a.issue ?? 1}</b>, Article <b>${a.article_no ?? 0}</b></span>
     <span>Published <b>${human(a.updated_at)}</b></span>
     <span>Licence <b>CC BY 4.0</b></span>
     <span>Peer review <b>published below</b></span>
-    <a class="pdf-btn noprint" href="${esc(a.ms_number)}.pdf" download>Download PDF</a>
+    <a class="pdf-btn noprint" href="${esc(artId(a))}.pdf" download>Download PDF</a>
   </div>
 
   <h2>Abstract</h2>
@@ -378,7 +393,7 @@ function homepageList(articles) {
   return articles.map((a) => {
     const names = [a.author_name, ...String(a.coauthors || "").split("\n")
       .map((x) => x.split(",")[0].trim()).filter(Boolean)].join(", ");
-    const href = `articles/${a.ms_number}.html`;
+    const href = `articles/${artId(a)}.html`;
     return `        <li>
           <p class="paper-kicker">${esc(TYPES[a.article_type] || a.article_type)}
             <span class="sec">· ${esc(SECTIONS[a.section] || a.section)}</span></p>
@@ -387,8 +402,8 @@ function homepageList(articles) {
           <p class="paper-abs">${esc(a.abstract)}</p>
           <p class="paper-links">
             <a href="${href}">Read</a>
-            <a href="articles/${a.ms_number}.pdf" download>PDF</a>
-            <span class="rr">${esc(a.ms_number)} · ${human(a.updated_at)} · CC BY 4.0</span>
+            <a href="articles/${artId(a)}.pdf" download>PDF</a>
+            <span class="rr">${esc(artId(a))} · ${human(a.updated_at)} · CC BY 4.0</span>
           </p>
         </li>`;
   }).join("\n");
@@ -415,7 +430,7 @@ const SAMPLE = process.argv.includes("--sample");
 
 if (SAMPLE) {
   const a = {
-    id: "sample", ms_number: "PRISM-2026-0001",
+    id: "sample", ms_number: "PRISM-2026-0047", volume: 1, issue: 1, article_no: 3,
     title: "Urban tree canopy predicts summer surface temperature better than building density in three mid-sized cities",
     abstract: "Cities are hotter than the countryside around them, and the usual explanation is that buildings store heat. Whether tree cover or building density matters more at neighbourhood scale is less settled.\n\nWe paired Landsat 8 surface temperature with municipal tree inventories and building footprints for three cities, dividing each into 500 m cells. Canopy cover explained more variance in summer surface temperature than building density in all three.\n\nThe association is cross-sectional and cannot establish that planting trees would cool a given block.",
     section: "earth_environment", article_type: "research_article",
@@ -462,18 +477,21 @@ if (SAMPLE) {
     console.log("No accepted articles yet — nothing to generate.");
     process.exit(0);
   }
-  const [reviews, decisions] = await Promise.all([
+  const [reviews, decisions, settings] = await Promise.all([
     api("published_reviews?select=*"), api("published_decisions?select=*"),
+    api("journal_settings?select=issn&limit=1").catch(() => []),
   ]);
+  ISSN = settings?.[0]?.issn || null;
+  if (!ISSN) console.log("  (no ISSN set yet — citation_issn omitted)");
   if (existsSync(OUT)) rmSync(OUT, { recursive: true });
   mkdirSync(OUT, { recursive: true });
   for (const a of articles) {
-    writeFileSync(join(OUT, `${a.ms_number}.html`),
+    writeFileSync(join(OUT, `${artId(a)}.html`),
       page(a, reviews.filter((r) => r.manuscript_id === a.id),
               decisions.filter((d) => d.manuscript_id === a.id)));
   }
   writeFileSync(join(ROOT, "sitemap.txt"),
-    [`${SITE}/`, ...articles.map((a) => `${SITE}/articles/${a.ms_number}.html`)].join("\n"));
+    [`${SITE}/`, ...articles.map((a) => `${SITE}/articles/${artId(a)}.html`)].join("\n"));
   writeHomepage(articles);
   console.log(`${articles.length} article page(s) written to articles/`);
   console.log(readdirSync(OUT).map((f) => "  " + f).join("\n"));
