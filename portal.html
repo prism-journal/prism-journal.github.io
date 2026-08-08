@@ -971,11 +971,57 @@ async function loadMine() {
   const [{ data: decs }, { data: revs }] = await Promise.all([
     sb.from("decisions").select("*").in("manuscript_id", ids),
     sb.from("reviews").select("*").in("manuscript_id", ids)]);
-  $("mine-list").innerHTML = `<ul class="ms-list">${data.map((m) => {
+  const render = (data, decs, revs) => `<ul class="ms-list">${data.map((m) => {
     const d = (decs||[]).filter((x) => x.manuscript_id === m.id);
     const r = (revs||[]).filter((x) => x.manuscript_id === m.id);
+    // Editable only before anyone has read it. Once it is in review, changing the
+    // text underneath the referees is not a correction, it is a different paper.
+    const open = m.status === "submitted" || m.status === "revision";
     return `<li>${msHead(m)}
       ${m.editor_note ? `<div class="panel"><b>From the editors:</b> ${esc(m.editor_note)}</div>` : ""}
+      ${open ? `<div class="panel" data-mine="${m.id}">
+        <div class="btn-row">
+          <button class="btn btn-ghost btn-sm" data-a="edit">Edit</button>
+          <button class="btn btn-ghost btn-sm" data-a="withdraw">Withdraw</button>
+          <button class="btn btn-ghost btn-sm" data-a="del">Delete</button>
+          <span class="spinner msg"></span>
+        </div>
+        <form class="edit-form hidden">
+          <div class="field"><label>Title</label>
+            <input type="text" data-e="title" value="${esc(m.title)}" minlength="3" maxlength="400" required></div>
+          <div class="field"><label>Abstract</label>
+            <textarea data-e="abstract" rows="6" minlength="40" required>${esc(m.abstract)}</textarea></div>
+          <div class="row">
+            <div class="field"><label>Section</label>
+              <select data-e="section">${Object.entries(SECTIONS).map(([k,v]) =>
+                `<option value="${k}"${k===m.section?" selected":""}>${esc(v)}</option>`).join("")}</select></div>
+            <div class="field"><label>Article type</label>
+              <select data-e="article_type">${Object.entries(TYPES).map(([k,v]) =>
+                `<option value="${k}"${k===m.article_type?" selected":""}>${esc(v)}</option>`).join("")}</select></div>
+          </div>
+          <div class="field"><label>Co-authors</label>
+            <textarea data-e="coauthors" rows="3">${esc(m.coauthors||"")}</textarea></div>
+          <div class="field"><label>Mentor contribution</label>
+            <textarea data-e="mentor_statement" rows="3" minlength="10" required>${esc(m.mentor_statement)}</textarea></div>
+          <div class="row">
+            <div class="field"><label>Data DOI</label>
+              <input type="text" data-e="data_doi" value="${esc(m.data_doi||"")}"></div>
+            <div class="field"><label>Code DOI</label>
+              <input type="text" data-e="code_doi" value="${esc(m.code_doi||"")}"></div>
+          </div>
+          <div class="field"><label>Ethics approval reference</label>
+            <input type="text" data-e="ethics_ref" value="${esc(m.ethics_ref||"")}"></div>
+          <div class="field"><label>Use of AI tools</label>
+            <textarea data-e="ai_disclosure" rows="3">${esc(m.ai_disclosure||"")}</textarea></div>
+          <div class="field"><label>Limitations</label>
+            <textarea data-e="limitations" rows="3" required>${esc(m.limitations||"")}</textarea></div>
+          <div class="btn-row">
+            <button class="btn btn-solid btn-sm" type="submit">Save changes</button>
+            <button class="btn btn-ghost btn-sm" type="button" data-a="cancel">Cancel</button>
+            <span class="spinner msg2"></span>
+          </div>
+        </form>
+      </div>` : ""}
       ${d.length || r.length ? `<div class="panel">
         ${d.map(decBlock).join("")}
         ${r.length ? `<h4 style="font-family:var(--mono);font-size:.6875rem;letter-spacing:.08em;

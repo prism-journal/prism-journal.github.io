@@ -409,9 +409,13 @@ create policy "reviewers read assigned" on public.manuscripts
 
 create policy "authors submit" on public.manuscripts
   for insert with check (author_id = auth.uid() and status = 'submitted');
+-- USING selects which rows an author may touch; WITH CHECK constrains what they
+-- may become. Without the second condition an author could set their own
+-- manuscript to 'accepted' — the check is what stops a paper accepting itself.
+-- Withdrawing is the one status change an author is entitled to make.
 create policy "authors edit pre-review" on public.manuscripts
   for update using (author_id = auth.uid() and status in ('submitted','revision'))
-  with check (author_id = auth.uid());
+  with check (author_id = auth.uid() and status in ('submitted','revision','withdrawn'));
 create policy "editors update ms" on public.manuscripts
   for update using (public.is_editor()) with check (public.is_editor());
 
@@ -744,13 +748,17 @@ create or replace function public.delete_manuscript(ms uuid)
 returns text language plpgsql security definer set search_path = public, storage as $$
 declare n_rev int; n_dec int; num text;
 begin
-  if not public.is_chief() then
-    raise exception 'Only the editor-in-chief can delete a submission.';
-  end if;
-
   select ms_number into num from public.manuscripts where id = ms;
   if num is null then
     raise exception 'No such submission.';
+  end if;
+
+  -- The chief editor may clear anything unjudged; an author may withdraw their
+  -- own mistake. Both stop at the same line: nothing that has been judged.
+  if not (public.is_chief()
+          or exists (select 1 from public.manuscripts
+                      where id = ms and author_id = auth.uid())) then
+    raise exception 'You can only delete your own submission.';
   end if;
 
   select count(*) into n_rev from public.reviews    where manuscript_id = ms;
