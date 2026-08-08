@@ -10,12 +10,13 @@
 // Dev-only: npm i puppeteer
 
 import { readdirSync, existsSync, mkdirSync } from "node:fs";
-import { join, dirname, basename } from "node:path";
+import { join, resolve, dirname, basename } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import puppeteer from "puppeteer";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const SRC = process.argv[2] ? [join(ROOT, process.argv[2])]
+// resolve, not join: an absolute path passed in was being appended to ROOT
+const SRC = process.argv[2] ? [resolve(process.cwd(), process.argv[2])]
   : (existsSync(join(ROOT, "articles"))
       ? readdirSync(join(ROOT, "articles")).filter((f) => f.endsWith(".html"))
           .map((f) => join(ROOT, "articles", f))

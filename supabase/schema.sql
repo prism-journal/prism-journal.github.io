@@ -728,6 +728,49 @@ end $$;
 revoke all    on function public.delete_my_account() from public, anon;
 grant execute on function public.delete_my_account() to authenticated;
 
+
+-- ---------------------------------------------------------------------------
+-- Deleting a submission.
+--
+-- Test entries, duplicates and spam need to go. Referee reports and signed
+-- decisions do not: once someone has judged a manuscript, that judgement is part
+-- of the record and the correct action is `withdrawn`, not erasure.
+--
+-- So this refuses as soon as a review or a decision exists, and only a chief
+-- editor may call it at all. It is a definer function because it also has to
+-- clear the stored PDF, which RLS on storage.objects would otherwise block.
+-- ---------------------------------------------------------------------------
+create or replace function public.delete_manuscript(ms uuid)
+returns text language plpgsql security definer set search_path = public, storage as $$
+declare n_rev int; n_dec int; num text;
+begin
+  if not public.is_chief() then
+    raise exception 'Only the editor-in-chief can delete a submission.';
+  end if;
+
+  select ms_number into num from public.manuscripts where id = ms;
+  if num is null then
+    raise exception 'No such submission.';
+  end if;
+
+  select count(*) into n_rev from public.reviews    where manuscript_id = ms;
+  select count(*) into n_dec from public.decisions  where manuscript_id = ms;
+  if n_rev > 0 or n_dec > 0 then
+    raise exception 'This submission carries % referee report(s) and % decision(s). A judged manuscript cannot be erased — set its status to withdrawn instead.', n_rev, n_dec;
+  end if;
+
+  -- the PDF, then the row; assignments, files and status events cascade
+  delete from storage.objects
+   where bucket_id = 'manuscripts'
+     and name in (select storage_path from public.manuscript_files where manuscript_id = ms);
+
+  delete from public.manuscripts where id = ms;
+  return num;
+end $$;
+
+revoke all    on function public.delete_manuscript(uuid) from public, anon;
+grant execute on function public.delete_manuscript(uuid) to authenticated;
+
 -- ---------------------------------------------------------------------------
 -- The first chief editor can only be made here, because the application has
 -- no path that lets anyone change their own role:

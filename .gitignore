@@ -17,3 +17,4 @@ reference/
 # fabricated paper on a real journal's site reads as a real one
 preview-article.html
 preview-article.pdf
+.DS_Store

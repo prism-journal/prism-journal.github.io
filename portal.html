@@ -137,6 +137,9 @@
   .panel dt { font-size:0.75rem; color:var(--ink-3); font-family:var(--mono); }
   .panel dd { margin:0; font-size:0.875rem; }
   .sub { border:1px solid var(--rule); border-radius:3px; padding:1rem; margin:0.75rem 0; background:var(--paper); }
+  .sub.danger-sub { border-color:var(--issue); border-left:2px solid var(--issue); }
+  .sub.danger-sub h4 { color:var(--issue-ink); }
+  .sub.danger-sub .btn-ghost:hover { border-color:var(--issue); color:var(--issue-ink); }
   .sub h4 { margin:0 0 0.5rem; font-size:0.6875rem; font-weight:700; font-family:var(--mono);
             letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-3); }
   .scores { display:flex; gap:1rem; flex-wrap:wrap; font-family:var(--mono); font-size:0.75rem; }
@@ -1190,6 +1193,16 @@ async function loadQueue() {
           <div class="btn-row"><button class="btn btn-solid btn-sm" data-act="save">${ic("check")}Save status</button>
             <span class="spinner msg-s"></span></div>` : ""}
 
+        ${profile.role === "chief_editor" ? `<div class="sub danger-sub">
+          <h4>Delete this submission</h4>
+          <p class="hint" style="margin:0 0 .625rem">Removes the manuscript, its file and its
+            history permanently. Refused once a referee report or a decision exists — a judged
+            manuscript is set to <b>withdrawn</b> instead, not erased.</p>
+          <div class="btn-row">
+            <button class="btn btn-ghost btn-sm" data-act="del">Delete permanently</button>
+            <span class="spinner msg-x"></span>
+          </div></div>` : ""}
+
         ${canDecide() ? `<div class="sub" style="margin-top:1rem"><h4>Write a decision</h4>
           <p class="hint">Your name is attached and published with the article. State which referee
             points are binding and which are optional.</p>
@@ -1231,6 +1244,24 @@ function wireQueue() {
         .update({ status:g("status").value, editor_note:g("note").value.trim() }).eq("id", id);
       msg.textContent = error ? friendly(error) : "Saved.";
       if (!error) setTimeout(loadQueue, 500);
+      });
+    };
+
+    if (act("del")) act("del").onclick = () => {
+      const msg = box.querySelector(".msg-x");
+      const num = box.closest("li").querySelector(".ms-no").textContent.trim();
+      // Typing the accession number is the confirmation. A dialog gets dismissed
+      // by reflex, and this is the one action in the queue that destroys data.
+      const typed = window.prompt(
+        `Delete ${num} permanently?\n\nThis removes the manuscript, its PDF and its history. ` +
+        `It cannot be undone.\n\nType the submission number to confirm:`);
+      if (typed === null) return;
+      if (typed.trim() !== num) { msg.textContent = "Number did not match — nothing deleted."; return; }
+      return busy(act("del"), "Deleting…", async () => {
+        const { data, error } = await sb.rpc("delete_manuscript", { ms: id });
+        if (error) { msg.textContent = friendly(error); return; }
+        msg.textContent = `${data} deleted.`;
+        setTimeout(loadQueue, 500);
       });
     };
 
