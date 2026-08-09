@@ -1029,6 +1029,62 @@ async function loadMine() {
            ${r.map(reviewBlock).join("")}` : ""}</div>` : ""}
     </li>`;
   }).join("")}</ul>`;
+
+  $("mine-list").innerHTML = render(data, decs, revs);
+  wireMine();
+}
+
+/* Controls under an author's own manuscript. Rebuilt on every render, so they
+   are wired here rather than inline. */
+function wireMine() {
+  $("mine-list").querySelectorAll("[data-mine]").forEach((box) => {
+    const id = box.dataset.mine, msg = box.querySelector(".msg");
+    const form = box.querySelector(".edit-form");
+    const btn = (n) => box.querySelector(`[data-a="${n}"]`);
+
+    btn("edit").onclick = () => form.classList.toggle("hidden");
+    btn("cancel").onclick = () => form.classList.add("hidden");
+
+    btn("withdraw").onclick = () => busy(btn("withdraw"), "Withdrawing…", async () => {
+      const { error } = await sb.from("manuscripts").update({ status: "withdrawn" }).eq("id", id);
+      msg.textContent = error ? friendly(error) : "Withdrawn.";
+      if (!error) setTimeout(loadMine, 500);
+    });
+
+    btn("del").onclick = () => {
+      const num = box.closest("li").querySelector(".ms-no").textContent.trim();
+      // Typing the accession number is the confirmation: a dialog gets dismissed
+      // by reflex, and this is the one author action that destroys data.
+      const typed = window.prompt(
+        `Delete ${num} permanently?\n\nThis removes the manuscript, its PDF and its history. ` +
+        `It cannot be undone. If you only want it out of the queue, use Withdraw instead.` +
+        `\n\nType the submission number to confirm:`);
+      if (typed === null) return;
+      if (typed.trim() !== num) { msg.textContent = "Number did not match — nothing deleted."; return; }
+      return busy(btn("del"), "Deleting…", async () => {
+        const { data, error } = await sb.rpc("delete_manuscript", { ms: id });
+        msg.textContent = error ? friendly(error) : `${data} deleted.`;
+        if (!error) setTimeout(loadMine, 500);
+      });
+    };
+
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      const msg2 = box.querySelector(".msg2");
+      const g = (f) => form.querySelector(`[data-e="${f}"]`);
+      const patch = {};
+      ["title","abstract","section","article_type","coauthors","mentor_statement",
+       "data_doi","code_doi","ethics_ref","ai_disclosure","limitations"]
+        .forEach((f) => { patch[f] = g(f).value.trim(); });
+      if (patch.title.length < 3) { msg2.textContent = "The title must be at least 3 characters."; return; }
+      if (patch.abstract.length < 40) { msg2.textContent = "The abstract must be at least 40 characters."; return; }
+      return busy(form.querySelector('button[type="submit"]'), "Saving…", async () => {
+        const { error } = await sb.from("manuscripts").update(patch).eq("id", id);
+        msg2.textContent = error ? friendly(error) : "Saved.";
+        if (!error) setTimeout(loadMine, 600);
+      });
+    };
+  });
 }
 
 /* ------------------------------------------------------------ my reviews */
