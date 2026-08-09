@@ -69,6 +69,10 @@
             color:rgba(246,242,243,0.55); padding:0.75rem 1rem; cursor:pointer;
             border-bottom:2px solid transparent; margin-bottom:-2px; white-space:nowrap; }
   .navtab[aria-selected="true"] { color:#F6F2F3; border-bottom-color:var(--issue); }
+  .tab-badge { display:inline-block; margin-left:0.4375rem; background:var(--issue);
+               color:#fff; font-family:var(--mono); font-size:0.5625rem; font-weight:700;
+               min-width:1.1em; padding:0.0625rem 0.3125rem; border-radius:999px;
+               vertical-align:1px; }
 
   .wrap { max-width:64rem; margin:0 auto; padding:2rem 1.25rem 5rem; }
 
@@ -546,7 +550,7 @@ $("f-type").insertAdjacentHTML("beforeend",
 if (CONFIG.url.startsWith("PASTE")) { only("v-setup"); throw new Error("not configured"); }
 const sb = createClient(CONFIG.url, CONFIG.anonKey);
 
-let me = null, profile = null;
+let me = null, profile = null, pendingReviews = 0;
 
 /* A recovery link carries a real session, so boot() would find one, load the
    profile and route to the queue — overwriting the set-a-new-password screen
@@ -675,8 +679,19 @@ async function boot() {
   const { data, error } = await sb.from("profiles").select("*").eq("id", me.id).single();
   if (recovering) return;
   if (error) { only("v-auth"); return notice("auth-note","err","Could not load your profile: " + friendly(error)); }
-  profile = data; paintUser(); buildNav();
-  go(canQueue() ? "v-queue" : "v-mine");
+  profile = data; paintUser();
+
+  // A board member can see the queue but cannot act in it, so routing them
+  // there by permission alone lands them on a page of controls they do not
+  // have, while their actual task — an invitation to review — sits unseen in
+  // another tab. Land on the work, not on the widest view.
+  const { count: pending } = await sb.from("review_assignments")
+    .select("id", { count: "exact", head: true })
+    .eq("reviewer_id", me.id).in("state", ["invited", "accepted"]);
+  pendingReviews = pending || 0;
+
+  buildNav();
+  go(pendingReviews > 0 ? "v-reviews" : canQueue() ? "v-queue" : "v-mine");
 }
 
 function paintUser() {
@@ -693,8 +708,11 @@ function buildNav() {
   if (canQueue())  tabs.push(["v-queue","Queue","inbox"]);
   if (canPeople()) tabs.push(["v-people","People","users"]);
   tabs.push(["v-settings","Settings","settings"]);
-  $("navin").innerHTML = tabs.map(([id,label,icon]) =>
-    `<button class="navtab" data-v="${id}" role="tab" aria-selected="false">${ic(icon)}${esc(label)}</button>`).join("");
+  $("navin").innerHTML = tabs.map(([id,label,icon]) => {
+    const badge = id === "v-reviews" && pendingReviews
+      ? `<span class="tab-badge">${pendingReviews}</span>` : "";
+    return `<button class="navtab" data-v="${id}" role="tab" aria-selected="false">${ic(icon)}${esc(label)}${badge}</button>`;
+  }).join("");
   $("navin").querySelectorAll("[data-v]").forEach((b) => { b.onclick = () => go(b.dataset.v); });
   show("nav");
 }
@@ -1198,9 +1216,11 @@ let qFilter = "all";
 
 async function loadQueue() {
   clearNote("queue-note");
-  $("queue-lede").textContent = isEditor()
+  $("queue-lede").innerHTML = isEditor()
     ? "Assign referees, move manuscripts through the workflow, and record decisions."
-    : "Advisory view: every submission currently with the editorial office.";
+    : "Advisory view — you can read every submission here but not act on it. " +
+      "Refereeing happens under <b>My reviews</b>, where an invitation appears once an " +
+      "editor assigns you a manuscript.";
   $("queue-list").innerHTML = `<p class="spinner">Loading…</p>`;
 
   const [{ data: rows, error }, { data: people }] = await Promise.all([
