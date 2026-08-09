@@ -108,7 +108,6 @@
   .btn-ghost { background:transparent; border-color:var(--rule); color:var(--ink); }
   .btn-ghost:hover:not(:disabled) { border-color:var(--ink); }
   .btn-sm { font-size:0.75rem; padding:0.375rem 0.75rem; }
-  .btn.armed { background:var(--issue); border-color:var(--issue); color:#fff; }
   .btn-row { display:flex; gap:0.625rem; flex-wrap:wrap; align-items:center; }
 
   .tabs { display:flex; border-bottom:1px solid var(--rule); margin-bottom:1.5rem; overflow-x:auto; }
@@ -1070,12 +1069,16 @@ function wireMine() {
       if (!error) setTimeout(loadMine, 500);
     });
 
-    armDelete(btn("del"), box.closest("li").querySelector(".ms-no").textContent.trim(),
-      () => busy(btn("del"), "Deleting…", async () => {
+    btn("del").onclick = () => {
+      const label = box.closest("li").querySelector(".ms-no").textContent.trim();
+      if (!confirmDelete(label)) return;
+      return busy(btn("del"), "Deleting…", async () => {
         const { data, error } = await sb.rpc("delete_manuscript", { ms: id });
-        msg.textContent = error ? friendly(error) : `${data} deleted.`;
-        if (!error) setTimeout(loadMine, 600);
-      }));
+        if (error) { notice("mine-note", "err", friendly(error)); msg.textContent = ""; return; }
+        msg.textContent = `${data} deleted.`;
+        setTimeout(loadMine, 600);
+      });
+    };
 
     form.onsubmit = (e) => {
       e.preventDefault();
@@ -1360,15 +1363,19 @@ function wireQueue() {
       });
     };
 
-    if (act("del")) {
+    if (act("del")) act("del").onclick = () => {
       const msgx = box.querySelector(".msg-x");
-      armDelete(act("del"), box.closest("li").querySelector(".ms-no").textContent.trim(),
-        () => busy(act("del"), "Deleting…", async () => {
-          const { data, error } = await sb.rpc("delete_manuscript", { ms: id });
-          msgx.textContent = error ? friendly(error) : `${data} deleted.`;
-          if (!error) setTimeout(loadQueue, 600);
-        }));
-    }
+      const label = box.closest("li").querySelector(".ms-no").textContent.trim();
+      if (!confirmDelete(label)) return;
+      return busy(act("del"), "Deleting…", async () => {
+        const { data, error } = await sb.rpc("delete_manuscript", { ms: id });
+        // A refusal from the database is the thing worth reading, so it goes in
+        // the notice bar rather than a few grey words beside the button.
+        if (error) { notice("queue-note", "err", friendly(error)); msgx.textContent = ""; return; }
+        msgx.textContent = `${data} deleted.`;
+        setTimeout(loadQueue, 600);
+      });
+    };
 
     if (act("decide")) act("decide").onclick = () => {
       const msg = box.querySelector(".msg-d");
@@ -1433,26 +1440,15 @@ async function loadPeople() {
 }
 
 
-/* Arming a destructive button. The first click turns it into a confirmation
-   naming what will be destroyed; the second carries it out. It disarms itself
-   after five seconds, so a stray click never leaves a live delete sitting on
-   the page. */
-function armDelete(btn, label, run) {
-  let armed = false, timer = null;
-  const rest = () => { armed = false; clearTimeout(timer); btn.textContent = "Delete";
-                       btn.classList.remove("armed"); };
-  btn.onclick = () => {
-    if (!armed) {
-      armed = true;
-      btn.textContent = `Click again to delete ${label}`;
-      btn.classList.add("armed");
-      timer = setTimeout(rest, 5000);
-      return;
-    }
-    clearTimeout(timer);
-    btn.classList.remove("armed");
-    return run();
-  };
+/* Deleting a manuscript. The confirmation is a native dialog: it cannot expire
+   while it is being read, it names exactly what will go, and there is nothing
+   to mistype. Earlier attempts at something subtler failed on both counts. */
+function confirmDelete(label) {
+  return window.confirm(
+    `Delete ${label}?\n\n` +
+    `This removes the manuscript, its PDF and its history permanently, and ` +
+    `cannot be undone.\n\n` +
+    `If you only want it out of the queue, cancel and use Withdraw instead.`);
 }
 
 /* ------------------------------------------------------------- settings */
