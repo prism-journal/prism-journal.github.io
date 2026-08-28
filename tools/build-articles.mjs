@@ -409,7 +409,7 @@ function homepageList(articles) {
   }).join("\n");
 }
 
-function writeHomepage(articles) {
+function writeHomepage(articles, outFile) {
   const file = join(ROOT, "index.html");
   let html = readFileSync(file, "utf8");
   const body = articles.length
@@ -421,12 +421,25 @@ function writeHomepage(articles) {
     `$1\n${body}\n      $2`);
   html = html.replace(/(<!--ARTICLES:COUNT-->)[\s\S]*?(<!--\/ARTICLES:COUNT-->)/,
     `$1${articles.length} article${articles.length === 1 ? "" : "s"}$2`);
-  writeFileSync(file, html);
-  console.log(`  homepage: ${articles.length} article(s) listed`);
+  writeFileSync(outFile || file, html);
+  console.log(`  homepage: ${articles.length} article(s) listed`
+    + (outFile ? ` -> ${outFile.split("/").pop()}` : ""));
 }
 
 /* ------------------------------------------------------------------- run */
 const SAMPLE = process.argv.includes("--sample");
+
+// Renders one article from a JSON file instead of the database, so a paper can be
+// proofed as it will appear before any decision is recorded against it.
+const FIX = process.argv.indexOf("--fixture");
+if (FIX !== -1) {
+  const f = JSON.parse(readFileSync(process.argv[FIX + 1], "utf8"));
+  writeFileSync(join(ROOT, "preview-article.html"),
+    page(f.article, f.reviews || [], f.decisions || []));
+  writeHomepage([f.article], join(ROOT, "preview-index.html"));
+  console.log("preview-article.html + preview-index.html written (not published)");
+  process.exit(0);
+}
 
 if (SAMPLE) {
   const a = {

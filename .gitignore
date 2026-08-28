@@ -18,3 +18,7 @@ reference/
 preview-article.html
 preview-article.pdf
 .DS_Store
+
+# preview artefacts — generated, never published
+preview-*.html
+PRISM-*.pdf
