@@ -496,6 +496,15 @@ if (SAMPLE) {
   ]);
   ISSN = settings?.[0]?.issn || null;
   if (!ISSN) console.log("  (no ISSN set yet — citation_issn omitted)");
+  // Never wipe the archive on an empty result. A transient API failure, an
+  // expired key or a paused project all return zero rows, and deleting every
+  // published article because a fetch came back empty is not a recoverable
+  // mistake — the pages are what readers and Scholar already have URLs for.
+  if (!articles.length) {
+    console.error("published_articles returned no rows — refusing to clear articles/.");
+    console.error("If the archive really should be empty, delete the directory by hand.");
+    process.exit(1);
+  }
   if (existsSync(OUT)) rmSync(OUT, { recursive: true });
   mkdirSync(OUT, { recursive: true });
   for (const a of articles) {

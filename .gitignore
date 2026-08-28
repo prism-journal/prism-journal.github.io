@@ -21,4 +21,7 @@ preview-article.pdf
 
 # preview artefacts — generated, never published
 preview-*.html
-PRISM-*.pdf
+/PRISM-*.pdf
+
+# published article PDFs are part of the record, unlike working drafts
+!articles/*.pdf

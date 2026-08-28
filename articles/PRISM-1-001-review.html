@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peer review record — PRISM-1-001 | PRISM</title>
+<meta name="description" content="A critical re-analysis of published data on iron-modified biochar for microplastic removal from agricultural irrigation water.">
+<meta name="citation_journal_title" content="PRISM">
+<meta name="citation_publisher" content="PRISM">
+<meta name="citation_title" content="Iron-Modified Biochar for Microplastic Removal from Agricultural Irrigation Water: A Critical Analysis of Published Data">
+<meta name="citation_author" content="Kim, Jake">
+<meta name="citation_author_institution" content="Shanghai High School International Division">
+<meta name="citation_publication_date" content="2026/08/28">
+<meta name="citation_volume" content="1"><meta name="citation_issue" content="1">
+<meta name="citation_firstpage" content="1"><meta name="citation_language" content="en">
+<meta name="citation_keywords" content="rice-husk biochar; iron modification; microplastics; irrigation water; adsorption mechanism">
+<meta name="citation_pdf_url" content="https://prism-journal.github.io/articles/PRISM-1-001.pdf">
+<meta name="dc.rights" content="CC BY 4.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0a0a; --body:#1a1d1f; --muted:#666; --line:#d5d5d5; --line2:#ececec;
+  --bg:#fff; --panel:#f7f7f7; --rule:#000;
+  --link:#A3132E; --oa:#A3132E; --btn:#A3132E; --btn-ink:#fff;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink:#f2f4f5; --body:#d7dbde; --muted:#9aa0a4; --line:#333; --line2:#242424;
+  --bg:#0e1113; --panel:#17191b; --rule:#e8e8e8;
+  --link:#ef6a83; --oa:#ef6a83; --btn:#b81f3c; --btn-ink:#fff;
+}}
+:root[data-theme="dark"]{
+  --ink:#f2f4f5; --body:#d7dbde; --muted:#9aa0a4; --line:#333; --line2:#242424;
+  --bg:#0e1113; --panel:#17191b; --rule:#e8e8e8;
+  --link:#ef6a83; --oa:#ef6a83; --btn:#b81f3c; --btn-ink:#fff;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--serif);
+  font-size:1.0625rem;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--link)}
+
+/* ============ Nature-style masthead ============ */
+.mast{background:var(--bg);font-family:var(--sans)}
+.mast .row1,.mast .row2{max-width:76rem;margin:0 auto;padding:0 1.5rem;
+  display:flex;align-items:center;gap:0}
+.mast .row1{padding-top:1rem;padding-bottom:.9rem}
+.wordmark{font-family:var(--serif);font-weight:700;font-size:2.6rem;line-height:1;
+  letter-spacing:-.03em;color:var(--ink);text-decoration:none}
+.mast .util{margin-left:auto;display:flex;align-items:center}
+.mast .util a{color:var(--ink);text-decoration:underline;font-size:.9375rem;
+  padding:.15rem 1.15rem;border-left:1px solid var(--line);display:flex;align-items:center;gap:.4rem}
+.mast .util a:first-child{border-left:0}
+.mast .util a:last-child{padding-right:0}
+.mast .row2{padding-bottom:.85rem;gap:1.9rem}
+.mast .row2 a{color:var(--ink);text-decoration:underline;font-size:.9375rem;font-weight:600}
+.mast .row2 .right{margin-left:auto;display:flex;gap:1.9rem}
+.mast .row2 .right a{font-weight:600}
+.blackbar{height:4px;background:var(--rule)}
+.crumb{max-width:76rem;margin:0 auto;padding:1.1rem 1.5rem .4rem;
+  font-family:var(--sans);font-size:.8125rem;color:var(--muted)}
+.crumb a{color:var(--muted)}
+.crumb i{font-style:normal;padding:0 .45rem;opacity:.6}
+svg.ic{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* ============ layout ============ */
+.wrap{max-width:76rem;margin:0 auto;padding:0 1.5rem 4rem;
+  display:grid;grid-template-columns:minmax(0,1fr) 20rem;gap:3.5rem}
+@media(max-width:64rem){.wrap{grid-template-columns:1fr;gap:0}}
+main{min-width:0;max-width:46rem;padding-top:.5rem}
+
+/* ============ article header ============ */
+.artline{font-family:var(--sans);font-size:.9375rem;color:var(--ink);
+  margin:0 0 1rem;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.artline .sep{color:var(--line);}
+.artline .oa{color:var(--oa);text-decoration:underline}
+h1{font-size:2.5rem;line-height:1.16;letter-spacing:-.02em;color:var(--ink);
+  font-weight:700;margin:0 0 1.15rem}
+@media(max-width:40rem){h1{font-size:1.75rem}}
+.authors{font-family:var(--sans);font-size:1rem;line-height:1.75;margin:0 0 1rem}
+.authors a{text-decoration:underline}
+.env{width:13px;height:13px;vertical-align:-1px;margin-left:.15rem}
+.citeline{font-family:var(--sans);font-size:.9375rem;color:var(--ink);
+  margin:0 0 .9rem;display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.citeline .j{font-style:italic}
+.saverow{font-family:var(--sans);font-size:.9375rem;margin:0 0 1.25rem}
+.saverow a{display:inline-flex;align-items:center;gap:.45rem;text-decoration:underline}
+.metrics{font-family:var(--sans);font-size:.875rem;color:var(--ink);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:.8rem 0;margin:0 0 2rem;display:flex;gap:1.6rem;flex-wrap:wrap}
+.metrics b{font-size:1.05rem}
+.metrics span{color:var(--muted)}
+
+/* ============ sidebar ============ */
+aside{padding-top:.5rem;font-family:var(--sans)}
+@media(max-width:64rem){aside{max-width:46rem;padding-top:2rem}}
+.dlpdf{display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  background:var(--btn);color:var(--btn-ink);text-decoration:none;font-weight:700;
+  font-size:1.0625rem;padding:1.05rem 1.25rem;margin-bottom:2rem}
+.dlpdf:hover{filter:brightness(1.08);color:var(--btn-ink)}
+.railh{font-family:var(--serif);font-size:1.5rem;font-weight:700;color:var(--ink);
+  margin:0 0 .5rem;padding-bottom:.5rem;border-bottom:1px solid var(--line)}
+.rail-item{padding:.7rem 0;border-bottom:1px solid var(--line2)}
+.rail-item .k{font-size:.75rem;color:var(--muted);font-weight:600;margin:0 0 .2rem}
+.rail-item a{font-weight:700;text-decoration:underline;font-size:.9375rem;color:var(--ink)}
+.rail-item a:hover{color:var(--link)}
+.toc{position:sticky;top:1rem;margin-top:2rem}
+.toc p{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);
+  font-weight:700;margin:0 0 .5rem}
+.toc a{display:block;font-size:.8125rem;color:var(--muted);text-decoration:none;
+  padding:.25rem 0 .25rem .7rem;border-left:2px solid var(--line);line-height:1.35}
+.toc a:hover{color:var(--ink);border-left-color:var(--link)}
+
+/* ============ body ============ */
+h2{font-family:var(--serif);font-size:1.6rem;font-weight:700;color:var(--ink);
+  letter-spacing:-.012em;margin:2.6rem 0 .8rem;scroll-margin-top:1.5rem}
+h3{font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);
+  margin:1.9rem 0 .5rem;scroll-margin-top:1.5rem}
+h4{font-family:var(--sans);font-size:.9375rem;font-weight:700;color:var(--ink);
+  margin:1.5rem 0 .35rem}
+p{margin:0 0 1.1rem}
+.abs{margin:0 0 2rem}
+.abs h2{margin-top:0}
+
+figure{margin:2.2rem 0;padding:0}
+figure img{width:100%;height:auto;display:block;border:1px solid var(--line);background:#fff}
+figcaption{font-family:var(--sans);font-size:.8125rem;line-height:1.55;color:var(--body);
+  margin-top:.65rem}
+figcaption b{color:var(--ink)}
+
+.tw{overflow-x:auto;margin:1.9rem 0}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:.8125rem}
+caption{text-align:left;font-family:var(--sans);font-size:.8125rem;color:var(--body);
+  margin-bottom:.6rem;line-height:1.55}
+caption b{color:var(--ink)}
+th,td{padding:.45rem .7rem;border-bottom:1px solid var(--line2);text-align:left;vertical-align:top}
+thead th{border-bottom:1.5px solid var(--line);color:var(--ink);font-weight:700;white-space:nowrap}
+tbody tr:last-child td{border-bottom:1.5px solid var(--line)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tr.grp td{font-weight:700;color:var(--ink);padding-top:.8rem;border-bottom:none}
+
+.eq{display:flex;align-items:center;gap:1rem;margin:1.4rem 0}
+.eq .m{flex:1;text-align:center;font-size:1.05rem}
+.eq .n{font-family:var(--sans);font-size:.8125rem;color:var(--muted)}
+
+.cites{font-size:.72em;line-height:0}
+.cref{text-decoration:none;font-weight:600;padding:0 .06em}
+
+ol.refs{list-style:none;margin:0;padding:0;font-family:var(--sans);font-size:.8125rem;line-height:1.55}
+ol.refs li{display:flex;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--line2);
+  scroll-margin-top:1.5rem}
+ol.refs .rnum{color:var(--muted);min-width:1.5rem;font-variant-numeric:tabular-nums}
+
+/* ---- back matter ---- */
+.bm{font-size:.9375rem}
+.bm h2{font-size:1.35rem;margin-top:2.4rem}
+.bm h3{font-size:1.0625rem;margin:1.4rem 0 .3rem}
+.bm h4{margin:1.1rem 0 .3rem}
+.bm p{margin-bottom:.85rem}
+.record{border:1px solid var(--line);padding:1.25rem;margin:1rem 0;background:var(--panel)}
+.record h4{margin-top:0}
+.scores{display:flex;gap:1.6rem;flex-wrap:wrap;font-family:var(--sans);font-size:.8125rem;
+  margin:0 0 1rem;padding-bottom:.85rem;border-bottom:1px solid var(--line)}
+.scores b{color:var(--ink);font-size:1.05rem}
+.scores span{color:var(--muted);display:block;font-size:.6875rem;
+  text-transform:uppercase;letter-spacing:.05em}
+.sig{font-family:var(--sans);font-size:.8125rem;color:var(--muted);margin-top:.85rem;
+  padding-top:.7rem;border-top:1px solid var(--line)}
+.about dl{display:grid;grid-template-columns:auto 1fr;gap:.35rem 1.5rem;
+  font-family:var(--sans);font-size:.875rem;margin:.5rem 0 0}
+.about dt{color:var(--muted)}
+.about dd{margin:0;color:var(--ink)}
+footer{border-top:1px solid var(--line);background:var(--panel)}
+footer .in{max-width:76rem;margin:0 auto;padding:2rem 1.5rem;font-family:var(--sans);
+  font-size:.8125rem;color:var(--muted)}
+
+/* ---- author popover ---- */
+.aut{position:relative;display:inline-block}
+.autbtn{font:inherit;font-family:var(--sans);color:var(--link);background:none;border:0;
+  padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:.15em}
+.autbtn:hover{filter:brightness(1.15)}
+.card{position:absolute;top:calc(100% + 12px);left:0;z-index:60;width:min(34rem,88vw);
+  background:var(--bg);border:1px solid var(--line);box-shadow:0 10px 34px rgba(0,0,0,.18);
+  padding:1.4rem 1.5rem;display:none;font-family:var(--serif);text-align:left}
+.card[data-open="1"]{display:block}
+.card::before{content:"";position:absolute;top:-9px;left:24px;width:16px;height:16px;
+  background:var(--bg);border-left:1px solid var(--line);border-top:1px solid var(--line);
+  transform:rotate(45deg)}
+.card .lab{font-family:var(--sans);font-size:.875rem;font-weight:700;color:var(--ink);margin:0 0 .5rem}
+.card h3{font-size:1.5rem;font-weight:700;color:var(--ink);margin:0 0 .8rem}
+.card p.af{font-size:1rem;color:var(--body);margin:0 0 1rem}
+.card .hr{border-top:1px solid var(--line2);margin:1rem 0}
+.card .acts{display:flex;gap:2rem;flex-wrap:wrap;align-items:center;font-family:var(--sans);font-size:.9375rem}
+.card .acts a{display:inline-flex;align-items:center;gap:.5rem;text-decoration:underline;font-weight:500}
+.card .srch{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;justify-content:space-between;
+  font-family:var(--sans);font-size:.9375rem}
+.card .sbtn{display:inline-flex;align-items:center;gap:.6rem;border:1px solid var(--link);
+  color:var(--link);padding:.6rem 1rem;text-decoration:none;font-weight:600}
+.card .sbtn:hover{background:var(--link);color:#fff}
+.card .son{color:var(--ink)}
+.card .son a{text-decoration:underline}
+.card .x{position:absolute;top:.7rem;right:.9rem;background:none;border:0;cursor:pointer;
+  font-size:1.5rem;line-height:1;color:var(--muted);padding:.2rem}
+.card .x:hover{color:var(--ink)}
+.orcid{width:19px;height:19px;flex:none}
+
+@media print{.mast,.blackbar,.crumb,aside,footer{display:none}main{max-width:none}}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="row1">
+    <a class="wordmark" href="../index.html">prism</a>
+    <div class="util">
+      <a href="../index.html#sections">Browse sections</a>
+      <a href="../index.html#archive"><svg class="ic" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>Archive</a>
+      <a href="../index.html#search"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Search</a>
+      <a href="../portal.html">Log in</a>
+    </div>
+  </div>
+  <div class="row2">
+    <a href="../index.html#sections">Explore content</a>
+    <a href="../index.html#about">About the journal</a>
+    <a href="../index.html#submit">Publish with us</a>
+    <span class="right">
+      <a href="../index.html#alerts">Sign up for alerts</a>
+      <a href="../index.html">RSS feed</a>
+    </span>
+  </div>
+</header>
+<div class="blackbar"></div>
+
+<div class="crumb">
+  <a href="../index.html">prism</a><i>›</i><a href="../index.html#archive">articles</a><i>›</i>article
+</div>
+
+<div class="wrap">
+<main>
+<p class="artline">Peer review record<span class="sep">|</span><a class="oa" href="https://creativecommons.org/licenses/by/4.0/">Open access</a><span class="sep">|</span>Published: 28 August 2026</p>
+
+<h1>Peer review record</h1>
+
+<p class="citeline">for <a href="PRISM-1-001.html">Iron-Modified Biochar for Microplastic Removal from Agricultural Irrigation Water: A Critical Analysis of Published Data</a></p>
+
+<p class="saverow"><a href="PRISM-1-001.html">← Back to the article</a></p>
+
+<div class="bm">
+<p>PRISM publishes the referee reports and the decision letter with every accepted article. Referees choose whether their report carries their name; signed reports are credited. This is the complete record for this manuscript, reproduced as submitted.</p>
+
+<h2>Referee report</h2>
+<div class="record">
+<h4>Signed report — recommendation: Accept</h4>
+<div class="scores">
+  <div><span>Sound</span><b>3</b>/5</div>
+  <div><span>Honest</span><b>4</b>/5</div>
+  <div><span>Checkable</span><b>2</b>/5</div>
+  <div><span>Legible</span><b>5</b>/5</div>
+</div>
+<p><b>Summary.</b> A critical re-analysis of published data on iron-modified biochar for microplastic removal from irrigation water. I recomputed every checkable quantity from Tables 1 and 2. Nine reproduced exactly: particle mass (2.638 µg), seasonal load (2.375 kg ha<sup>−1</sup>), demand at the highest capacity (7.3 kg ha<sup>−1</sup>), husk-derived supply (440 kg ha<sup>−1</sup>), the 26.9 % attraction-window widening, both efficiency medians (96.2 and 98.0), the count and span of the twelve efficiencies, the 67× capacity spread, and all seven surface-area ratios. Section 3.2 is the strongest contribution and it holds.</p>
+<p><b>Major points.</b> (1) Section 3.4 did not use the lowest capacity it reports: 181 kg ha<sup>−1</sup> corresponds to 13.1 mg g<sup>−1</sup>, the lowest iron-modified capacity, not the 4.82 mg g<sup>−1</sup> minimum given in Section 3.3, at which demand exceeds supply. The revised text states the iron-modified range explicitly and reports the 4.815 mg g<sup>−1</sup> case. (2) The deposited record contained neither data nor code. The compiled tables, parameters with sources, and a reproduction script have since been deposited. (3) Section 2.3 declared a regression Section 3.1 did not report; the revised Methods states the reason for declining to fit it.</p>
+<p><b>Minor points.</b> Section 3.1 referred to "the only other pair to lose area" when Table 1 contains exactly one such pair. Section 2.2 described Table 1 as covering five feedstocks when three entries name a grade or treatment. The peanut-shell ratio did not follow from its own two values. All corrected.</p>
+<p class="sig">Henry Wang · submitted 28 August 2026</p>
+</div>
+
+<h2>Decision</h2>
+<p class="sig" style="border:0;padding:0">The decision letter is added here when the handling editor records it.</p>
+</div>
+
+</main>
+
+<aside>
+  <a class="dlpdf" href="PRISM-1-001.pdf" download>Download PDF
+    <svg class="ic" style="width:19px;height:19px" viewBox="0 0 24 24"><path d="M12 3v13"/><path d="M7 12l5 5 5-5"/><path d="M4 21h16"/></svg></a>
+
+  <div class="railh">Associated content</div>
+  <div class="rail-item">
+    <p class="k">Data &amp; code</p>
+    <a href="https://doi.org/10.5281/zenodo.22130291">Compiled datasets and reproduction script</a>
+  </div>
+  <div class="rail-item">
+    <p class="k">Section</p>
+    <a href="../index.html#chemistry_materials">Chemistry &amp; Materials</a>
+  </div>
+  <div class="rail-item">
+    <p class="k">Volume</p>
+    <a href="../index.html#archive">Volume 1, Issue 1 (2026)</a>
+  </div>
+
+  <div class="toc">
+    <p>Sections</p>
+    <a href="#abstract">Abstract</a>
+    <a href="#intro">Introduction</a>
+    <a href="#data">Data compilation and analysis</a>
+    <a href="#results">Results</a>
+    <a href="#discussion">Discussion</a>
+    <a href="#conclusion">Conclusion</a>
+    <a href="#references">References</a>
+    <a href="#authorinfo">Author information</a>
+    <a href="#ethics">Ethics declarations</a>
+    <a href="#addinfo">Additional information</a>
+    <a href="#rights">Rights and permissions</a>
+    <a href="#about">About this article</a>
+  </div>
+</aside>
+</div>
+
+<footer><div class="in">
+  <b style="color:var(--ink)">PRISM</b> — an open-access multidisciplinary journal of
+  secondary-school research. Reviewed and decided by students, published with the full
+  review record.
+</div></footer>
+
+<script>
+// Author popover. Nature opens a card on the author name rather than sending the
+// reader down to the affiliation list, which loses their place in the text.
+// Opens on hover after a short delay and on click; a clicked card stays put so it
+// can be read and its links followed without the pointer having to stay inside it.
+(function () {
+  const DELAY = 120;
+  let timer = null, pinned = null;
+
+  const show = (c) => { if (c) c.setAttribute("data-open", "1"); };
+  const hide = (c) => { if (c && c !== pinned) c.removeAttribute("data-open"); };
+  const closeAll = () => {
+    pinned = null;
+    document.querySelectorAll('.card[data-open="1"]')
+      .forEach((c) => c.removeAttribute("data-open"));
+  };
+
+  document.querySelectorAll(".aut").forEach((wrap) => {
+    const btn = wrap.querySelector("[data-aut]");
+    const card = btn && document.getElementById(btn.dataset.aut);
+    if (!card) return;
+
+    wrap.addEventListener("mouseenter", () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => show(card), DELAY);
+    });
+    wrap.addEventListener("mouseleave", () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => hide(card), DELAY);
+    });
+    btn.addEventListener("click", (e) => {
+      e.preventDefault(); e.stopPropagation();
+      const open = card.getAttribute("data-open") === "1" && pinned === card;
+      closeAll();
+      if (!open) { pinned = card; show(card); btn.setAttribute("aria-expanded", "true"); }
+      else btn.setAttribute("aria-expanded", "false");
+    });
+    card.addEventListener("click", (e) => e.stopPropagation());
+    card.querySelector(".x").addEventListener("click", () => {
+      closeAll(); btn.setAttribute("aria-expanded", "false");
+    });
+  });
+
+  document.addEventListener("click", closeAll);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
+})();
+</script>
+</body>
+</html>
