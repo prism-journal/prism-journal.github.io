@@ -36,13 +36,37 @@ jobs:
       - name: Ping
         if: steps.cfg.outputs.skip != 'true'
         run: |
-          code=$(curl -s -o /dev/null -w '%{http_code}' \
+          # The step runs under `bash -e`, so a failing curl would abort before
+          # the diagnostic echo below and leave the log saying only "exit 6".
+          # Capture the exit code deliberately and report what it means.
+          set +e
+          code=$(curl -sS -o /dev/null -w '%{http_code}' \
             -H "apikey: ${{ steps.cfg.outputs.key }}" \
-            "${{ steps.cfg.outputs.url }}/rest/v1/manuscripts?select=id&limit=1")
+            "${{ steps.cfg.outputs.url }}/rest/v1/journal_settings?select=id&limit=1" 2>curl.err)
+          rc=$?
+          set -e
+
+          if [ "$rc" -ne 0 ]; then
+            echo "curl exited $rc"
+            cat curl.err || true
+            case "$rc" in
+              6)  echo "::error::DNS cannot resolve ${{ steps.cfg.outputs.url }}. Supabase withdraws the project hostname while a project is paused, so this is what a paused project looks like from outside — and it is exactly what this workflow exists to catch. Open the Supabase dashboard and resume the project. If it has been deleted rather than paused, create a new one, apply supabase/schema.sql, and update the url and anonKey in portal.html. Note that negative DNS answers are cached, so the host can keep returning NXDOMAIN for a while after a resume." ;;
+              7)  echo "::error::Host resolves but refused the connection — project is down rather than gone." ;;
+              28) echo "::error::Request timed out — project may be waking, or the network is blocked." ;;
+              35|60) echo "::error::TLS failure talking to Supabase." ;;
+              *)  echo "::error::curl failed with exit $rc; see the message above." ;;
+            esac
+            exit 1
+          fi
+
           echo "Ping returned HTTP $code"
-          # 200 = reachable, 401/403 = reachable but RLS refused us, which is
-          # also a healthy answer. Anything else means the project is down.
+          # journal_settings is granted to anon (schema.sql), so a healthy
+          # project answers 200 with a row. Pinging a table anon cannot read
+          # returns 401 without the query ever reaching the database, which may
+          # not register as activity — which is how the project paused on 24 Aug
+          # despite this workflow reporting success.
           case "$code" in
-            200|401|403) echo "Project is awake." ;;
-            *) echo "::error::Supabase looks unreachable (HTTP $code)"; exit 1 ;;
+            200) echo "Project is awake and served a real query." ;;
+            401|403) echo "::warning::Reachable, but the ping was refused before touching the database. Check that journal_settings is still granted to anon." ;;
+            *) echo "::error::Supabase answered but returned HTTP $code"; exit 1 ;;
           esac
