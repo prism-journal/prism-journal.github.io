@@ -5,10 +5,11 @@
 <meta name="citation_author" content="Fei, Albert">
 <meta name="citation_author_institution" content="Shanghai High School International Division">
 <meta name="citation_publication_date" content="2026/09/21">
-<meta name="citation_language" content="en">
-<meta name="citation_technical_report_institution" content="PRISM preprint PRISM-P-001">
-<meta name="robots" content="index,follow">
-<meta name="description" content="Grid carbon intensity varies 5.1-fold across China's provinces. A preprint on how long an electric car takes to repay its manufacturing carbon debt, and why the answer depends more on the analyst than the grid.">
+<meta name="citation_volume" content="1"><meta name="citation_issue" content="1">
+<meta name="citation_firstpage" content="3"><meta name="citation_language" content="en">
+<meta name="citation_keywords" content="electric vehicles; grid carbon intensity; China; life-cycle assessment; breakeven">
+<meta name="dc.rights" content="CC BY 4.0">
+<meta name="description" content="Grid carbon intensity varies 5.1-fold across China's provinces. How long an electric car takes to repay its manufacturing carbon debt, and why the answer depends more on the analyst than the grid.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -221,10 +222,6 @@ pre code{background:none;padding:0}
 ol.refs{list-style:none;margin:0;padding:0;font-family:var(--sans);font-size:.8125rem;line-height:1.55}
 ol.refs li{display:flex;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--line2)}
 ol.refs .rnum{color:var(--muted);min-width:1.5rem}
-
-.pbanner{background:#A3132E;color:#fff;font-family:var(--sans);font-size:.9rem;
-  padding:.75rem 1.5rem;text-align:center;font-weight:600}
-.pbanner span{font-weight:400;opacity:.92}
 </style>
 <header class="mast">
   <div class="row1">
@@ -251,11 +248,9 @@ ol.refs .rnum{color:var(--muted);min-width:1.5rem}
 
 
 
-<div class="pbanner">PREPRINT &mdash; not peer reviewed
-  <span>&nbsp;&middot;&nbsp; posted 21 September 2026 &middot; no referee has assessed this manuscript</span></div>
 <div class="wrap">
 <main>
-<p class="artline">Article<span class="sep">|</span><a class="oa" href="https://creativecommons.org/licenses/by/4.0/">Open access</a><span class="sep">|</span>Preprint — not yet peer reviewed</p>
+<p class="artline">Article<span class="sep">|</span><a class="oa" href="https://creativecommons.org/licenses/by/4.0/">Open access</a><span class="sep">|</span>Published: 21 September 2026</p>
 
 <h1>What an electric car is worth depends on where it is plugged in — and on who is counting</h1>
 
@@ -264,13 +259,13 @@ changes the climate case for an electric car depends on an accounting choice tha
 rarely state.</p>
 
 <div class="authors">Albert Fei<sup>1</sup></div>
-<p class="citeline"><sup>1</sup>Shanghai High School International Division, Shanghai, China<span class="sep">|</span><span class="j">PRISM</span> · preprint</p>
+<p class="citeline"><sup>1</sup>Shanghai High School International Division, Shanghai, China<span class="sep">|</span><span class="j">PRISM</span> <b>1</b>, 3 (2026)</p>
 
 <div class="metrics">
   <span><b>30</b> provinces</span>
   <span><b>5</b> figures</span>
   <span><b>MEE/NBS</b> official data</span>
-  <span>Draft — 21 September 2026</span>
+  <span>PRISM-1-003</span>
 </div>
 
 <div class="abs" id="abstract">
@@ -479,6 +474,11 @@ the evidence level of every value used are held in the project repository. The a
 only the Python standard library; <code>scripts/01_breakeven.py</code> prints every number that
 appears in this paper so that a rerun can be checked against the text.</p>
 
+<h2 id="review">Peer review information</h2>
+<p>PRISM thanks Edward, Deputy Editor, for his contribution to the peer review of this work. He is
+neither an author nor a mentor on the manuscript. The signed report is published with this article
+as part of the review record.</p>
+
 <h2 id="author">Author contributions</h2>
 <p>A.F. is the sole author. A.F. proposed the topic, compiled the source material, carried out the
 analysis, produced the figures and wrote the manuscript, and takes responsibility for the work.</p>
@@ -514,19 +514,21 @@ is not an author.</p>
 <li id="ref5"><span class="rnum">5.</span><span>Chen, Y. et al. Decarbonizing China's grid: provincial grid carbon footprint factors and export-embedded electricity emissions from 2020 to 2060. <i>Carbon Footprints</i> (2025). <a href="https://www.oaepublish.com/articles/cf.2025.61">oaepublish.com</a></span></li>
 </ol>
 
-<h2 id="about">About this draft</h2>
+<h2 id="about">About this article</h2>
 <div class="about"><dl>
   <dt>Author</dt><dd>Albert Fei</dd>
   <dt>Mentor</dt><dd>Henry Wang</dd>
-  <dt>Status</dt><dd>Preprint — not submitted, not peer reviewed</dd>
+  <dt>Article</dt><dd>PRISM-1-003</dd>
+  <dt>Received</dt><dd>21 September 2026</dd>
+  <dt>Accepted</dt><dd>21 September 2026</dd>
   <dt>Data</dt><dd>MEE/NBS 2023 provincial electricity emission factors, 30 provinces</dd>
   <dt>Analysis</dt><dd>Python standard library only; reruns in under a second</dd>
-  <dt>Drafted</dt><dd>21 September 2026</dd>
+  <dt>Published</dt><dd>21 September 2026</dd>
 </dl></div>
 </div>
 </main>
 <aside>
-  <div class="railh">This draft</div>
+  <div class="railh">This article</div>
   <div class="rail-item"><p class="k">Result</p>
     <a href="#results">No province shows a reversal</a></div>
   <div class="rail-item"><p class="k">But</p>
@@ -543,6 +545,7 @@ is not an author.</p>
     <a href="#limits">5. Limitations</a>
     <a href="#conclusion">6. Conclusion</a>
     <a href="#data">Data and code</a>
+    <a href="#review">Peer review</a>
     <a href="#author">Author contributions</a>
     <a href="#mentor">Mentor contribution</a>
     <a href="#competing">Competing interests</a>
