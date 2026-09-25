@@ -25,3 +25,6 @@ preview-*.html
 
 # published article PDFs are part of the record, unlike working drafts
 !articles/*.pdf
+
+# working-paper PDFs are part of the record too
+!working-papers/*.pdf
