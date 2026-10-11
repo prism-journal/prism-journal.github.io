@@ -49,7 +49,9 @@
   .bar-in { max-width:64rem; margin:0 auto; padding:0.875rem 1.25rem;
             display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
   .mark { font-family:var(--serif); font-size:1.375rem; letter-spacing:0.14em;
-          text-decoration:none; color:inherit; }
+          text-decoration:none; color:inherit;
+          display:flex; align-items:center; gap:0.42rem; }
+  .mark-glyph { width:1.62em; height:auto; flex:none; }
   .mark-sub { font-family:var(--mono); font-size:0.625rem; letter-spacing:0.1em;
               text-transform:uppercase; color:rgba(246,242,243,0.5);
               padding-left:0.875rem; border-left:1px solid rgba(246,242,243,0.25); }
@@ -217,7 +219,7 @@
 
 <div class="bar">
   <div class="bar-in">
-    <a class="mark" href="./" title="Back to the journal">PRISM</a>
+    <a class="mark" href="./" title="Back to the journal"><svg class="mark-glyph" viewBox="0 0 877 512" aria-hidden="true" focusable="false"><defs><linearGradient id="rmb" x1="73.36" y1="332.18" x2="295.32" y2="251.39" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="currentColor" stop-opacity="0.2"/><stop offset="1" stop-color="currentColor" stop-opacity="1"/></linearGradient></defs><line x1="73.36" y1="332.18" x2="295.32" y2="251.39" stroke="url(#rmb)" stroke-width="52.24" stroke-linecap="round"/><line x1="537.93" y1="268.00" x2="714.57" y2="457.30" stroke="#6E3AD6" stroke-width="56.78" stroke-linecap="round"/><line x1="541.81" y1="263.24" x2="762.71" y2="398.30" stroke="#2E5FE0" stroke-width="56.78" stroke-linecap="round"/><line x1="543.54" y1="259.79" x2="784.11" y2="355.51" stroke="#0E93B8" stroke-width="56.78" stroke-linecap="round"/><line x1="544.57" y1="256.49" x2="796.88" y2="314.59" stroke="#2E9B4F" stroke-width="56.78" stroke-linecap="round"/><line x1="545.08" y1="253.13" x2="803.24" y2="272.95" stroke="#D89A16" stroke-width="56.78" stroke-linecap="round"/><line x1="545.12" y1="250.15" x2="803.64" y2="235.95" stroke="#D2542E" stroke-width="56.78" stroke-linecap="round"/><path d="M 408.88 54.70 L 636.00 448.08 L 181.76 448.08 Z" fill="currentColor"/><line x1="295.32" y1="251.39" x2="522.44" y2="251.39" stroke="var(--plate, #0B090A)" stroke-width="24.98" stroke-linecap="round"/></svg><span>PRISM</span></a>
     <span class="mark-sub">Editorial portal</span>
     <div class="bar-right">
       <a class="bar-back" href="./">&larr; <span class="long">Back to the </span>journal</a>
