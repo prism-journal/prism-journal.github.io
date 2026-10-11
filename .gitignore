@@ -28,3 +28,6 @@ preview-*.html
 
 # working-paper PDFs are part of the record too
 !working-papers/*.pdf
+
+# the journal-hosted data deposit
+!data/*.zip
