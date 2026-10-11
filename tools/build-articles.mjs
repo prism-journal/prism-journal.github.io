@@ -415,7 +415,29 @@ function homepageList(articles) {
   }).join("\n");
 }
 
+/* ------------------------------------------------- homepage display order */
+// The homepage list is ordered editorially, not by publication date, so the
+// order survives a rebuild only if it lives somewhere the rebuild can read.
+// Anything absent from the file keeps its incoming position at the end, which
+// means a newly published article still appears before anyone has ranked it.
+function applyOrder(articles) {
+  let order;
+  try {
+    order = JSON.parse(readFileSync(join(ROOT, "tools/homepage-order.json"), "utf8")).order;
+  } catch {
+    console.log("  homepage: no usable tools/homepage-order.json, keeping date order");
+    return articles;
+  }
+  if (!Array.isArray(order)) return articles;
+  const rank = new Map(order.map((id, i) => [id, i]));
+  const at = (a) => (rank.has(artId(a)) ? rank.get(artId(a)) : Number.MAX_SAFE_INTEGER);
+  const listed = articles.filter((a) => rank.has(artId(a))).length;
+  console.log(`  homepage: ${listed} of ${articles.length} article(s) placed by homepage-order.json`);
+  return articles.slice().sort((a, b) => at(a) - at(b));
+}
+
 function writeHomepage(articles, outFile) {
+  articles = applyOrder(articles);
   const file = join(ROOT, "index.html");
   let html = readFileSync(file, "utf8");
   const body = articles.length
