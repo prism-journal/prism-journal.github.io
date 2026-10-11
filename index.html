@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PRISM — A Multidisciplinary Journal of Student Research</title>
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#FBFAF9">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F0C0E">
 <meta name="description" content="An open-access multidisciplinary journal of secondary-school research. Reviewed and decided by students, published with the full review record.">
 <meta name="color-scheme" content="light dark">
 <link rel="canonical" href="https://prism-journal.github.io/">
@@ -22,7 +28,6 @@
 <meta name="twitter:title" content="PRISM — A Multidisciplinary Journal of Student Research">
 <meta name="twitter:description" content="An open-access multidisciplinary journal of secondary-school research. Reviewed and decided by students, published with the full review record.">
 
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230B090A'/%3E%3Cpath d='M16 6 L27 25 L5 25 Z' fill='none' stroke='%23F6F2F3' stroke-width='1.6'/%3E%3Cpath d='M2 15 L11.5 15' stroke='%23FFFDFA' stroke-width='1.6'/%3E%3Cpath d='M20 20 L31 22' stroke='%23C4213D' stroke-width='1.4'/%3E%3Cpath d='M20 20 L31 19' stroke='%23D89A16' stroke-width='1.4'/%3E%3Cpath d='M20 20 L31 16' stroke='%232E9B4F' stroke-width='1.4'/%3E%3Cpath d='M20 20 L31 13' stroke='%230E93B8' stroke-width='1.4'/%3E%3C/svg%3E">
 
 <style>
   /* baseline reset — the page's own stylesheet follows and owns everything else */
@@ -308,8 +313,18 @@
     font-size: 1.375rem;
     letter-spacing: 0.14em;
     text-decoration: none;
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 0.42rem;
     margin-bottom: 0.25rem;
+  }
+  /* The glyph is sized in em so it tracks the wordmark at every breakpoint.
+     Its prism inherits currentColor and the ray inside it is painted in
+     --paper, so both follow the theme without a second file. */
+  .rail-glyph {
+    width: 1.62em;
+    height: auto;
+    flex: none;
   }
   .rail-tag {
     font-family: var(--mono);
@@ -1058,7 +1073,7 @@
 <div class="shell">
 
   <nav class="rail" aria-label="Contents">
-    <a class="rail-mark" href="#top">PRISM</a>
+    <a class="rail-mark" href="#top"><svg class="rail-glyph" viewBox="0 0 877 512" aria-hidden="true" focusable="false"><defs><linearGradient id="rmb" x1="73.36" y1="332.18" x2="295.32" y2="251.39" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="currentColor" stop-opacity="0.2"/><stop offset="1" stop-color="currentColor" stop-opacity="1"/></linearGradient></defs><line x1="73.36" y1="332.18" x2="295.32" y2="251.39" stroke="url(#rmb)" stroke-width="52.24" stroke-linecap="round"/><line x1="537.93" y1="268.00" x2="714.57" y2="457.30" stroke="#6E3AD6" stroke-width="56.78" stroke-linecap="round"/><line x1="541.81" y1="263.24" x2="762.71" y2="398.30" stroke="#2E5FE0" stroke-width="56.78" stroke-linecap="round"/><line x1="543.54" y1="259.79" x2="784.11" y2="355.51" stroke="#0E93B8" stroke-width="56.78" stroke-linecap="round"/><line x1="544.57" y1="256.49" x2="796.88" y2="314.59" stroke="#2E9B4F" stroke-width="56.78" stroke-linecap="round"/><line x1="545.08" y1="253.13" x2="803.24" y2="272.95" stroke="#D89A16" stroke-width="56.78" stroke-linecap="round"/><line x1="545.12" y1="250.15" x2="803.64" y2="235.95" stroke="#D2542E" stroke-width="56.78" stroke-linecap="round"/><path d="M 408.88 54.70 L 636.00 448.08 L 181.76 448.08 Z" fill="currentColor"/><line x1="295.32" y1="251.39" x2="522.44" y2="251.39" stroke="var(--paper, var(--bg, #FBFAF9))" stroke-width="24.98" stroke-linecap="round"/></svg><span>PRISM</span></a>
     <div class="rail-tag">Contents</div>
     <ul class="rail-list">
       <li><a class="rail-link" href="#about"><span class="n">01</span>About</a></li>
