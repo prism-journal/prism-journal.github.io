@@ -1,8 +1,9 @@
 {
-  "note": "Display order for the homepage article list. The homepage is ordered editorially rather than by date. Articles not listed here fall to the end, most recently updated first, so a newly published article appears without this file having to be edited first. The working-paper entry is not an article and stays below the list.",
+  "note": "Display order for the homepage article list. The homepage is ordered editorially rather than by date. Articles not listed here fall to the end, most recently updated first, so a newly published article appears without this file having to be edited first. Working papers may be ranked alongside articles; any not listed here stay below the list. A ranked working paper keeps its own kicker, so a reader can still see that it is not a numbered article.",
   "order": [
     "PRISM-1-002",
     "PRISM-1-004",
+    "PRISM-WP-003",
     "PRISM-1-001",
     "PRISM-1-005",
     "PRISM-1-003"

@@ -1,0 +1,425 @@
+<title>Peer review record &mdash; PRISM-WP-003</title>
+<link rel="icon" href="../favicon.ico" sizes="48x48">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="manifest" href="../site.webmanifest">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#FBFAF9">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F0C0E">
+<meta name="description" content="The signed referee report on PRISM-WP-003 by Henry Wang, and what the revised version did about it.">
+<meta name="robots" content="index,follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0a0a; --body:#1a1d1f; --muted:#666; --line:#d5d5d5; --line2:#ececec;
+  --bg:#fff; --panel:#f7f7f7; --rule:#000;
+  --link:#A3132E; --oa:#A3132E; --btn:#A3132E; --btn-ink:#fff;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink:#f2f4f5; --body:#d7dbde; --muted:#9aa0a4; --line:#333; --line2:#242424;
+  --bg:#0e1113; --panel:#17191b; --rule:#e8e8e8;
+  --link:#ef6a83; --oa:#ef6a83; --btn:#b81f3c; --btn-ink:#fff;
+}}
+:root[data-theme="dark"]{
+  --ink:#f2f4f5; --body:#d7dbde; --muted:#9aa0a4; --line:#333; --line2:#242424;
+  --bg:#0e1113; --panel:#17191b; --rule:#e8e8e8;
+  --link:#ef6a83; --oa:#ef6a83; --btn:#b81f3c; --btn-ink:#fff;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--serif);
+  font-size:1.0625rem;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--link)}
+
+/* ============ Nature-style masthead ============ */
+.mast{background:var(--bg);font-family:var(--sans)}
+.mast .row1,.mast .row2{max-width:76rem;margin:0 auto;padding:0 1.5rem;
+  display:flex;align-items:center;gap:0}
+.mast .row1{padding-top:1rem;padding-bottom:.9rem}
+.wordmark{font-family:var(--serif);font-weight:700;font-size:2.6rem;line-height:1;
+  letter-spacing:-.03em;color:var(--ink);text-decoration:none}.wordmark{display:flex;align-items:center;gap:.46rem}.wordmark-glyph{width:1.12em;height:auto;flex:none}@media(max-width:40rem){.wordmark-glyph{display:none}}
+.mast .util{margin-left:auto;display:flex;align-items:center}
+.mast .util a{color:var(--ink);text-decoration:underline;font-size:.9375rem;
+  padding:.15rem 1.15rem;border-left:1px solid var(--line);display:flex;align-items:center;gap:.4rem}
+.mast .util a:first-child{border-left:0}
+.mast .util a:last-child{padding-right:0}
+.mast .row2{padding-bottom:.85rem;gap:1.9rem}
+.mast .row2 a{color:var(--ink);text-decoration:underline;font-size:.9375rem;font-weight:600}
+.mast .row2 .right{margin-left:auto;display:flex;gap:1.9rem}
+.mast .row2 .right a{font-weight:600}
+.blackbar{height:4px;background:var(--rule)}
+.crumb{max-width:76rem;margin:0 auto;padding:1.1rem 1.5rem .4rem;
+  font-family:var(--sans);font-size:.8125rem;color:var(--muted)}
+.crumb a{color:var(--muted)}
+.crumb i{font-style:normal;padding:0 .45rem;opacity:.6}
+svg.ic{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* ============ layout ============ */
+.wrap{max-width:76rem;margin:0 auto;padding:0 1.5rem 4rem;
+  display:grid;grid-template-columns:minmax(0,1fr) 20rem;gap:3.5rem}
+@media(max-width:64rem){.wrap{grid-template-columns:1fr;gap:0}}
+main{min-width:0;max-width:46rem;padding-top:.5rem}
+
+/* ============ article header ============ */
+.artline{font-family:var(--sans);font-size:.9375rem;color:var(--ink);
+  margin:0 0 1rem;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.artline .sep{color:var(--line);}
+.artline .oa{color:var(--oa);text-decoration:underline}
+h1{font-size:2.5rem;line-height:1.16;letter-spacing:-.02em;color:var(--ink);
+  font-weight:700;margin:0 0 1.15rem}
+@media(max-width:40rem){h1{font-size:1.75rem}}
+.authors{font-family:var(--sans);font-size:1rem;line-height:1.75;margin:0 0 1rem}
+.authors a{text-decoration:underline}
+.env{width:13px;height:13px;vertical-align:-1px;margin-left:.15rem}
+.citeline{font-family:var(--sans);font-size:.9375rem;color:var(--ink);
+  margin:0 0 .9rem;display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.citeline .j{font-style:italic}
+.saverow{font-family:var(--sans);font-size:.9375rem;margin:0 0 1.25rem}
+.saverow a{display:inline-flex;align-items:center;gap:.45rem;text-decoration:underline}
+.metrics{font-family:var(--sans);font-size:.875rem;color:var(--ink);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:.8rem 0;margin:0 0 2rem;display:flex;gap:1.6rem;flex-wrap:wrap}
+.metrics b{font-size:1.05rem}
+.metrics span{color:var(--muted)}
+
+/* ============ sidebar ============ */
+aside{padding-top:.5rem;font-family:var(--sans)}
+@media(max-width:64rem){aside{max-width:46rem;padding-top:2rem}}
+.dlpdf{display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  background:var(--btn);color:var(--btn-ink);text-decoration:none;font-weight:700;
+  font-size:1.0625rem;padding:1.05rem 1.25rem;margin-bottom:2rem}
+.dlpdf:hover{filter:brightness(1.08);color:var(--btn-ink)}
+.railh{font-family:var(--serif);font-size:1.5rem;font-weight:700;color:var(--ink);
+  margin:0 0 .5rem;padding-bottom:.5rem;border-bottom:1px solid var(--line)}
+.rail-item{padding:.7rem 0;border-bottom:1px solid var(--line2)}
+.rail-item .k{font-size:.75rem;color:var(--muted);font-weight:600;margin:0 0 .2rem}
+.rail-item a{font-weight:700;text-decoration:underline;font-size:.9375rem;color:var(--ink)}
+.rail-item a:hover{color:var(--link)}
+.toc{position:sticky;top:1rem;margin-top:2rem}
+.toc p{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);
+  font-weight:700;margin:0 0 .5rem}
+.toc a{display:block;font-size:.8125rem;color:var(--muted);text-decoration:none;
+  padding:.25rem 0 .25rem .7rem;border-left:2px solid var(--line);line-height:1.35}
+.toc a:hover{color:var(--ink);border-left-color:var(--link)}
+
+/* ============ body ============ */
+h2{font-family:var(--serif);font-size:1.6rem;font-weight:700;color:var(--ink);
+  letter-spacing:-.012em;margin:2.6rem 0 .8rem;scroll-margin-top:1.5rem}
+h3{font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);
+  margin:1.9rem 0 .5rem;scroll-margin-top:1.5rem}
+h4{font-family:var(--sans);font-size:.9375rem;font-weight:700;color:var(--ink);
+  margin:1.5rem 0 .35rem}
+p{margin:0 0 1.1rem}
+.abs{margin:0 0 2rem}
+.abs h2{margin-top:0}
+
+figure{margin:2.2rem 0;padding:0}
+figure img{width:100%;height:auto;display:block;border:1px solid var(--line);background:#fff}
+figcaption{font-family:var(--sans);font-size:.8125rem;line-height:1.55;color:var(--body);
+  margin-top:.65rem}
+figcaption b{color:var(--ink)}
+
+.tw{overflow-x:auto;margin:1.9rem 0}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:.8125rem}
+caption{text-align:left;font-family:var(--sans);font-size:.8125rem;color:var(--body);
+  margin-bottom:.6rem;line-height:1.55}
+caption b{color:var(--ink)}
+th,td{padding:.45rem .7rem;border-bottom:1px solid var(--line2);text-align:left;vertical-align:top}
+thead th{border-bottom:1.5px solid var(--line);color:var(--ink);font-weight:700;white-space:nowrap}
+tbody tr:last-child td{border-bottom:1.5px solid var(--line)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tr.grp td{font-weight:700;color:var(--ink);padding-top:.8rem;border-bottom:none}
+
+.eq{display:flex;align-items:center;gap:1rem;margin:1.4rem 0}
+.eq .m{flex:1;text-align:center;font-size:1.05rem}
+.eq .n{font-family:var(--sans);font-size:.8125rem;color:var(--muted)}
+
+.cites{font-size:.72em;line-height:0}
+.cref{text-decoration:none;font-weight:600;padding:0 .06em}
+
+ol.refs{list-style:none;margin:0;padding:0;font-family:var(--sans);font-size:.8125rem;line-height:1.55}
+ol.refs li{display:flex;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--line2);
+  scroll-margin-top:1.5rem}
+ol.refs .rnum{color:var(--muted);min-width:1.5rem;font-variant-numeric:tabular-nums}
+
+/* ---- back matter ---- */
+.bm{font-size:.9375rem}
+.bm h2{font-size:1.35rem;margin-top:2.4rem}
+.bm h3{font-size:1.0625rem;margin:1.4rem 0 .3rem}
+.bm h4{margin:1.1rem 0 .3rem}
+.bm p{margin-bottom:.85rem}
+.record{border:1px solid var(--line);padding:1.25rem;margin:1rem 0;background:var(--panel)}
+.record h4{margin-top:0}
+.scores{display:flex;gap:1.6rem;flex-wrap:wrap;font-family:var(--sans);font-size:.8125rem;
+  margin:0 0 1rem;padding-bottom:.85rem;border-bottom:1px solid var(--line)}
+.scores b{color:var(--ink);font-size:1.05rem}
+.scores span{color:var(--muted);display:block;font-size:.6875rem;
+  text-transform:uppercase;letter-spacing:.05em}
+.sig{font-family:var(--sans);font-size:.8125rem;color:var(--muted);margin-top:.85rem;
+  padding-top:.7rem;border-top:1px solid var(--line)}
+.about dl{display:grid;grid-template-columns:auto 1fr;gap:.35rem 1.5rem;
+  font-family:var(--sans);font-size:.875rem;margin:.5rem 0 0}
+.about dt{color:var(--muted)}
+.about dd{margin:0;color:var(--ink)}
+footer{border-top:1px solid var(--line);background:var(--panel)}
+footer .in{max-width:76rem;margin:0 auto;padding:2rem 1.5rem;font-family:var(--sans);
+  font-size:.8125rem;color:var(--muted)}
+
+/* ---- author popover ---- */
+.aut{position:relative;display:inline-block}
+.autbtn{font:inherit;font-family:var(--sans);color:var(--link);background:none;border:0;
+  padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:.15em}
+.autbtn:hover{filter:brightness(1.15)}
+.card{position:absolute;top:calc(100% + 12px);left:0;z-index:60;width:min(34rem,88vw);
+  background:var(--bg);border:1px solid var(--line);box-shadow:0 10px 34px rgba(0,0,0,.18);
+  padding:1.4rem 1.5rem;display:none;font-family:var(--serif);text-align:left}
+.card[data-open="1"]{display:block}
+.card::before{content:"";position:absolute;top:-9px;left:24px;width:16px;height:16px;
+  background:var(--bg);border-left:1px solid var(--line);border-top:1px solid var(--line);
+  transform:rotate(45deg)}
+.card .lab{font-family:var(--sans);font-size:.875rem;font-weight:700;color:var(--ink);margin:0 0 .5rem}
+.card h3{font-size:1.5rem;font-weight:700;color:var(--ink);margin:0 0 .8rem}
+.card p.af{font-size:1rem;color:var(--body);margin:0 0 1rem}
+.card .hr{border-top:1px solid var(--line2);margin:1rem 0}
+.card .acts{display:flex;gap:2rem;flex-wrap:wrap;align-items:center;font-family:var(--sans);font-size:.9375rem}
+.card .acts a{display:inline-flex;align-items:center;gap:.5rem;text-decoration:underline;font-weight:500}
+.card .srch{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;justify-content:space-between;
+  font-family:var(--sans);font-size:.9375rem}
+.card .sbtn{display:inline-flex;align-items:center;gap:.6rem;border:1px solid var(--link);
+  color:var(--link);padding:.6rem 1rem;text-decoration:none;font-weight:600}
+.card .sbtn:hover{background:var(--link);color:#fff}
+.card .son{color:var(--ink)}
+.card .son a{text-decoration:underline}
+.card .x{position:absolute;top:.7rem;right:.9rem;background:none;border:0;cursor:pointer;
+  font-size:1.5rem;line-height:1;color:var(--muted);padding:.2rem}
+.card .x:hover{color:var(--ink)}
+.orcid{width:19px;height:19px;flex:none}
+
+@media print{.mast,.blackbar,.crumb,aside,footer{display:none}main{max-width:none}}
+
+.lede{font-size:1.05rem;color:var(--body);margin:0 0 1.4rem;max-width:52ch}
+.warn{background:var(--panel);border-left:3px solid var(--link);padding:1rem 1.2rem;
+  margin:1.3rem 0;border-radius:0 3px 3px 0;font-size:.9375rem}
+.warn p{margin:0}.warn p+p{margin-top:.6rem}
+.warn .lab{font-family:var(--sans);font-size:.68rem;font-weight:700;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--link);display:block;margin-bottom:.45rem}
+.scores{list-style:none;display:flex;flex-wrap:wrap;gap:.5rem;padding:0;margin:1rem 0 1.4rem}
+.scores li{font-family:var(--sans);font-size:.8125rem;border:1px solid var(--line);
+  border-radius:3px;padding:.45rem .8rem;display:flex;gap:.55rem;align-items:baseline}
+.scores span{color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:.68rem}
+.scores b{font-size:1.05rem;color:var(--ink)}
+.scores i{font-style:normal;color:var(--muted);font-size:.8em}
+.rec{font-family:var(--sans);font-size:.9375rem;margin:.2rem 0 1rem}
+.rec b{background:var(--panel);border:1px solid var(--line);border-radius:3px;
+  padding:.2rem .6rem}
+.rev h3{margin-top:2rem}
+.rev h4{font-family:var(--sans);font-size:.9rem;margin:1.5rem 0 .4rem;color:var(--ink)}
+.rev ul{margin:.4rem 0 .9rem 1.1rem}
+.sig{font-family:var(--sans);font-size:.8125rem;color:var(--muted);
+  border-top:1px solid var(--line);padding-top:.8rem;margin-top:2rem}
+</style>
+<header class="mast">
+  <div class="row1">
+    <a class="wordmark" href="https://prism-journal.github.io/index.html"><svg class="wordmark-glyph" viewBox="0 0 877 512" aria-hidden="true" focusable="false"><defs><linearGradient id="rmb" x1="73.36" y1="332.18" x2="295.32" y2="251.39" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="currentColor" stop-opacity="0.2"/><stop offset="1" stop-color="currentColor" stop-opacity="1"/></linearGradient></defs><line x1="73.36" y1="332.18" x2="295.32" y2="251.39" stroke="url(#rmb)" stroke-width="52.24" stroke-linecap="round"/><line x1="537.93" y1="268.00" x2="714.57" y2="457.30" stroke="#6E3AD6" stroke-width="56.78" stroke-linecap="round"/><line x1="541.81" y1="263.24" x2="762.71" y2="398.30" stroke="#2E5FE0" stroke-width="56.78" stroke-linecap="round"/><line x1="543.54" y1="259.79" x2="784.11" y2="355.51" stroke="#0E93B8" stroke-width="56.78" stroke-linecap="round"/><line x1="544.57" y1="256.49" x2="796.88" y2="314.59" stroke="#2E9B4F" stroke-width="56.78" stroke-linecap="round"/><line x1="545.08" y1="253.13" x2="803.24" y2="272.95" stroke="#D89A16" stroke-width="56.78" stroke-linecap="round"/><line x1="545.12" y1="250.15" x2="803.64" y2="235.95" stroke="#D2542E" stroke-width="56.78" stroke-linecap="round"/><path d="M 408.88 54.70 L 636.00 448.08 L 181.76 448.08 Z" fill="currentColor"/><line x1="295.32" y1="251.39" x2="522.44" y2="251.39" stroke="var(--paper, var(--bg, #FBFAF9))" stroke-width="24.98" stroke-linecap="round"/></svg><span>prism</span></a>
+    <div class="util">
+      <a href="https://prism-journal.github.io/index.html#sections">Browse sections</a>
+      <a href="https://prism-journal.github.io/index.html#archive"><svg class="ic" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>Archive</a>
+      <a href="https://prism-journal.github.io/index.html#search"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Search</a>
+      <a href="https://prism-journal.github.io/portal.html">Log in</a>
+    </div>
+  </div>
+  <div class="row2">
+    <a href="https://prism-journal.github.io/index.html#sections">Explore content</a>
+    <a href="https://prism-journal.github.io/index.html#about">About the journal</a>
+    <a href="https://prism-journal.github.io/index.html#submit">Publish with us</a>
+    <span class="right">
+      <a href="https://prism-journal.github.io/index.html#alerts">Sign up for alerts</a>
+      <a href="https://prism-journal.github.io/index.html">RSS feed</a>
+    </span>
+  </div>
+</header>
+<div class="blackbar"></div>
+
+
+
+
+<div class="wrap">
+<main>
+<p class="artline">Peer review record<span class="sep">|</span><a class="oa" href="https://creativecommons.org/licenses/by/4.0/">Open access</a><span class="sep">|</span>13 October 2026</p>
+
+<h1>Peer review record</h1>
+<p class="lede">for <i>Four micropeptide-source RNAs fail as a colon cancer recurrence panel, and
+the marker that survives clears a selection-aware null only narrowly</i></p>
+
+<p><a href="PRISM-WP-003.html">&larr; Back to the working paper</a></p>
+
+<div class="warn">
+<span class="lab">Read this first</span>
+<p><b>This referee is not independent of the author.</b> Henry Wang is PRISM's editor-in-chief,
+is at the same school as Leo Lee, and is Lee's co-author on PRISM-1-004. PRISM draws its
+reviewers from one school whose authors routinely write together, so independent refereeing is
+frequently not available to it. The journal's rule is disclosure rather than avoidance, and this
+report should be read as informed rather than independent.</p>
+<p>The revisions the report asked for were made by the journal, not by the author. No handling
+editor has recorded a decision, and the only available editor is the referee, so the paper
+remains a working paper rather than a numbered article.</p>
+</div>
+
+<div class="rev">
+<h3 id="report">Referee report</h3>
+
+<p class="rec">Signed report &mdash; recommendation: <b>Minor revision</b></p>
+
+<ul class="scores">
+  <li><span>Sound</span><b>4</b><i>/5</i></li>
+  <li><span>Honest</span><b>5</b><i>/5</i></li>
+  <li><span>Checkable</span><b>4</b><i>/5</i></li>
+  <li><span>Legible</span><b>5</b><i>/5</i></li>
+</ul>
+
+<h4>Summary</h4>
+
+<p>This manuscript evaluates four micropeptide-source RNAs as predictors of disease-free interval
+in stage II/III colon adenocarcinoma using TCGA-COAD data. The prespecified four-gene panel does
+not meet the stated performance threshold and does not significantly outperform random four-gene
+panels. The manuscript therefore supports its primary negative conclusion.</p>
+
+<p>An exploratory analysis identifies LINC00675 as the strongest individual marker, with a
+held-out C-index of approximately 0.70. The authors appropriately distinguish this exploratory
+finding from the prespecified panel analysis and further evaluate it using a matched single-gene
+null and a selection-aware correction.</p>
+
+<p>The manuscript is clear about the distinction between prespecified and exploratory analyses and
+appropriately discusses several statistical limitations. I consider the study suitable for
+publication after the points below are addressed.</p>
+
+<h4>Major point 1 &mdash; Assess the proportional-hazards assumption</h4>
+
+<p>The analyses rely on Cox proportional-hazards models, but the manuscript states that
+proportional-hazards adequacy was not formally examined. This should be assessed, particularly for
+LINC00675.</p>
+
+<p>The crossing Kaplan&ndash;Meier curves do not necessarily demonstrate violation of the
+proportional-hazards assumption for the continuous Cox model, but they make a formal diagnostic
+appropriate.</p>
+
+<p>Please report a proportional-hazards diagnostic, such as a Schoenfeld-residual test, and
+briefly discuss its implications for interpretation of the Cox-model results.</p>
+
+<h4>Major point 2 &mdash; Clarify the selection-aware null</h4>
+
+<p>The single-gene null is an important addition because it compares LINC00675 with genes passing
+the same expression requirements.</p>
+
+<p>However, the Methods should describe the best-of-four procedure in sufficient detail for
+independent reproduction. In particular, please specify:</p>
+
+<ul>
+  <li>how genes were sampled in each resampling iteration;</li>
+  <li>whether sampling was performed with or without replacement;</li>
+  <li>how ties were handled; and</li>
+  <li>how the selection-aware empirical probability was calculated.</li>
+</ul>
+
+<p>The manuscript should also clarify that this procedure represents a selection-aware empirical
+calibration rather than an exact reconstruction of the biological candidate-selection process.
+This distinction is relevant because the four candidate genes may not be statistically
+independent.</p>
+
+<h4>Major point 3 &mdash; Clarify uncertainty around the LINC00675 C-index</h4>
+
+<p>The reported confidence interval around the LINC00675 C-index conditions on the fitted models
+and does not repeat marker selection or the complete model-development procedure.</p>
+
+<p>Although this limitation is discussed later in the manuscript, it should also be stated where
+the confidence interval is first reported so that readers do not interpret it as representing
+total model-selection uncertainty.</p>
+
+<p>A description such as &ldquo;conditional bootstrap confidence interval given the fitted
+cross-validation models&rdquo; would make the scope of the interval clearer.</p>
+
+<h4>Minor points</h4>
+
+<p>1. The expanded DFI cohort should be described as a <b>sensitivity analysis</b> rather than an
+independent validation cohort.</p>
+
+<p>2. The distinction between RNA abundance and micropeptide abundance or function should remain
+explicit in the interpretation of the results.</p>
+
+<p>3. Both random-panel comparisons should be reported: the analysis using all random panels and
+the analysis restricted to nondegenerate panels. These answer related but distinct questions.</p>
+
+<p>4. The selection-aware <i>p</i> &asymp; 0.042 should not be presented as strong independent
+evidence of a validated biomarker. Given the small number of DFI events and the exploratory origin
+of the finding, cautious interpretation is appropriate.</p>
+
+<p>5. The reproducibility package would benefit from deposition in a persistent repository with a
+DOI or comparable permanent identifier.</p>
+
+<h4>Overall assessment</h4>
+
+<p>The strongest contribution of the manuscript is the prespecified negative result. The study
+defines a performance criterion in advance, evaluates the candidate panel against random
+alternatives, and reports that the proposed panel fails to satisfy the prespecified criterion.</p>
+
+<p>The LINC00675 result is potentially interesting but remains exploratory. Its predictive
+performance, selection-aware null result, small event count, absence of independent validation,
+and lack of demonstrated incremental value beyond clinical variables all warrant cautious
+interpretation.</p>
+
+<p>The requested revisions concern statistical clarification and reporting rather than a
+substantial redesign of the study. After these points are addressed, I would support
+publication.</p>
+
+<p class="sig">Henry Wang &middot; signed report &middot; recommendation: minor revision</p>
+
+<h3 id="response">What the revised version did</h3>
+
+<p>All three major points and four of the five minor points are addressed in the version now
+posted. The author did not carry out these revisions; the journal did, and the working paper says
+so on its own page.</p>
+
+<p><b>Major 1.</b> A Grambsch&ndash;Therneau correlation test on scaled Schoenfeld residuals
+(&sect;11.1) finds no evidence against proportional hazards for any of the four transcripts:
+&chi;&sup2; = 0.49 for LINC00467, 0.00 for ELFN1-AS1, 1.13 for LINC00675/TMEM238L and 0.00 for
+HOXB-AS3. With 18 events the test has little power, which the section states; what it does settle
+is that the crossing in the median-split figure does not carry into the continuous model, which
+is the model actually fitted.</p>
+
+<p><b>Major 2.</b> &sect;4.1 now states that the four genes are drawn without replacement, that a
+resample counts when its maximum is greater than or equal to the observed C-index, and that
+drawing with replacement instead moves the figure by less than the Monte Carlo error &mdash;
+4.21% against 4.19%, with a standard error near 0.05 percentage points. The quantity is named a
+selection-aware empirical calibration rather than a multiplicity-corrected significance level,
+and the non-independence of the four candidates is stated as the reason.</p>
+
+<p><b>Major 3.</b> The interval is described as conditional on the fitted cross-validation models
+at its first appearance in the abstract, again in &sect;7, and in a note beneath the single-marker
+table.</p>
+
+<p><b>Minor points 1 to 4</b> were adopted, or were already satisfied and deliberately left
+unchanged. <b>Minor point 5</b> is outstanding: the reproducibility package is still
+journal-hosted and carries no DOI, which is why the Checkable score of 4/5 stands.</p>
+
+<p>One analysis was added that this version of the report did not ask for. An earlier draft of the
+report raised clinical covariate adjustment, and that analysis was run and kept (&sect;11.2):
+adjusting for stage moves the LINC00675 coefficient from &minus;0.5954 to &minus;0.5950, an
+attenuation of 0.07%. It is reported alongside the reason it proves less than it appears &mdash;
+stage has a held-out C-index of 0.405 in this cohort, so surviving adjustment for it is close to
+free.</p>
+</div>
+
+<h3 id="decision">Decision</h3>
+<p>No decision has been recorded. Under PRISM's policy an editor does not decide on a manuscript
+they wrote themselves, and beyond that the journal has no editor without a working relationship
+to this author. This section is filled in when a handling editor records a decision.</p>
+</main>
+</div>
+<footer><div class="in">
+  <b style="color:var(--ink)">PRISM</b> &mdash; an open-access multidisciplinary journal of
+  secondary-school research. Review records are published with the work they concern.
+  <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+</div></footer>
