@@ -280,38 +280,6 @@ now has a null of its own, and passes by four per cent.</p>
 <p><a class="dlpdf" style="max-width:24rem" href="PRISM-WP-003.pdf" download>Download the full paper (PDF)
 <svg class="ic" style="width:19px;height:19px" viewBox="0 0 24 24"><path d="M12 3v13"/><path d="M7 12l5 5 5-5"/><path d="M4 21h16"/></svg></a></p>
 
-<div class="warn">
-<span class="lab">About this working paper</span>
-<p><b>Peer reviewed by Henry Wang, who is not independent of the author.</b> The
-<a href="PRISM-WP-003-review.html">signed report is published in full</a>: minor revision, with
-scores of 4, 5, 4 and 5 for sound, honest, checkable and legible. The referee is PRISM's
-editor-in-chief, is at the author's school, and is the author's co-author on PRISM-1-004. PRISM
-draws its reviewers from one school whose authors routinely write together, so independent
-refereeing is frequently not available to it; the journal's rule is disclosure rather than
-avoidance. Read the report as informed rather than independent.</p>
-<p>The paper remains a <b>working paper</b> rather than a numbered article because no handling
-editor has recorded a decision, and the only available editor is the referee. The revisions the
-report asked for were made &mdash; by the journal, not by the author.</p>
-<p><b>The framing of this version is not the author's, and one analysis is not his either.</b>
-The submitted manuscript carried an AI-assisted abstract, discussion and conclusion and a
-declaration that the author would rewrite them before submission; that rewrite has not happened.
-The title, abstract and the prose of sections 5 to 13 were written by Claude (Anthropic) for the
-journal. None of the author's results were altered and no model of his was refitted.</p>
-<p>The submitted study identified a missing comparison &mdash; a random single-gene null for
-LINC00675 &mdash; as the gap that left its headline number uninterpretable. The journal computed
-it (&sect;4.1, &sect;10, Fig. 8), after requiring the re-implementation to reproduce all four of
-the author's published single-marker C-indices and all 100 of his per-fold values exactly. The
-proportional-hazards and stage-adjustment analyses in &sect;11 were added the same way. Those
-computations are the journal's, not the author's; their code is deposited separately so it can
-be checked or discarded on its own.</p>
-<p><b>A referee report exists, and is deliberately not published as a PRISM review.</b> Henry
-Wang, editor-in-chief, filed a signed report on the working-paper version recommending minor
-revision, and this version answers it. He is barred from refereeing this manuscript under
-PRISM's conflict policy &mdash; he is at the author's school and is the author's co-author on
-PRISM-1-004 &mdash; so the report is not published as a peer review, and the paper stays a
-working paper until an eligible referee reports or the policy is changed. The revisions stand
-on their own merits either way.</p>
-</div>
 <h2 id="abstract">Abstract</h2>
 <p>Transcripts once classified as long noncoding RNAs can encode functional peptides, and several of those peptides have documented roles in colorectal cancer. This study asked whether the source RNAs of four experimentally characterised micropeptides — LINC00467 (ASAP), ELFN1-AS1 (SMIMP), LINC00675/TMEM238L (FORCP) and HOXB-AS3 — form a useful recurrence panel in colon adenocarcinoma.</p>
 <p>They do not. In 137 stage II/III TCGA-COAD patients with 18 disease-free interval (DFI) events, the four-transcript elastic-net Cox panel reached a held-out C-index of 0.609 (95% CI, 0.509–0.717) under five-by-three nested cross-validation repeated over five seeds, below the 0.65 development target set in advance. Against 1,000 random four-gene panels put through the identical procedure, it ranked at the 93.4th percentile, one-sided empirical <i>p</i> = 0.067. The prespecified comparison fails at its own threshold.</p>
@@ -426,7 +394,7 @@ on their own merits either way.</p>
 <p>None of the author's results were altered. No model of his was refitted and no reported number of his was changed; the Methods describe the same pipeline as the submitted version.</p>
 <p>Four quantitative additions are new to this version and were made by the journal. Three are arithmetic on the author's frozen outputs: the count of degenerate random panels and the restricted probability in §5.1, the tally of below-chance estimates in §7, and the independent reproduction of his published empirical <i>p</i> of 0.066933 from <code>random_panel_scores.tsv</code> as a check that his frozen outputs and his reported numbers agree.</p>
 <p>The fourth is new computation: the random single-gene null of §10 and §4.1, with Fig. 8. This required re-downloading the expression matrix, whose SHA-256 was checked against the hash in the author's <code>results.json</code>, and re-implementing the per-fold Cox fit and concordance count because <code>lifelines</code> and <code>scikit-survival</code> could not be installed. That re-implementation was gated on reproducing the author's recorded results: all four published single-marker C-indices to the last recorded decimal, all 100 per-fold C-indices, pair counts and coefficients, and the archived per-sample library sizes. It is the journal's computation, not the author's, and the code is in the deposit so that it can be checked or discarded independently of his. The proportional-hazards tests and stage-adjusted models of §11 were added the same way, after peer review asked for them, and their code is deposited beside it.</p>
-<p><b>Peer review.</b> This paper is published as a working paper and has not been peer reviewed. See the note on the article page.</p>
+<p><b>Peer review.</b> Reviewed by Henry Wang, whose signed report is published in full as the <a href="PRISM-WP-003-review.html">review record</a>: minor revision, scoring 4, 5, 4 and 5 for sound, honest, checkable and legible. He is PRISM's editor-in-chief, is at the author's school, and is the author's co-author on PRISM-1-004. PRISM draws its referees from one school whose authors routinely write together, so independent refereeing is frequently not available to it and the journal's rule is disclosure rather than avoidance; this report should be read as informed rather than independent. The revisions it asked for were made by the journal rather than by the author. The paper remains a working paper rather than a numbered article because no handling editor has recorded a decision.</p>
 <h2 id="data-and-code-availability">Data and code availability</h2>
 <p>The study uses the public <a href="https://gdc.xenahubs.net/download/TCGA-COAD.star_counts.tsv.gz">TCGA-COAD expression matrix</a> from UCSC Xena and the <a href="https://gdc.cancer.gov/about-data/publications/PanCan-Clinical-2018">TCGA Clinical Data Resource</a>. Neither is redistributed here. The journal's addition — the single-gene null code, the 1,000 sampled C-indices, the gate mask and the figure script — is in <code>prism-single-gene-null/</code> inside the deposit, alongside its validation output. It is separate from the author's material and can be checked or rejected on its own.</p>
 <p>The author's reproducibility package is deposited with the journal as <a href="https://prism-journal.github.io/data/coad-micropeptide-package.zip">coad-micropeptide-package.zip</a> (30 MB). It contains the analysis pipeline, the frozen results, the patient-filtering audits, the cross-validation splits, the random-panel outputs and the figure sources, with SHA-256 hashes for the two required inputs. It is journal-hosted rather than archived, so it carries no DOI and no persistent identifier. The two source matrices are excluded and must be downloaded from the addresses above; the package records their hashes so a rerun can be checked against the analysed snapshot. Proposed validation data are at <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE39582">GEO accession GSE39582</a>.</p>
