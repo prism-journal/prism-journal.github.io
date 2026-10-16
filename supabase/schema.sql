@@ -788,3 +788,12 @@ grant execute on function public.delete_manuscript(uuid) to authenticated;
 --
 -- Everyone after that is appointed through the People tab in the portal.
 -- ---------------------------------------------------------------------------
+
+-- ---------------------------------------------------------------------------
+-- Keepalive
+--
+-- The free tier pauses a project after about 7 days without activity. The
+-- objects that prevent that live in supabase/keepalive.sql, kept separate so
+-- they can be pasted into the SQL editor on their own. Apply that file too;
+-- the scheduled workflow in .github/workflows/keepalive.yml depends on it.
+-- ---------------------------------------------------------------------------

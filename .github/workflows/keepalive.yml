@@ -1,15 +1,26 @@
-# Supabase free-tier projects are paused after ~7 days without traffic, which
-# would make the submission portal look broken to an author. This pings the
-# project twice a week to keep it awake.
+# Supabase pauses a free project after about 7 days without activity, which
+# takes the submission portal down without warning an author.
 #
-# It reads the project URL and anon key straight out of portal.html so there is
-# only ever one place to change them. Both values are public by design.
+# This ran twice a week and called a plain select. It reported HTTP 200 every
+# time and the project was paused anyway on 14 September 2026, then flagged as
+# inactive again on 16 October while the pings were succeeding. So the ping is
+# now a write, through the keepalive() function in supabase/keepalive.sql, and
+# it runs every day instead of twice a week. A read can be served without the
+# database doing durable work; an update cannot.
+#
+# The project URL and publishable key are read out of portal.html so there is
+# one place to change them. Both are public by design.
+#
+# Optional: set the repository secret SUPABASE_ACCESS_TOKEN to a Supabase
+# personal access token and this will also un-pause the project by itself
+# instead of waiting for someone to read the failure. Without the secret the
+# restore step is skipped and the workflow just reports.
 
 name: Keep Supabase awake
 
 on:
   schedule:
-    - cron: "17 6 * * 1,4"   # Mondays and Thursdays, 06:17 UTC
+    - cron: "17 6 * * *"   # every day, 06:17 UTC
   workflow_dispatch:
 
 jobs:
@@ -26,47 +37,105 @@ jobs:
           KEY=$(grep -oE 'anonKey:[[:space:]]*"[A-Za-z0-9._-]+"' portal.html \
                 | sed -E 's/.*"([A-Za-z0-9._-]+)".*/\1/' | head -1)
           if [ -z "$URL" ] || [ -z "$KEY" ]; then
-            echo "Supabase is not configured in portal.html yet — nothing to ping."
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          echo "url=$URL" >> "$GITHUB_OUTPUT"
-          echo "key=$KEY" >> "$GITHUB_OUTPUT"
-
-      - name: Ping
-        if: steps.cfg.outputs.skip != 'true'
-        run: |
-          # The step runs under `bash -e`, so a failing curl would abort before
-          # the diagnostic echo below and leave the log saying only "exit 6".
-          # Capture the exit code deliberately and report what it means.
-          set +e
-          code=$(curl -sS -o /dev/null -w '%{http_code}' \
-            -H "apikey: ${{ steps.cfg.outputs.key }}" \
-            "${{ steps.cfg.outputs.url }}/rest/v1/journal_settings?select=id&limit=1" 2>curl.err)
-          rc=$?
-          set -e
-
-          if [ "$rc" -ne 0 ]; then
-            echo "curl exited $rc"
-            cat curl.err || true
-            case "$rc" in
-              6)  echo "::error::DNS cannot resolve ${{ steps.cfg.outputs.url }}. Supabase withdraws the project hostname while a project is paused, so this is what a paused project looks like from outside — and it is exactly what this workflow exists to catch. Open the Supabase dashboard and resume the project. If it has been deleted rather than paused, create a new one, apply supabase/schema.sql, and update the url and anonKey in portal.html. Note that negative DNS answers are cached, so the host can keep returning NXDOMAIN for a while after a resume." ;;
-              7)  echo "::error::Host resolves but refused the connection — project is down rather than gone." ;;
-              28) echo "::error::Request timed out — project may be waking, or the network is blocked." ;;
-              35|60) echo "::error::TLS failure talking to Supabase." ;;
-              *)  echo "::error::curl failed with exit $rc; see the message above." ;;
-            esac
+            echo "::error::Supabase is not configured in portal.html — nothing to ping."
             exit 1
           fi
+          REF=$(printf '%s' "$URL" | sed -E 's#https://([a-z0-9]+)\.supabase\.co#\1#')
+          echo "url=$URL"  >> "$GITHUB_OUTPUT"
+          echo "key=$KEY"  >> "$GITHUB_OUTPUT"
+          echo "ref=$REF"  >> "$GITHUB_OUTPUT"
+          echo "Project $REF"
 
-          echo "Ping returned HTTP $code"
-          # journal_settings is granted to anon (schema.sql), so a healthy
-          # project answers 200 with a row. Pinging a table anon cannot read
-          # returns 401 without the query ever reaching the database, which may
-          # not register as activity — which is how the project paused on 24 Aug
-          # despite this workflow reporting success.
+      - name: Write-ping the database
+        id: ping
+        env:
+          URL: ${{ steps.cfg.outputs.url }}
+          KEY: ${{ steps.cfg.outputs.key }}
+        run: |
+          # curl failures are captured rather than allowed to abort the step, so
+          # the log says what went wrong instead of only "exit 6".
+          set +e
+          body=$(curl -sS -X POST "$URL/rest/v1/rpc/keepalive" \
+                   -H "apikey: $KEY" \
+                   -H "Content-Type: application/json" \
+                   -H "Prefer: return=representation" \
+                   -d '{}' -w '\n%{http_code}' 2>curl.err)
+          rc=$?
+          set -e
+          code=$(printf '%s' "$body" | tail -n1)
+          payload=$(printf '%s' "$body" | sed '$d')
+
+          if [ "$rc" -ne 0 ]; then
+            echo "curl exited $rc"; cat curl.err || true
+            case "$rc" in
+              6)  echo "::error::DNS cannot resolve $URL. Supabase withdraws the hostname while a project is paused, so this is what a paused project looks like from outside." ;;
+              7)  echo "::error::Host resolves but refused the connection — down rather than gone." ;;
+              28) echo "::error::Timed out — the project may be waking, or the network is blocked." ;;
+              35|60) echo "::error::TLS failure talking to Supabase." ;;
+              *)  echo "::error::curl failed with exit $rc." ;;
+            esac
+            echo "paused=true" >> "$GITHUB_OUTPUT"
+            exit 0   # let the restore step run; the verify step decides the outcome
+          fi
+
+          echo "HTTP $code — $payload"
+
           case "$code" in
-            200) echo "Project is awake and served a real query." ;;
-            401|403) echo "::warning::Reachable, but the ping was refused before touching the database. Check that journal_settings is still granted to anon." ;;
-            *) echo "::error::Supabase answered but returned HTTP $code"; exit 1 ;;
+            200|204)
+              # The function returns the timestamp it just wrote. Checking that it
+              # is recent is what proves a write actually happened, rather than a
+              # cached or short-circuited response.
+              ts=$(printf '%s' "$payload" | tr -d '"')
+              if [ -z "$ts" ]; then
+                echo "::warning::Call succeeded but returned nothing to verify."
+              else
+                age=$(( $(date -u +%s) - $(date -u -d "$ts" +%s) ))
+                echo "Database wrote $ts (${age}s ago)"
+                if [ "$age" -gt 300 ]; then
+                  echo "::error::keepalive() returned a stale timestamp (${age}s old) — the update did not land."
+                  exit 1
+                fi
+              fi
+              echo "ok=true" >> "$GITHUB_OUTPUT"
+              ;;
+            404)
+              echo "::error::No keepalive() function on this project. Run supabase/keepalive.sql in the SQL editor once; until then the project is only being read, which is what let it pause before."
+              exit 1
+              ;;
+            401|403)
+              echo "::error::Refused before reaching the database (HTTP $code). Check that execute on public.keepalive() is still granted to anon."
+              exit 1
+              ;;
+            *)
+              echo "::error::Supabase answered HTTP $code."
+              exit 1
+              ;;
           esac
+
+      - name: Resume the project if it is paused
+        if: steps.ping.outputs.paused == 'true'
+        env:
+          TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          REF: ${{ steps.cfg.outputs.ref }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::The project looks paused and no SUPABASE_ACCESS_TOKEN secret is set, so it cannot be resumed from here. Open the Supabase dashboard and resume it by hand. Adding that secret would let this workflow do it unattended."
+            exit 1
+          fi
+          echo "Asking the Management API to restore $REF"
+          code=$(curl -sS -o restore.out -w '%{http_code}' -X POST \
+            "https://api.supabase.com/v1/projects/$REF/restore" \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" -d '{}')
+          echo "HTTP $code"; cat restore.out || true
+          case "$code" in
+            200|201|202|204) echo "::notice::Restore accepted. A project takes a few minutes to come back, and negative DNS answers stay cached for a while after that, so the next scheduled run is the real check." ;;
+            401|403) echo "::error::The Management API rejected the token. Regenerate SUPABASE_ACCESS_TOKEN."; exit 1 ;;
+            *) echo "::error::Restore request returned HTTP $code."; exit 1 ;;
+          esac
+
+      - name: Fail if the ping never succeeded
+        if: steps.ping.outputs.ok != 'true'
+        run: |
+          echo "::error::The project did not serve a write-ping this run. See the steps above."
+          exit 1
