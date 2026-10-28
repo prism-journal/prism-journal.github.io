@@ -7,3 +7,4 @@ https://prism-journal.github.io/articles/PRISM-1-004.html
 https://prism-journal.github.io/articles/PRISM-1-005.html
 https://prism-journal.github.io/working-papers/PRISM-WP-001.html
 https://prism-journal.github.io/working-papers/PRISM-WP-004-review.html
+https://prism-journal.github.io/working-papers/PRISM-WP-004.html
