@@ -1,0 +1,341 @@
+<title>Peer review record &mdash; PRISM-WP-004</title>
+<link rel="icon" href="../favicon.ico" sizes="48x48">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="manifest" href="../site.webmanifest">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#FBFAF9">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F0C0E">
+<meta name="description" content="The signed referee report on PRISM-WP-004 by Henry Wang, and what the revised version did about it.">
+<meta name="robots" content="index,follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0a0a; --body:#1a1d1f; --muted:#666; --line:#d5d5d5; --line2:#ececec;
+  --bg:#fff; --panel:#f7f7f7; --rule:#000;
+  --link:#A3132E; --oa:#A3132E; --btn:#A3132E; --btn-ink:#fff;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink:#f2f4f5; --body:#d7dbde; --muted:#9aa0a4; --line:#333; --line2:#242424;
+  --bg:#0e1113; --panel:#17191b; --rule:#e8e8e8;
+  --link:#ef6a83; --oa:#ef6a83; --btn:#b81f3c; --btn-ink:#fff;
+}}
+:root[data-theme="dark"]{
+  --ink:#f2f4f5; --body:#d7dbde; --muted:#9aa0a4; --line:#333; --line2:#242424;
+  --bg:#0e1113; --panel:#17191b; --rule:#e8e8e8;
+  --link:#ef6a83; --oa:#ef6a83; --btn:#b81f3c; --btn-ink:#fff;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--serif);
+  font-size:1.0625rem;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--link)}
+
+/* ============ Nature-style masthead ============ */
+.mast{background:var(--bg);font-family:var(--sans)}
+.mast .row1,.mast .row2{max-width:76rem;margin:0 auto;padding:0 1.5rem;
+  display:flex;align-items:center;gap:0}
+.mast .row1{padding-top:1rem;padding-bottom:.9rem}
+.wordmark{font-family:var(--serif);font-weight:700;font-size:2.6rem;line-height:1;
+  letter-spacing:-.03em;color:var(--ink);text-decoration:none}.wordmark{display:flex;align-items:center;gap:.46rem}.wordmark-glyph{width:1.12em;height:auto;flex:none}@media(max-width:40rem){.wordmark-glyph{display:none}}
+.mast .util{margin-left:auto;display:flex;align-items:center}
+.mast .util a{color:var(--ink);text-decoration:underline;font-size:.9375rem;
+  padding:.15rem 1.15rem;border-left:1px solid var(--line);display:flex;align-items:center;gap:.4rem}
+.mast .util a:first-child{border-left:0}
+.mast .util a:last-child{padding-right:0}
+.mast .row2{padding-bottom:.85rem;gap:1.9rem}
+.mast .row2 a{color:var(--ink);text-decoration:underline;font-size:.9375rem;font-weight:600}
+.mast .row2 .right{margin-left:auto;display:flex;gap:1.9rem}
+.mast .row2 .right a{font-weight:600}
+.blackbar{height:4px;background:var(--rule)}
+.crumb{max-width:76rem;margin:0 auto;padding:1.1rem 1.5rem .4rem;
+  font-family:var(--sans);font-size:.8125rem;color:var(--muted)}
+.crumb a{color:var(--muted)}
+.crumb i{font-style:normal;padding:0 .45rem;opacity:.6}
+svg.ic{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* ============ layout ============ */
+.wrap{max-width:76rem;margin:0 auto;padding:0 1.5rem 4rem;
+  display:grid;grid-template-columns:minmax(0,1fr) 20rem;gap:3.5rem}
+@media(max-width:64rem){.wrap{grid-template-columns:1fr;gap:0}}
+main{min-width:0;max-width:46rem;padding-top:.5rem}
+
+/* ============ article header ============ */
+.artline{font-family:var(--sans);font-size:.9375rem;color:var(--ink);
+  margin:0 0 1rem;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.artline .sep{color:var(--line);}
+.artline .oa{color:var(--oa);text-decoration:underline}
+h1{font-size:2.5rem;line-height:1.16;letter-spacing:-.02em;color:var(--ink);
+  font-weight:700;margin:0 0 1.15rem}
+@media(max-width:40rem){h1{font-size:1.75rem}}
+.authors{font-family:var(--sans);font-size:1rem;line-height:1.75;margin:0 0 1rem}
+.authors a{text-decoration:underline}
+.env{width:13px;height:13px;vertical-align:-1px;margin-left:.15rem}
+.citeline{font-family:var(--sans);font-size:.9375rem;color:var(--ink);
+  margin:0 0 .9rem;display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.citeline .j{font-style:italic}
+.saverow{font-family:var(--sans);font-size:.9375rem;margin:0 0 1.25rem}
+.saverow a{display:inline-flex;align-items:center;gap:.45rem;text-decoration:underline}
+.metrics{font-family:var(--sans);font-size:.875rem;color:var(--ink);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:.8rem 0;margin:0 0 2rem;display:flex;gap:1.6rem;flex-wrap:wrap}
+.metrics b{font-size:1.05rem}
+.metrics span{color:var(--muted)}
+
+/* ============ sidebar ============ */
+aside{padding-top:.5rem;font-family:var(--sans)}
+@media(max-width:64rem){aside{max-width:46rem;padding-top:2rem}}
+.dlpdf{display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  background:var(--btn);color:var(--btn-ink);text-decoration:none;font-weight:700;
+  font-size:1.0625rem;padding:1.05rem 1.25rem;margin-bottom:2rem}
+.dlpdf:hover{filter:brightness(1.08);color:var(--btn-ink)}
+.railh{font-family:var(--serif);font-size:1.5rem;font-weight:700;color:var(--ink);
+  margin:0 0 .5rem;padding-bottom:.5rem;border-bottom:1px solid var(--line)}
+.rail-item{padding:.7rem 0;border-bottom:1px solid var(--line2)}
+.rail-item .k{font-size:.75rem;color:var(--muted);font-weight:600;margin:0 0 .2rem}
+.rail-item a{font-weight:700;text-decoration:underline;font-size:.9375rem;color:var(--ink)}
+.rail-item a:hover{color:var(--link)}
+.toc{position:sticky;top:1rem;margin-top:2rem}
+.toc p{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);
+  font-weight:700;margin:0 0 .5rem}
+.toc a{display:block;font-size:.8125rem;color:var(--muted);text-decoration:none;
+  padding:.25rem 0 .25rem .7rem;border-left:2px solid var(--line);line-height:1.35}
+.toc a:hover{color:var(--ink);border-left-color:var(--link)}
+
+/* ============ body ============ */
+h2{font-family:var(--serif);font-size:1.6rem;font-weight:700;color:var(--ink);
+  letter-spacing:-.012em;margin:2.6rem 0 .8rem;scroll-margin-top:1.5rem}
+h3{font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);
+  margin:1.9rem 0 .5rem;scroll-margin-top:1.5rem}
+h4{font-family:var(--sans);font-size:.9375rem;font-weight:700;color:var(--ink);
+  margin:1.5rem 0 .35rem}
+p{margin:0 0 1.1rem}
+.abs{margin:0 0 2rem}
+.abs h2{margin-top:0}
+
+figure{margin:2.2rem 0;padding:0}
+figure img{width:100%;height:auto;display:block;border:1px solid var(--line);background:#fff}
+figcaption{font-family:var(--sans);font-size:.8125rem;line-height:1.55;color:var(--body);
+  margin-top:.65rem}
+figcaption b{color:var(--ink)}
+
+.tw{overflow-x:auto;margin:1.9rem 0}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:.8125rem}
+caption{text-align:left;font-family:var(--sans);font-size:.8125rem;color:var(--body);
+  margin-bottom:.6rem;line-height:1.55}
+caption b{color:var(--ink)}
+th,td{padding:.45rem .7rem;border-bottom:1px solid var(--line2);text-align:left;vertical-align:top}
+thead th{border-bottom:1.5px solid var(--line);color:var(--ink);font-weight:700;white-space:nowrap}
+tbody tr:last-child td{border-bottom:1.5px solid var(--line)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tr.grp td{font-weight:700;color:var(--ink);padding-top:.8rem;border-bottom:none}
+
+.eq{display:flex;align-items:center;gap:1rem;margin:1.4rem 0}
+.eq .m{flex:1;text-align:center;font-size:1.05rem}
+.eq .n{font-family:var(--sans);font-size:.8125rem;color:var(--muted)}
+
+.cites{font-size:.72em;line-height:0}
+.cref{text-decoration:none;font-weight:600;padding:0 .06em}
+
+ol.refs{list-style:none;margin:0;padding:0;font-family:var(--sans);font-size:.8125rem;line-height:1.55}
+ol.refs li{display:flex;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--line2);
+  scroll-margin-top:1.5rem}
+ol.refs .rnum{color:var(--muted);min-width:1.5rem;font-variant-numeric:tabular-nums}
+
+/* ---- back matter ---- */
+.bm{font-size:.9375rem}
+.bm h2{font-size:1.35rem;margin-top:2.4rem}
+.bm h3{font-size:1.0625rem;margin:1.4rem 0 .3rem}
+.bm h4{margin:1.1rem 0 .3rem}
+.bm p{margin-bottom:.85rem}
+.record{border:1px solid var(--line);padding:1.25rem;margin:1rem 0;background:var(--panel)}
+.record h4{margin-top:0}
+.scores{display:flex;gap:1.6rem;flex-wrap:wrap;font-family:var(--sans);font-size:.8125rem;
+  margin:0 0 1rem;padding-bottom:.85rem;border-bottom:1px solid var(--line)}
+.scores b{color:var(--ink);font-size:1.05rem}
+.scores span{color:var(--muted);display:block;font-size:.6875rem;
+  text-transform:uppercase;letter-spacing:.05em}
+.sig{font-family:var(--sans);font-size:.8125rem;color:var(--muted);margin-top:.85rem;
+  padding-top:.7rem;border-top:1px solid var(--line)}
+.about dl{display:grid;grid-template-columns:auto 1fr;gap:.35rem 1.5rem;
+  font-family:var(--sans);font-size:.875rem;margin:.5rem 0 0}
+.about dt{color:var(--muted)}
+.about dd{margin:0;color:var(--ink)}
+footer{border-top:1px solid var(--line);background:var(--panel)}
+footer .in{max-width:76rem;margin:0 auto;padding:2rem 1.5rem;font-family:var(--sans);
+  font-size:.8125rem;color:var(--muted)}
+
+/* ---- author popover ---- */
+.aut{position:relative;display:inline-block}
+.autbtn{font:inherit;font-family:var(--sans);color:var(--link);background:none;border:0;
+  padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:.15em}
+.autbtn:hover{filter:brightness(1.15)}
+.card{position:absolute;top:calc(100% + 12px);left:0;z-index:60;width:min(34rem,88vw);
+  background:var(--bg);border:1px solid var(--line);box-shadow:0 10px 34px rgba(0,0,0,.18);
+  padding:1.4rem 1.5rem;display:none;font-family:var(--serif);text-align:left}
+.card[data-open="1"]{display:block}
+.card::before{content:"";position:absolute;top:-9px;left:24px;width:16px;height:16px;
+  background:var(--bg);border-left:1px solid var(--line);border-top:1px solid var(--line);
+  transform:rotate(45deg)}
+.card .lab{font-family:var(--sans);font-size:.875rem;font-weight:700;color:var(--ink);margin:0 0 .5rem}
+.card h3{font-size:1.5rem;font-weight:700;color:var(--ink);margin:0 0 .8rem}
+.card p.af{font-size:1rem;color:var(--body);margin:0 0 1rem}
+.card .hr{border-top:1px solid var(--line2);margin:1rem 0}
+.card .acts{display:flex;gap:2rem;flex-wrap:wrap;align-items:center;font-family:var(--sans);font-size:.9375rem}
+.card .acts a{display:inline-flex;align-items:center;gap:.5rem;text-decoration:underline;font-weight:500}
+.card .srch{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;justify-content:space-between;
+  font-family:var(--sans);font-size:.9375rem}
+.card .sbtn{display:inline-flex;align-items:center;gap:.6rem;border:1px solid var(--link);
+  color:var(--link);padding:.6rem 1rem;text-decoration:none;font-weight:600}
+.card .sbtn:hover{background:var(--link);color:#fff}
+.card .son{color:var(--ink)}
+.card .son a{text-decoration:underline}
+.card .x{position:absolute;top:.7rem;right:.9rem;background:none;border:0;cursor:pointer;
+  font-size:1.5rem;line-height:1;color:var(--muted);padding:.2rem}
+.card .x:hover{color:var(--ink)}
+.orcid{width:19px;height:19px;flex:none}
+
+@media print{.mast,.blackbar,.crumb,aside,footer{display:none}main{max-width:none}}
+
+.lede{font-size:1.05rem;color:var(--body);margin:0 0 1.4rem;max-width:52ch}
+.warn{background:var(--panel);border-left:3px solid var(--link);padding:1rem 1.2rem;
+  margin:1.3rem 0;border-radius:0 3px 3px 0;font-size:.9375rem}
+.warn p{margin:0}.warn p+p{margin-top:.6rem}
+.warn .lab{font-family:var(--sans);font-size:.68rem;font-weight:700;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--link);display:block;margin-bottom:.45rem}
+.scores{list-style:none;display:flex;flex-wrap:wrap;gap:.5rem;padding:0;margin:1rem 0 1.4rem}
+.scores li{font-family:var(--sans);font-size:.8125rem;border:1px solid var(--line);
+  border-radius:3px;padding:.45rem .8rem;display:flex;gap:.55rem;align-items:baseline}
+.scores span{color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:.68rem}
+.scores b{font-size:1.05rem;color:var(--ink)}
+.scores i{font-style:normal;color:var(--muted);font-size:.8em}
+.rec{font-family:var(--sans);font-size:.9375rem;margin:.2rem 0 1rem}
+.rec b{background:var(--panel);border:1px solid var(--line);border-radius:3px;
+  padding:.2rem .6rem}
+.rev h3{margin-top:2rem}
+.rev h4{font-family:var(--sans);font-size:.9rem;margin:1.5rem 0 .4rem;color:var(--ink)}
+.rev ul{margin:.4rem 0 .9rem 1.1rem}
+.sig{font-family:var(--sans);font-size:.8125rem;color:var(--muted);
+  border-top:1px solid var(--line);padding-top:.8rem;margin-top:2rem}
+</style>
+<header class="mast">
+  <div class="row1">
+    <a class="wordmark" href="https://prism-journal.github.io/index.html"><svg class="wordmark-glyph" viewBox="0 0 877 512" aria-hidden="true" focusable="false"><defs><linearGradient id="rmb" x1="73.36" y1="332.18" x2="295.32" y2="251.39" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="currentColor" stop-opacity="0.2"/><stop offset="1" stop-color="currentColor" stop-opacity="1"/></linearGradient></defs><line x1="73.36" y1="332.18" x2="295.32" y2="251.39" stroke="url(#rmb)" stroke-width="52.24" stroke-linecap="round"/><line x1="537.93" y1="268.00" x2="714.57" y2="457.30" stroke="#6E3AD6" stroke-width="56.78" stroke-linecap="round"/><line x1="541.81" y1="263.24" x2="762.71" y2="398.30" stroke="#2E5FE0" stroke-width="56.78" stroke-linecap="round"/><line x1="543.54" y1="259.79" x2="784.11" y2="355.51" stroke="#0E93B8" stroke-width="56.78" stroke-linecap="round"/><line x1="544.57" y1="256.49" x2="796.88" y2="314.59" stroke="#2E9B4F" stroke-width="56.78" stroke-linecap="round"/><line x1="545.08" y1="253.13" x2="803.24" y2="272.95" stroke="#D89A16" stroke-width="56.78" stroke-linecap="round"/><line x1="545.12" y1="250.15" x2="803.64" y2="235.95" stroke="#D2542E" stroke-width="56.78" stroke-linecap="round"/><path d="M 408.88 54.70 L 636.00 448.08 L 181.76 448.08 Z" fill="currentColor"/><line x1="295.32" y1="251.39" x2="522.44" y2="251.39" stroke="var(--paper, var(--bg, #FBFAF9))" stroke-width="24.98" stroke-linecap="round"/></svg><span>prism</span></a>
+    <div class="util">
+      <a href="https://prism-journal.github.io/index.html#sections">Browse sections</a>
+      <a href="https://prism-journal.github.io/index.html#archive"><svg class="ic" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>Archive</a>
+      <a href="https://prism-journal.github.io/index.html#search"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Search</a>
+      <a href="https://prism-journal.github.io/portal.html">Log in</a>
+    </div>
+  </div>
+  <div class="row2">
+    <a href="https://prism-journal.github.io/index.html#sections">Explore content</a>
+    <a href="https://prism-journal.github.io/index.html#about">About the journal</a>
+    <a href="https://prism-journal.github.io/index.html#submit">Publish with us</a>
+    <span class="right">
+      <a href="https://prism-journal.github.io/index.html#alerts">Sign up for alerts</a>
+      <a href="https://prism-journal.github.io/index.html">RSS feed</a>
+    </span>
+  </div>
+</header>
+<div class="blackbar"></div>
+
+
+
+
+<div class="wrap">
+<main>
+<p class="kicker">Peer review record · PRISM-WP-004</p>
+<h1>Referee report on <em>EconForge as a Reproducible Python Toolkit for Steady State Computation in RBC and New Keynesian Models</em></h1>
+<p>Finley Dou · Shanghai High School International Division · manuscript of 28 October 2026, 21 pages · <a href="PRISM-WP-004.pdf">manuscript PDF</a></p>
+
+<h2>Read this first</h2>
+<p>This referee is not independent of the author. Henry Wang is PRISM's editor-in-chief, is at the same school as Finley Dou, and is Dou's co-author on PRISM-1-004. Dou also serves on PRISM's Reviewer Corps. The journal's rule is disclosure rather than avoidance, and this report should be read as informed rather than independent.</p>
+<p>The report goes to the author and the handling editor. If the paper is published, PRISM publishes the report with it.</p>
+
+<h2>Signed report — recommendation: Major revision</h2>
+<p><b>Sound</b> 3/5 · <b>Honest</b> 4/5 · <b>Checkable</b> 3/5 · <b>Legible</b> 2/5</p>
+
+<h3>Summary</h3>
+<p>The manuscript documents EconForge 0.1.0a1, the author's own Python toolkit for deterministic steady states. It reruns the five released configurations against closed-form references. These are two RBC calibrations, each from two starting points, and one three-equation New Keynesian model. All five pass, with final residuals between 10<sup>−12</sup> and 10<sup>−23</sup>, and the automatic-differentiation Jacobians agree with hand-derived ones to 7×10<sup>−16</sup>. The paper's case for the toolkit is its acceptance logic. A solver reporting success is not enough: a fresh evaluation of every original equation decides whether a result is accepted.</p>
+<p>The mathematics is correct. I re-derived the closed forms, the Jacobians and the NK determinant, and I reproduced the central number in Table 3 with code of my own (details below). The paper is also unusually careful about what its evidence does not show.</p>
+<p>My main concern is that nothing in the study could have failed. Each start is the answer moved by 20%. The variable scales are the answer itself. And the paper's main design claim, that fresh verification catches what solver termination misses, is never shown catching anything. Section 6.4 says so directly. A test that could fail is cheap to build, and I ran a version of it below. With that test added, the paper has a result. Without it, the evidence fits a Short Report better than a Research Article.</p>
+
+<h3>What I checked</h3>
+<ul>
+<li><b>Release identity.</b> I downloaded both files from the v0.1.0-alpha.1 release page. Their SHA256 digests match Appendix B exactly, for the wheel (d9301e86…1df1b26) and for the source archive (1d1684d1…c33407f).</li>
+<li><b>Model files.</b> The five JSON files in the source archive contain the equations in (4), (5), (9) and (12)–(13) and the calibrations in Table 2.</li>
+<li><b>Closed forms.</b> Recomputed at 60 digits, K<sub>A</sub>*, c<sub>A</sub>*, K<sub>B</sub>* and c<sub>B</sub>* match the values in §3. The determinant of (15) is 0.0275.</li>
+<li><b>Jacobians.</b> Appendix A's J<sub>B</sub> agrees with my own differentiation. Scaled by the released equation and variable scales, it reproduces every entry of Figure 7.</li>
+<li><b>Independent rerun.</b> I used SciPy alone (1.17.1, not the 1.15.3 in the paper), with my own analytical Jacobian in place of JAX and the released starts, scales and tolerances. RBC-B primary gives a normalized residual of 1.866×10<sup>−12</sup> and a scaled error of 9.539×10<sup>−11</sup>. Both match Table 3 to four figures. The other RBC cases also end at machine precision, though their digits below 10<sup>−15</sup> differ from yours (minor point 5).</li>
+<li><b>What I could not check.</b> Appendix B describes an experiments/ folder with reproduce.sh, an evidence directory and figure data. It is not in the release and not among the files I was sent. So I could not check the eleven additional solve requests, the figure data or the 60-digit reference audit.</li>
+</ul>
+
+<h3>Major point 1 — Show the verifier catching something</h3>
+<p>Figure 2 is the paper's contribution. Successful termination is necessary but not sufficient, and a fresh check of the original rows decides acceptance. But §6.4 states that the controls "do not exhibit a converged backend followed by failed fresh residual verification." The layer that justifies the toolkit is never observed doing its job.</p>
+<p>Such a case is easy to build. I gave SciPy's TRF method, with the paper's settings, a copy of RBC-B with 3 added to the resource row. Then c = K<sup>α</sup> − δK − 3 is negative for every K, because K<sup>α</sup> − δK never exceeds 2.87, so no admissible root exists. SciPy returns success=True (status 3, step tolerance). At the returned point the largest normalized residual is 5.4×10<sup>−3</sup>, about 500,000 times the acceptance threshold. The solver got there by pushing consumption to its bound and raising productivity to z = 0.054. This is exactly the case Figure 2 is designed for.</p>
+<p>Please add it, or one like it, and report what EconForge does: the backend status, the fresh-check outcome and the public result.</p>
+
+<h3>Major point 2 — Say which check catches which error, and test it</h3>
+<p>The introduction motivates the work with "a sign error, a mistaken time index, or an unreported normalization." The fresh check re-evaluates the same declared equations, which §4.3 rightly calls "computational separation, not an independent formulation." It therefore cannot catch a sign error in the model file.</p>
+<p>I tested this by flipping the sign of (1 − δ) in RBC-B's Euler row. Started near its own root, TRF converges with success=True to K = 0.0694, which is 0.18% of the true K<sub>B</sub>*. The normalized residual is 5.8×10<sup>−15</sup>, well inside the contract. Every check passes except the comparison with the closed form, and a user solving a new model will not have a closed form.</p>
+<p>This is not a flaw in EconForge. It is the limit of what residual verification can do, and the paper should state it as a table. The rows would be failure types: false solver convergence, a sign or timing error in the model file, a wrong derivative, and a wrong artifact. The columns would be the checks: termination, the fresh residual check, the analytical-Jacobian comparison, the closed-form comparison and the hash. Each cell would say whether the study demonstrated it.</p>
+<p>A small fault-injection study would fill that table with observations instead of argument. Run a handful of deliberately broken model files through the full pipeline and record which layer stops each one. It would also give the paper a result that could have come out otherwise. I think this is the change that turns the manuscript from a description into a study.</p>
+
+<h3>Major point 3 — The benchmarks are given the answer</h3>
+<p>Every released case is built from the answer. The variable scales d<sub>j</sub> are the analytical root: cases.json lists (K*, 1, c*) as its scales. The equation scales are values at the root: Y*, 1 and (c*)<sup>−γ</sup>. Both starts are the root multiplied by 0.8 or 1.2. A user solving a model without a closed form has none of this, so the benchmark tests the solver with the best information it could ever have.</p>
+<p>Please rerun the five configurations with scales and starts that do not use the reference, for example unit scales and K = c = 1. Report every outcome, including failures. Please also list the "six broader explicit starting vectors" in §6.4. At present a reader cannot tell what they were.</p>
+
+<h3>Major point 4 — Put a number on "a small residual can coexist with error"</h3>
+<p>§3.1 and §8 warn that a small residual does not bound the error when the Jacobian is ill-conditioned. §4.2 says EconForge already computes the singular values of D<sub>S</sub><sup>−1</sup>JD<sub>d</sub>. The paper never reports them, but they explain its own Figure 9. From the matrices in Figure 7:</p>
+<table>
+<caption>Error amplification in the released cases. The first-order bound is error ≤ ‖(D<sub>S</sub><sup>−1</sup>JD<sub>d</sub>)<sup>−1</sup>‖<sub>∞</sub> × residual. The observed ratios are Table 3's maximum scaled error divided by its final normalized norm.</caption>
+<thead><tr><th>Model</th><th>‖(D<sub>S</sub><sup>−1</sup>JD<sub>d</sub>)<sup>−1</sup>‖<sub>∞</sub></th><th>Observed error / residual</th></tr></thead>
+<tbody>
+<tr><td>RBC-A</td><td>16.5</td><td>0.9 primary · 10 robustness</td></tr>
+<tr><td>RBC-B</td><td>60.6</td><td>51 primary · 28 robustness</td></tr>
+<tr><td>NK-A</td><td>14.5</td><td>2.7</td></tr>
+</tbody>
+</table>
+<p>Every observed ratio sits under the bound. The largest error in the study, RBC-B primary, does not come from the solver underperforming. In scaled units the Euler row depends on capital only through β(1−α)q ≈ 0.022, so an Euler residual r leaves a capital error near 45r.</p>
+<p>The same arithmetic shows that the two acceptance criteria are not nested. The residual contract admits |(1−ρ)z| ≤ 1.01×10<sup>−8</sup>, which allows z up to 1.01×10<sup>−7</sup>. The reference comparison allows z only 10<sup>−8</sup>. In NK-A, v = 2×10<sup>−8</sup>, with x and π solving their rows exactly, passes the contract and fails the reference test in v and π.</p>
+<p>Nothing in this study came close, because the residuals sit 4 to 15 orders of magnitude below the threshold. But a user who relies on the residual contract alone, which is all they have without a closed form, accepts errors up to ‖J<sup>−1</sup>‖ × 10<sup>−8</sup>. Please report the conditioning for each case, state the error bound it implies, and say how the 10<sup>−8</sup> threshold was chosen.</p>
+
+<h3>Major point 5 — Deposit the research package, and complete the AI disclosure</h3>
+<p>Neither item is about the science, but both are needed before an editor can decide.</p>
+<p>(a) <b>Deposit.</b> The paper's evidence lives in the experiments folder, evidence directory and figure data described in Appendix B. PRISM's checkability criterion asks for deposited data and code with a persistent identifier. The model files are public and I could reproduce the central number from them, which is to the paper's credit. The rest I could not reach.</p>
+<p>(b) <b>Disclosure.</b> PRISM requires AI use to be disclosed in the Methods, naming the tool and what it did. Disclosed use is never held against a manuscript. The current statement sits at the end of the paper and names no tool. It also says the human author "must review" the content and "adapt this disclosure to the eventual website's editorial policy," which reads as though that review has not happened yet. Please move the statement to the Methods, name the tool, say which parts of the work are yours, and confirm that you have checked the content. The sentences addressed to reviewers at the ends of §7 and §8 should go. So should "the project owner commissioned this manuscript," unless you explain it.</p>
+
+<h3>Minor points</h3>
+<ol>
+<li><b>Figures.</b> There are twelve; a Research Article allows six. Figure 9 replots Table 3's error column, and Figure 8 replots its residual column plus five starting values that one more column would carry. Figure 11 is a table set as an image. Figures 1, 3 and 12 are schematics of what the text already says. Figure 6 draws π = 10x and π = −x, which the text states. Figure 10's caption says its arrows are not paths. I would keep Figure 2, Figure 4, and Figure 7 with the conditioning added, plus Table 3 and Figure 11 as a real table. That leaves room for the fault-injection results.</li>
+<li><b>Qualifications.</b> Nearly every paragraph and caption ends by saying what it does not show. For example, Figure 3 "is not an observation of an economy," and "the word exact identifies SciPy's subproblem option, not an exact-arithmetic or exact-root claim." Gather these into one scope table in §8 and cut them elsewhere, so that a reader from another section can find the result in each paragraph.</li>
+<li><b>Internal terms.</b> A reader cannot decode "P3.10," "Linux H recovery," "historical private acceptance," "internal accepted scientific candidate," "residual-budget charges," "admission" or "qualified stack." Define them or remove them.</li>
+<li><b>Equation (2).</b> Every released file sets the magnitude L<sub>i</sub> equal to the scale S<sub>i</sub>. The threshold is therefore 1.01×10<sup>−8</sup>S<sub>i</sub> throughout, and the two-term form is never used. Say what L<sub>i</sub> is for, or drop it.</li>
+<li><b>Digits below rounding.</b> Table 3 and Figure 9 report values such as 1.533×10<sup>−16</sup> to four figures, and Figure 9's log axis invites ranking the cases by them. At that level the digits depend on how an expression is evaluated, not on the method. My rerun of RBC-A primary gives a normalized residual of 2.22×10<sup>−16</sup> against your 1.708×10<sup>−16</sup>. Below about 10<sup>−15</sup> relative, report "within working precision" and keep the exact values in the data.</li>
+<li><b>Stored RBC-B reference.</b> The release stores K<sub>B</sub>* = 37.989253538152255, which is the plain float64 evaluation of (11). The correctly rounded value is 37.98925353815237, 16 units in the last place higher (3.0×10<sup>−15</sup> relative). §5 says equation (17) uses the 60-digit value. Please confirm which value produced Table 3, because the RBC-B robustness error (5.985×10<sup>−15</sup>) is the same size as this difference.</li>
+<li><b>The NK determinant.</b> The determinant of J<sub>N</sub> is (1−ρ<sub>v</sub>)[κ(φ<sub>π</sub>−1) + (1−β)φ<sub>x</sub>]/σ. The bracket is the expression whose sign governs determinacy in this model (Bullard and Mitra, 2002; Galí, 2015, ch. 3). You are right that a nonzero determinant is not determinacy, but naming the shared expression would make a good teaching link. A calibration that sets it to zero, φ<sub>π</sub> = 0.95 with φ<sub>x</sub> = 0.5, gives a line of steady states. That is a natural test of the branch-selection and rank diagnostics in §4.3.</li>
+<li><b>Unused parameters.</b> The RBC-A files carry delta and gamma, but no equation uses them, so changing them does nothing. The paper notes this. A parser warning on unused parameters would serve the toolkit's own aim of transparency.</li>
+<li><b>Wording that claims more than was done.</b> The abstract says the wheel was "independently checked against its distribution checksum," but the check was done by the software's author. §5 says the protocol "was recorded before manuscript drafting," but the protocol is not deposited. Reserve "independently" for checks by someone else, and either deposit the protocol with its date or drop the claim. The word "Reproducible" in the title currently rests on one run on one machine. Once the fault-injection results exist, the title can state what they found.</li>
+</ol>
+
+<h3>Overall assessment</h3>
+<p>The paper is correct, its model files and release are public and verifiable, and it is more candid about its limits than most. I reproduced its central number with code of my own, which is what a checkable paper should allow.</p>
+<p>What it lacks is a result that could have turned out differently. The five benchmarks were started near the answer, scaled by the answer and judged against a threshold they cleared by many orders of magnitude. The verification layer the paper exists to describe is never shown rejecting anything. The additions I am asking for are small in computing time; each control above ran in under a second. They do change what the paper can claim. After major points 1 to 3, it would report which errors EconForge's checks catch and which they cannot, and that is a Research Article. Without them, I would ask the author to resubmit the current evidence as a Short Report of at most 2,000 words and three figures.</p>
+<p><b>Henry Wang</b> · signed report · recommendation: major revision · 28 October 2026</p>
+
+<h3>References cited in this report</h3>
+<ul>
+<li>Bullard, J. and Mitra, K. (2002). Learning about monetary policy rules. <i>Journal of Monetary Economics</i>, 49(6), 1105–1129.</li>
+<li>Galí, J. (2015). <i>Monetary Policy, Inflation, and the Business Cycle</i>, 2nd ed. Princeton University Press.</li>
+</ul>
+</main>
+</div>
+<footer><div class="in">
+  <b style="color:var(--ink)">PRISM</b> &mdash; an open-access multidisciplinary journal of
+  secondary-school research. Review records are published with the work they concern.
+  <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+</div></footer>
